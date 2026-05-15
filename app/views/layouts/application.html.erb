@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full bg-[#F5F0E8]">
   <head>
     <title><%= content_for(:title) || "Focus" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -11,18 +11,47 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic-regular.css">
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="min-h-screen bg-[#F5F0E8] font-sans text-base text-stone-900 antialiased">
+    <div class="flex min-h-screen flex-col bg-[#F5F0E8]">
+      <% if flash.any? %>
+        <div class="px-4 pt-4">
+          <div class="mx-auto flex w-full max-w-5xl flex-col gap-3">
+            <% flash.each do |type, message| %>
+              <% next if message.blank? %>
+
+              <div id="<%= type %>" class="<%= flash_message_classes(type) %>" role="status" aria-live="polite">
+                <p><%= message %></p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <main class="flex flex-1 items-center <%= authenticated? ? 'pb-24' : '' %>">
+        <div class="mx-auto w-full max-w-5xl px-4 py-6">
+          <%= yield %>
+        </div>
+      </main>
+
+      <% if authenticated? %>
+        <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-[#D9D0C4] bg-[#F5F0E8]/95 backdrop-blur-sm" aria-label="Navegação principal">
+          <div class="mx-auto grid min-h-14 max-w-5xl grid-cols-4 px-2 pb-[env(safe-area-inset-bottom)]">
+            <% bottom_nav_items.each do |item| %>
+              <%= bottom_nav_link(item) %>
+            <% end %>
+          </div>
+        </nav>
+      <% end %>
+    </div>
   </body>
 </html>

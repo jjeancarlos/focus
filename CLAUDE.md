@@ -1,151 +1,51 @@
-# CLAUDE.md
+## Project Context
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Focus is an inclusive learning PWA for students with dyslexia and ADHD (TDH in Portuguese), built for the 2º Hackathon SIF/UniRios 2026. Theme: "Transforming Education and Learning with Technology and Inclusion."
 
-## Stack
+Two user roles: `aluno` (student) and `professor` (teacher).
 
-- Ruby 3.4.8 (`.ruby-version`)
-- Rails 8.1.1
-- PostgreSQL
-- Propshaft for assets
-- `tailwindcss-rails` is installed, but there is no frontend build pipeline configured beyond default Rails assets
-- Solid Cache, Solid Queue, and Solid Cable are configured via Rails gems instead of Redis-backed adapters
-- Kamal + Docker for production deploy
+## Design Rules (mandatory — read STYLE.md before any UI work)
 
-## Common commands
+- Background always `#F5F0E8` — never pure white `#FFFFFF`
+- Never use red, not even for errors — use amber `#CA8A04`
+- Primary color: `#4A6FA5` (muted slate blue)
+- Minimum font size: 16px
+- Buttons minimum 48px height (touch targets)
+- Font: OpenDyslexic for dyslexia/both profiles, Arial fallback
+- Feedback always positive: "Quase lá! Tente de novo." — never "Errado."
+- Icons always accompanied by text labels
+- Check STYLE.md for the full token reference before writing any HTML/CSS
 
-### Setup and local development
+## Domain language
 
-```bash
-bin/setup
+- Atividade = Mission (called "Missão" in UI)
+- Mission types: `leitura` (Guided Reading), `foco` (Focus Mission), `desafio` (Challenge)
+- Perfil de acessibilidade: `dislexia`, `tdh`, `ambos`
+- XP = experience points earned per completed mission
+- Sequência = daily streak counter
+
+## Architecture conventions
+
+- Business logic in `app/services/` (e.g. `XpCalculatorService`)
+- Controllers stay thin — no business logic, only redirect/render
+- Complex queries as scopes on models, not inline in controllers
+- Stimulus controllers in `app/javascript/controllers/`
+
+## User model fields (add to authentication migration before db:migrate)
+
+```ruby
+t.string  :name,                    null: false
+t.string  :role,         default: "aluno"   # aluno | professor
+t.string  :perfil_acessibilidade             # dislexia | tdh | ambos
+t.integer :xp_total,    default: 0
+t.integer :nivel,        default: 1
+t.integer :sequencia_dias, default: 0
+t.references :turma, foreign_key: true
 ```
-
-`bin/setup --skip-server` installs gems, runs `bin/rails db:prepare`, and clears logs/tmp without starting the server.
-
-```bash
-bin/rails server
-bin/dev
-```
-
-`bin/dev` currently only execs `bin/rails server`; there is no Foreman/Procfile-based local process orchestration in this repo.
-
-### Database
-
-```bash
-bin/rails db:prepare
-bin/rails db:migrate
-bin/rails db:seed
-```
-
-Test database prep:
-
-```bash
-bin/rails db:test:prepare
-```
-
-### Tests
-
-Run all non-system tests:
-
-```bash
-bin/rails test
-```
-
-Run a single test file:
-
-```bash
-bin/rails test test/models/some_model_test.rb
-```
-
-Run a single test by line number:
-
-```bash
-bin/rails test test/models/some_model_test.rb:42
-```
-
-Run system tests:
-
-```bash
-bin/rails test:system
-```
-
-Run the same sequence used by `bin/ci`:
-
-```bash
-bin/ci
-```
-
-`bin/ci` runs setup, RuboCop, bundler-audit, Brakeman, Rails tests, system tests, and `db:seed:replant` in test.
-
-### Lint and security
-
-```bash
-bin/rubocop
-bin/brakeman --no-pager
-bin/bundler-audit
-```
-
-### Production container / deploy
-
-Build the production image:
-
-```bash
-docker build -t focus .
-```
-
-Kamal deploy configuration lives in `config/deploy.yml`:
-
-```bash
-bin/kamal setup
-bin/kamal deploy
-bin/kamal logs
-```
-
-## Architecture
-
-This repository is still very close to a fresh Rails 8 application. There is no domain-specific app code yet beyond framework base classes and default layouts.
-
-### Request / app structure
-
-- `config/routes.rb` only exposes the Rails health endpoint at `/up`
-- No application root route is defined
-- `app/controllers`, `app/models`, `app/jobs`, and `app/mailers` only contain base application classes
-- PWA templates exist under `app/views/pwa`, but the related routes are commented out
-
-When adding product code, expect to establish the first real domain boundaries rather than fitting into an existing feature architecture.
-
-### Data and infrastructure
-
-- Development/test use PostgreSQL databases `focus_development` and `focus_test` from `config/database.yml`
-- Production uses separate databases for primary, cache, queue, and cable roles
-- Queueing, caching, and Action Cable are intended to use the Solid adapters (`solid_queue`, `solid_cache`, `solid_cable`), not Redis
-- `config/deploy.yml` sets `SOLID_QUEUE_IN_PUMA: true`, so job processing is expected to run inside the web process until the app is split across dedicated job servers
-
-### Assets and frontend
-
-- Asset delivery uses Propshaft
-- Global stylesheet entrypoint is `app/assets/stylesheets/application.css`
-- `tailwindcss-rails` is present in the Gemfile, but there are no custom Tailwind config files or app-specific frontend components yet
-- The default HTML layout is `app/views/layouts/application.html.erb`
-
-### Code loading and extension points
-
-- `config/application.rb` enables `config.autoload_lib(ignore: %w[assets tasks])`, so POROs placed in `lib/` are autoloaded
-- This is the main existing extension point outside the standard Rails directories
-
-## CI behavior
-
-GitHub Actions in `.github/workflows/ci.yml` run four jobs:
-
-- Brakeman
-- bundler-audit
-- RuboCop
-- test / system-test against PostgreSQL
-
-CI installs `libpq-dev`, starts a PostgreSQL service, and runs tests with `DATABASE_URL=postgres://postgres:postgres@localhost:5432`.
 
 ## Notes for future edits
 
 - Prefer `bin/*` wrappers over raw gem executables
-- Do not assume Redis, Docker Compose, or Foreman-based multi-process local dev are wired up here; those are not present in this repository today
-- If you add UI work, check `STYLE.md` first if that file exists in the repo, because project-level instructions require it for styling decisions
+- No Redis — use Solid Queue/Cache/Cable already configured
+- Always check STYLE.md before any UI work
+- One migration per feature — add all fields before running `db:migrate`
