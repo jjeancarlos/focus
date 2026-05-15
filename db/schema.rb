@@ -34,10 +34,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_15_221847) do
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email_address", null: false
+    t.string "name", default: "", null: false
+    t.integer "nivel", default: 1, null: false
     t.string "password_digest", null: false
+    t.string "perfil_acessibilidade"
+    t.string "role", default: "aluno", null: false
+    t.integer "sequencia_dias", default: 0, null: false
+    t.bigint "turma_id"
     t.datetime "updated_at", null: false
+    t.integer "xp_total", default: 0, null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["turma_id"], name: "index_users_on_turma_id"
   end
 
   add_foreign_key "sessions", "users"
+  add_foreign_key "users", "turmas"
 end
