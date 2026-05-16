@@ -15,7 +15,7 @@ class RegistrationsController < ApplicationController
       session[:pending_registration_user_id] = @user.id
       redirect_to cadastro_perfil_path
     else
-      flash.now[:alert] = "Quase lá! Revise os campos para continuar."
+      flash.now[:alert] = t("auth.registration.invalid")
       render :new, status: :unprocessable_entity
     end
   end
@@ -29,9 +29,9 @@ class RegistrationsController < ApplicationController
     if @user.update(profile_params)
       session.delete(:pending_registration_user_id)
       start_new_session_for(@user)
-      redirect_to after_authentication_url, notice: "Sua experiência está pronta para começar."
+      redirect_to root_path, notice: t("auth.registration.profile_completed")
     else
-      flash.now[:alert] = "Quase lá! Escolha o perfil que combina com você."
+      flash.now[:alert] = t("auth.registration.profile_invalid")
       render :perfil, status: :unprocessable_entity
     end
   end
@@ -50,7 +50,7 @@ class RegistrationsController < ApplicationController
       return if @user&.onboarding_pending?
 
       session.delete(:pending_registration_user_id)
-      redirect_to cadastro_path, alert: "Quase lá! Comece criando sua conta."
+      redirect_to cadastro_path, alert: t("auth.registration.restart")
     end
 
     def redirect_authenticated_user

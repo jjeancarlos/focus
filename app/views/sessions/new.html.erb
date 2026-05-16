@@ -19,6 +19,8 @@
     <% end %>
 
     <%= form_with url: session_url, class: "space-y-5", local: true do |form| %>
+      <%= hidden_field_tag :return_to, params[:return_to] %>
+
       <div>
         <%= form.label :email_address, "E-mail",
               class: "block text-base font-semibold text-stone-800" %>

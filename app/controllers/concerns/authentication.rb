@@ -30,12 +30,26 @@ module Authentication
     end
 
     def request_authentication
-      session[:return_to_after_authenticating] = request.url
-      redirect_to new_session_path
+      redirect_to authentication_request_path
     end
 
-    def after_authentication_url
-      session.delete(:return_to_after_authenticating) || root_url
+    def authentication_request_path
+      return_to = request.get? ? safe_return_to_path(request.fullpath) : nil
+      new_session_path(return_to:)
+    end
+
+    def after_authentication_url(return_to: nil, fallback: root_path)
+      session.delete(:return_to_after_authenticating)
+      safe_return_to_path(return_to) || fallback
+    end
+
+    def safe_return_to_path(path)
+      return if path.blank?
+      return unless path.start_with?("/")
+      return if path.start_with?("//")
+      return if path == new_session_path || path == session_path
+
+      path
     end
 
     def start_new_session_for(user)
