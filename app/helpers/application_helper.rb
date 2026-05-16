@@ -11,6 +11,7 @@ module ApplicationHelper
     [
       { label: "Home", path: "/", icon: :home },
       { label: "Missões", path: "/missoes", icon: :missions },
+      { label: "Histórico", path: "/aluno/dashboard", icon: :history },
       { label: "Conquistas", path: "/conquistas", icon: :achievements },
       { label: "Perfil", path: "/perfil", icon: :profile }
     ]
@@ -19,7 +20,6 @@ module ApplicationHelper
   def bottom_nav_link(item)
     active = bottom_nav_active?(item[:path])
     color = active ? "text-[#4A6FA5]" : "text-[#7A726C]"
-
     link_to item[:path], class: [
       "flex min-h-14 flex-col items-center justify-center gap-1 px-2 py-2 text-center text-[13px] font-semibold leading-none",
       color
@@ -35,13 +35,11 @@ module ApplicationHelper
 
   def bottom_nav_active?(path)
     return request.path == "/" if path == "/"
-
     request.path == path || request.path.start_with?("#{path}/")
   end
 
   def bottom_nav_icon(name, active:)
     color = active ? "#4A6FA5" : "#7A726C"
-
     content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", stroke: color, "stroke-width": 1.8, class: "h-5 w-5", aria: { hidden: true }) do
       safe_join(bottom_nav_elements(name))
     end
@@ -62,6 +60,11 @@ module ApplicationHelper
         tag.path(d: "M12 20v2", "stroke-linecap": "round"),
         tag.path(d: "M2 12h2", "stroke-linecap": "round"),
         tag.path(d: "M20 12h2", "stroke-linecap": "round")
+      ]
+    when :history
+      [
+        tag.circle(cx: "12", cy: "12", r: "9", "stroke-linecap": "round"),
+        tag.path(d: "M12 7v5l3 3", "stroke-linecap": "round", "stroke-linejoin": "round")
       ]
     when :achievements
       [
