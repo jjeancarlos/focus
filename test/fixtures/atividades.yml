@@ -1,0 +1,64 @@
+leitura:
+  tipo: leitura
+  titulo: Leitura teste
+  descricao: Treino de leitura com foco em compreensão
+  conteudo: Joana levou um livro azul para a escola e leu com a turma.
+  imagem_url:
+  perguntas:
+    - id: leitura_1
+      enunciado: Qual objeto Joana levou?
+      opcoes:
+        - Um livro azul
+        - Uma bola vermelha
+        - Um caderno verde
+      correta_index: 0
+    - id: leitura_2
+      enunciado: Onde Joana leu?
+      opcoes:
+        - Na praia
+        - Na escola
+        - No mercado
+      correta_index: 1
+  xp_base: 30
+  ativo: true
+
+foco:
+  tipo: foco
+  titulo: Foco teste
+  descricao: Observação e memória visual
+  conteudo:
+  imagem_url: https://example.com/foco.jpg
+  perguntas:
+    - id: foco_1
+      tempo_exibicao: 1
+      enunciado: O que estava em destaque?
+      opcoes:
+        - Uma mesa
+        - Uma árvore
+        - Um carro
+      correta_index: 0
+  xp_base: 40
+  ativo: true
+
+desafio:
+  tipo: desafio
+  titulo: Desafio teste
+  descricao: Sequência de palavras com imagens
+  conteudo: Organize as palavras.
+  imagem_url:
+  perguntas:
+    - id: desafio_1
+      tempo_ideal: 10
+      enunciado: Monte a frase
+      palavras:
+        - Eu
+        - gosto
+        - de
+        - ler
+      ordem_correta:
+        - Eu
+        - gosto
+        - de
+        - ler
+  xp_base: 50
+  ativo: true

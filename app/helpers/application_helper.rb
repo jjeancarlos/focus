@@ -7,6 +7,12 @@ module ApplicationHelper
     end
   end
 
+  def mission_icon(name)
+    content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", stroke: "#2C4A7C", "stroke-width": 1.8, class: "h-8 w-8", aria: { hidden: true }) do
+      safe_join(mission_icon_elements(name))
+    end
+  end
+
   def bottom_nav_items
     [
       { label: "Home", path: "/", icon: :home },
@@ -79,6 +85,38 @@ module ApplicationHelper
       [
         tag.path(d: "M18 21a6 6 0 0 0-12 0", "stroke-linecap": "round", "stroke-linejoin": "round"),
         tag.path(d: "M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z", "stroke-linecap": "round", "stroke-linejoin": "round")
+      ]
+    else
+      []
+    end
+  end
+
+  def mission_icon_elements(name)
+    case name
+    when :leitura
+      [
+        tag.path(d: "M6 5.5A2.5 2.5 0 0 1 8.5 3H19v15.5A2.5 2.5 0 0 0 16.5 16H6z", "stroke-linecap": "round", "stroke-linejoin": "round"),
+        tag.path(d: "M6 5.5V21", "stroke-linecap": "round", "stroke-linejoin": "round"),
+        tag.path(d: "M10 7h5", "stroke-linecap": "round"),
+        tag.path(d: "M10 11h5", "stroke-linecap": "round")
+      ]
+    when :foco
+      [
+        tag.circle(cx: "12", cy: "12", r: "8"),
+        tag.circle(cx: "12", cy: "12", r: "3"),
+        tag.path(d: "M12 4V2", "stroke-linecap": "round"),
+        tag.path(d: "M20 12h2", "stroke-linecap": "round"),
+        tag.path(d: "M12 20v2", "stroke-linecap": "round"),
+        tag.path(d: "M2 12h2", "stroke-linecap": "round")
+      ]
+    when :desafio
+      [
+        tag.path(d: "M8 7h8", "stroke-linecap": "round"),
+        tag.path(d: "M8 12h8", "stroke-linecap": "round"),
+        tag.path(d: "M8 17h8", "stroke-linecap": "round"),
+        tag.path(d: "M5 7h.01", "stroke-linecap": "round"),
+        tag.path(d: "M5 12h.01", "stroke-linecap": "round"),
+        tag.path(d: "M5 17h.01", "stroke-linecap": "round")
       ]
     else
       []
