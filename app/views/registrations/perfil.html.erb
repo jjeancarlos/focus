@@ -1,0 +1,88 @@
+<% content_for :head do %>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<% end %>
+
+<section class="mx-auto flex w-full max-w-2xl flex-col justify-center py-6">
+  <div class="rounded-2xl bg-[#EDE8DF] p-8 shadow-sm">
+    <div class="text-center">
+      <h1 class="text-2xl font-bold text-[#2C4A7C]">Como você aprende?</h1>
+      <p class="mt-3 text-base leading-relaxed text-[#7A726C]">
+        Isso nos ajuda a adaptar sua experiência
+      </p>
+    </div>
+
+    <% if @user.errors.any? %>
+      <div class="mt-6 rounded-2xl border border-[#e5ce94] bg-[#F5E9C8] px-4 py-3 text-base text-[#8a6510]">
+        <p class="font-semibold">Quase lá! Escolha o perfil que combina com você.</p>
+      </div>
+    <% end %>
+
+    <%= form_with model: @user, url: cadastro_perfil_path, method: :patch, class: "mt-8 space-y-4", data: { profile_form: true } do |form| %>
+      <div>
+        <%= form.radio_button :perfil_acessibilidade, "dislexia", class: "peer sr-only", required: true, data: { profile_option: true } %>
+        <%= form.label :perfil_acessibilidade_dislexia, class: "flex min-h-20 cursor-pointer items-center gap-4 rounded-2xl border border-[#D9D0C4] bg-[#F5F0E8] p-5 peer-checked:border-[#4A6FA5] peer-checked:bg-[#D4E0F0]" do %>
+          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4E0F0] text-[#2C4A7C]">
+            <i class="fa-solid fa-book-open-reader text-xl" aria-hidden="true"></i>
+          </span>
+          <span>
+            <span class="block text-base font-semibold text-stone-900">Tenho dislexia</span>
+            <span class="mt-1 block text-sm leading-relaxed text-stone-600">Adapta fonte, espaçamento e tempo</span>
+          </span>
+        <% end %>
+      </div>
+
+      <div>
+        <%= form.radio_button :perfil_acessibilidade, "tdh", class: "peer sr-only", required: true, data: { profile_option: true } %>
+        <%= form.label :perfil_acessibilidade_tdh, class: "flex min-h-20 cursor-pointer items-center gap-4 rounded-2xl border border-[#D9D0C4] bg-[#F5F0E8] p-5 peer-checked:border-[#4A6FA5] peer-checked:bg-[#D4E0F0]" do %>
+          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4E0F0] text-[#2C4A7C]">
+            <i class="fa-solid fa-bullseye text-xl" aria-hidden="true"></i>
+          </span>
+          <span>
+            <span class="block text-base font-semibold text-stone-900">Tenho TDH</span>
+            <span class="mt-1 block text-sm leading-relaxed text-stone-600">Adapta temporizadores e foco visual</span>
+          </span>
+        <% end %>
+      </div>
+
+      <div>
+        <%= form.radio_button :perfil_acessibilidade, "ambos", class: "peer sr-only", required: true, data: { profile_option: true } %>
+        <%= form.label :perfil_acessibilidade_ambos, class: "flex min-h-20 cursor-pointer items-center gap-4 rounded-2xl border border-[#D9D0C4] bg-[#F5F0E8] p-5 peer-checked:border-[#4A6FA5] peer-checked:bg-[#D4E0F0]" do %>
+          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4E0F0] text-[#2C4A7C]">
+            <i class="fa-solid fa-layer-group text-xl" aria-hidden="true"></i>
+          </span>
+          <span>
+            <span class="block text-base font-semibold text-stone-900">Tenho os dois</span>
+            <span class="mt-1 block text-sm leading-relaxed text-stone-600">Aplica todas as adaptações</span>
+          </span>
+        <% end %>
+      </div>
+
+      <div id="start-button-container" class="hidden pt-4">
+        <%= form.submit "Começar", id: "start-button", disabled: true, class: "min-h-12 w-full rounded-full bg-[#4A6FA5] px-6 py-3 text-base font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50" %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    const container = document.getElementById("start-button-container");
+    const button = document.getElementById("start-button");
+    const options = document.querySelectorAll('[data-profile-option="true"]');
+
+    if (!container || !button || options.length === 0) return;
+
+    const syncButtonState = function() {
+      const selected = Array.from(options).some(function(option) { return option.checked; });
+      container.classList.toggle("hidden", !selected);
+      button.disabled = !selected;
+    };
+
+    options.forEach(function(option) {
+      option.addEventListener("change", syncButtonState);
+    });
+
+    syncButtonState();
+  });
+</script>

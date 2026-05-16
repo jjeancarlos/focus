@@ -1,1 +1,2 @@
 /* Tailwind entrypoint moved to app/assets/tailwind/application.css */
+@import "chartkick/chart.js";
