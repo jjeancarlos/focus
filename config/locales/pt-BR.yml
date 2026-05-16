@@ -1,0 +1,43 @@
+pt-BR:
+  auth:
+    login:
+      email_not_found: "Não encontramos uma conta com esse email."
+      invalid_password: "Senha incorreta. Tente novamente."
+      rate_limited: "Muitas tentativas de login. Aguarde um instante e tente novamente."
+    registration:
+      invalid: "Quase lá! Revise os campos para continuar."
+      profile_invalid: "Quase lá! Escolha o perfil que combina com você."
+      profile_completed: "Sua experiência está pronta para começar."
+      restart: "Quase lá! Comece criando sua conta."
+      email_taken: "Esse email já está cadastrado. Tente fazer login."
+      login_link: "fazer login"
+    password:
+      rate_limited: "Muitas tentativas. Aguarde um instante e tente novamente."
+      instructions_sent: "Se esse email estiver cadastrado, enviaremos as instruções para redefinir sua senha."
+      reset_success: "Sua senha foi atualizada com sucesso."
+      mismatch: "As senhas não coincidem. Tente novamente."
+      invalid_token: "O link para redefinir a senha é inválido ou expirou."
+  passwords:
+    new:
+      title: "Esqueceu sua senha?"
+      email_placeholder: "Digite seu e-mail"
+      submit: "Enviar instruções"
+    edit:
+      title: "Defina sua nova senha"
+      password_placeholder: "Digite a nova senha"
+      password_confirmation_placeholder: "Repita a nova senha"
+      submit: "Salvar nova senha"
+  activerecord:
+    attributes:
+      user:
+        name: "Nome"
+        email_address: "E-mail"
+        password: "Senha"
+        password_confirmation: "Confirmação da senha"
+        perfil_acessibilidade: "Perfil de acessibilidade"
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      blank: "não pode ficar em branco"
+      confirmation: "não confere"
+      inclusion: "não está incluído na lista"

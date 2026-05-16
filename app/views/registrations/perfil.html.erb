@@ -9,97 +9,91 @@
   </div>
 
   <div class="w-full max-w-md">
-
-    <% if alert.present? %>
-      <div class="mb-5 rounded-xl px-4 py-3 text-sm font-medium"
-           style="background-color: #F5E9C8; color: #2A2520;">
-        <%= alert %>
+    <% if alert.present? || @user.errors.any? %>
+      <div class="mb-5 rounded-2xl border border-[#e5ce94] bg-[#F5E9C8] px-4 py-3 text-base text-[#8a6510]">
+        <p class="font-semibold"><%= alert.presence || t("auth.registration.profile_invalid") %></p>
       </div>
     <% end %>
 
-    <%= form_with model: @user, url: cadastro_perfil_path, method: :patch,
-          local: true, id: "perfil-form" do |form| %>
-
-      <%= form.hidden_field :perfil_acessibilidade, id: "perfil-input", value: "" %>
-
-      <%# CARDS DE PERFIL %>
-      <div class="space-y-4 mb-8">
-
-        <%# DISLEXIA %>
-        <div class="perfil-card rounded-2xl p-6 shadow-sm cursor-pointer
-                    border-2 border-transparent"
-             style="background-color: #EDE8DF;"
-             data-perfil="dislexia"
-             onclick="selecionarPerfil(this)">
-          <div class="flex items-start gap-4">
-            <span class="text-4xl">🔤</span>
-            <div>
-              <p class="text-lg font-semibold text-[#2C4A7C]">Tenho dislexia</p>
-              <p class="text-sm mt-1 text-[#7A726C]">
-                Adapta fonte, espaçamento e tempo de leitura
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <%# TDH %>
-        <div class="perfil-card rounded-2xl p-6 shadow-sm cursor-pointer
-                    border-2 border-transparent"
-             style="background-color: #EDE8DF;"
-             data-perfil="tdh"
-             onclick="selecionarPerfil(this)">
-          <div class="flex items-start gap-4">
-            <span class="text-4xl">🎯</span>
-            <div>
-              <p class="text-lg font-semibold text-[#2C4A7C]">Tenho TDH</p>
-              <p class="text-sm mt-1 text-[#7A726C]">
-                Adapta temporizadores e foco visual
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <%# AMBOS %>
-        <div class="perfil-card rounded-2xl p-6 shadow-sm cursor-pointer
-                    border-2 border-transparent"
-             style="background-color: #EDE8DF;"
-             data-perfil="ambos"
-             onclick="selecionarPerfil(this)">
-          <div class="flex items-start gap-4">
-            <span class="text-4xl">🔤🎯</span>
-            <div>
-              <p class="text-lg font-semibold text-[#2C4A7C]">Tenho os dois</p>
-              <p class="text-sm mt-1 text-[#7A726C]">
-                Aplica todas as adaptações
-              </p>
-            </div>
-          </div>
-        </div>
-
+    <%= form_with model: @user, url: cadastro_perfil_path, method: :patch, local: true, class: "space-y-4", data: { profile_form: true } do |form| %>
+      <div>
+        <%= form.radio_button :perfil_acessibilidade, "dislexia", class: "peer sr-only", required: true, data: { profile_option: true } %>
+        <%= form.label :perfil_acessibilidade_dislexia, class: "flex min-h-20 cursor-pointer items-center gap-4 rounded-2xl border border-[#D9D0C4] bg-[#F5F0E8] p-5", data: { profile_card: true } do %>
+          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4E0F0] text-[#2C4A7C] text-2xl">🔤</span>
+          <span>
+            <span class="block text-base font-semibold text-stone-900">Tenho dislexia</span>
+            <span class="mt-1 block text-sm leading-relaxed text-stone-600">Adapta fonte, espaçamento e tempo de leitura</span>
+          </span>
+        <% end %>
       </div>
 
-      <%# BOTÃO — aparece só após selecionar %>
-      <div id="btn-comecar" class="hidden">
-        <%= form.submit "Começar 🚀",
-              class: "min-h-12 w-full rounded-full bg-[#4A6FA5] px-6
-                      py-3 text-base font-semibold text-white cursor-pointer" %>
+      <div>
+        <%= form.radio_button :perfil_acessibilidade, "tdh", class: "peer sr-only", required: true, data: { profile_option: true } %>
+        <%= form.label :perfil_acessibilidade_tdh, class: "flex min-h-20 cursor-pointer items-center gap-4 rounded-2xl border border-[#D9D0C4] bg-[#F5F0E8] p-5", data: { profile_card: true } do %>
+          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4E0F0] text-[#2C4A7C] text-2xl">🎯</span>
+          <span>
+            <span class="block text-base font-semibold text-stone-900">Tenho TDH</span>
+            <span class="mt-1 block text-sm leading-relaxed text-stone-600">Adapta temporizadores e foco visual</span>
+          </span>
+        <% end %>
       </div>
 
+      <div>
+        <%= form.radio_button :perfil_acessibilidade, "ambos", class: "peer sr-only", required: true, data: { profile_option: true } %>
+        <%= form.label :perfil_acessibilidade_ambos, class: "flex min-h-20 cursor-pointer items-center gap-4 rounded-2xl border border-[#D9D0C4] bg-[#F5F0E8] p-5", data: { profile_card: true } do %>
+          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4E0F0] text-[#2C4A7C] text-2xl">🔤🎯</span>
+          <span>
+            <span class="block text-base font-semibold text-stone-900">Tenho os dois</span>
+            <span class="mt-1 block text-sm leading-relaxed text-stone-600">Aplica todas as adaptações</span>
+          </span>
+        <% end %>
+      </div>
+
+      <div id="start-button-container" class="hidden pt-4">
+        <%= form.submit "Começar", id: "start-button", disabled: true, class: "min-h-12 w-full rounded-full bg-[#4A6FA5] px-6 py-3 text-base font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer" %>
+      </div>
     <% end %>
   </div>
 </div>
 
 <script>
-  function selecionarPerfil(card) {
-    document.querySelectorAll('.perfil-card').forEach(function(c) {
-      c.style.borderColor = 'transparent';
-      c.style.backgroundColor = '#EDE8DF';
+  const initializeProfileSelection = () => {
+    const container = document.getElementById("start-button-container");
+    const button = document.getElementById("start-button");
+    const options = Array.from(document.querySelectorAll('[data-profile-option="true"]'));
+
+    if (!container || !button || options.length === 0) return;
+
+    const syncButtonState = () => {
+      let hasSelection = false;
+
+      options.forEach((option) => {
+        const card = document.querySelector(`label[for="${option.id}"]`);
+        const selected = option.checked;
+
+        if (selected) hasSelection = true;
+        if (!card) return;
+
+        card.classList.toggle("border-[#4A6FA5]", selected);
+        card.classList.toggle("bg-[#D4E0F0]", selected);
+      });
+
+      container.classList.toggle("hidden", !hasSelection);
+      button.disabled = !hasSelection;
+    };
+
+    options.forEach((option) => {
+      option.onchange = syncButtonState;
     });
 
-    card.style.borderColor = '#4A6FA5';
-    card.style.backgroundColor = '#D4E0F0';
+    syncButtonState();
+  };
 
-    document.getElementById('perfil-input').value = card.dataset.perfil;
-    document.getElementById('btn-comecar').classList.remove('hidden');
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeProfileSelection);
+  } else {
+    initializeProfileSelection();
   }
+
+  document.addEventListener("turbo:load", initializeProfileSelection);
 </script>
