@@ -10,9 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_16_000232) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_16_010000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "atividades", force: :cascade do |t|
+    t.boolean "ativo", default: true, null: false
+    t.text "conteudo"
+    t.datetime "created_at", null: false
+    t.text "descricao", null: false
+    t.string "imagem_url"
+    t.jsonb "perguntas", default: [], null: false
+    t.string "tipo", null: false
+    t.string "titulo", null: false
+    t.datetime "updated_at", null: false
+    t.integer "xp_base", default: 20, null: false
+    t.index ["ativo"], name: "index_atividades_on_ativo"
+    t.index ["tipo"], name: "index_atividades_on_tipo"
+  end
 
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -25,6 +40,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_16_000232) do
 
   create_table "tentativas", force: :cascade do |t|
     t.bigint "aluno_id", null: false
+    t.bigint "atividade_id"
     t.datetime "concluida_em", null: false
     t.datetime "created_at", null: false
     t.integer "pontuacao", default: 0, null: false
@@ -33,6 +49,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_16_000232) do
     t.datetime "updated_at", null: false
     t.integer "xp_ganho", default: 0, null: false
     t.index ["aluno_id"], name: "index_tentativas_on_aluno_id"
+    t.index ["atividade_id"], name: "index_tentativas_on_atividade_id"
     t.index ["concluida_em"], name: "index_tentativas_on_concluida_em"
     t.index ["tipo_missao"], name: "index_tentativas_on_tipo_missao"
   end
@@ -62,6 +79,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_16_000232) do
   end
 
   add_foreign_key "sessions", "users"
+  add_foreign_key "tentativas", "atividades"
   add_foreign_key "tentativas", "users", column: "aluno_id"
   add_foreign_key "users", "turmas"
 end

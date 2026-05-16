@@ -1,0 +1,66 @@
+<div class="mx-auto max-w-3xl space-y-6 pb-8">
+  <div class="space-y-2 px-1">
+    <h1 class="text-2xl font-bold" style="color: #2C4A7C;">Escolha sua Missão</h1>
+    <p class="text-base" style="color: #7A726C;">Selecione o tipo de prática que faz mais sentido para você agora.</p>
+  </div>
+
+  <div class="space-y-4">
+    <% cards = [
+      {
+        tipo: "leitura",
+        titulo: "Leitura Guiada",
+        descricao: "Treino de leitura com foco em compreensão",
+        xp: "Até 30 XP",
+        icon: :leitura
+      },
+      {
+        tipo: "foco",
+        titulo: "Missão de Foco",
+        descricao: "Observação e memória visual",
+        xp: "Até 40 XP",
+        icon: :foco
+      },
+      {
+        tipo: "desafio",
+        titulo: "Desafio",
+        descricao: "Sequência de palavras com imagens",
+        xp: "Até 50 XP + bônus",
+        icon: :desafio
+      }
+    ] %>
+
+    <% cards.each do |card| %>
+      <% disponivel = @missoes_por_tipo[card[:tipo]] %>
+      <% classes = "block rounded-2xl px-4 py-6 shadow-sm" %>
+      <% style = "background-color: #EDE8DF;" %>
+
+      <% if disponivel %>
+        <%= link_to missao_path(card[:tipo]), class: classes, style: style do %>
+          <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full" style="background-color: #DDE6F2;">
+              <%= mission_icon(card[:icon]) %>
+            </div>
+            <div class="space-y-2">
+              <h2 class="text-xl font-semibold" style="color: #2C4A7C;"><%= card[:titulo] %></h2>
+              <p class="text-base leading-relaxed" style="color: #7A726C;"><%= card[:descricao] %></p>
+              <p class="text-base font-semibold" style="color: #4A8C5C;"><%= card[:xp] %></p>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="rounded-2xl px-4 py-6 shadow-sm opacity-75" style="background-color: #EDE8DF;">
+          <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full" style="background-color: #DDE6F2;">
+              <%= mission_icon(card[:icon]) %>
+            </div>
+            <div class="space-y-2">
+              <h2 class="text-xl font-semibold" style="color: #2C4A7C;"><%= card[:titulo] %></h2>
+              <p class="text-base leading-relaxed" style="color: #7A726C;"><%= card[:descricao] %></p>
+              <p class="text-base font-semibold" style="color: #4A8C5C;">Em breve</p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
