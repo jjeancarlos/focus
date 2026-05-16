@@ -1,0 +1,133 @@
+<div class="min-h-screen pb-28" style="background-color: #F5F0E8;">
+
+  <%# HEADER %>
+  <div class="px-4 pt-10 pb-4">
+    <h1 class="text-2xl font-bold" style="color: #2C4A7C;">
+      Olá, <%= Current.user.name.split.first %>!
+    </h1>
+    <span class="inline-block mt-2 px-4 py-1 rounded-full text-sm font-semibold text-white"
+          style="background-color: <%= nivel_color(Current.user.nivel) %>;">
+      Nível <%= Current.user.nivel %> · <%= nivel_nome(Current.user.nivel) %>
+    </span>
+  </div>
+
+  <%# BARRA DE XP %>
+  <div class="mx-4 mb-4 rounded-2xl p-4" style="background-color: #EDE8DF;">
+    <div class="flex justify-between text-sm mb-2" style="color: #7A726C;">
+      <span>XP atual</span>
+      <span><%= Current.user.xp_total %> / <%= proximo_nivel_xp(Current.user.nivel) %> XP</span>
+    </div>
+    <div class="w-full rounded-full h-4" style="background-color: #D4E0F0;">
+      <div class="h-4 rounded-full"
+           style="background-color: #4A6FA5;
+                  width: <%= xp_percentual(Current.user) %>%;
+                  transition: width 0.6s ease;"></div>
+    </div>
+  </div>
+
+  <div class="px-4 space-y-4">
+
+    <%# SEQUÊNCIA %>
+    <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
+      <p class="text-sm font-semibold mb-1" style="color: #7A726C;">Minha Sequência</p>
+      <div class="flex items-baseline gap-2">
+        <span class="text-5xl font-bold" style="color: #2C4A7C;">
+          <%= Current.user.sequencia_dias %>
+        </span>
+        <span class="text-base" style="color: #7A726C;">dias seguidos</span>
+      </div>
+      <p class="text-sm mt-1" style="color: #4A8C5C;">
+        <%= Current.user.sequencia_dias > 0 ? "Continue assim." : "Faça sua primeira missão hoje." %>
+      </p>
+    </div>
+
+    <%# GRÁFICO — XP POR DIA %>
+    <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
+      <p class="text-sm font-semibold mb-3" style="color: #7A726C;">XP por dia — últimos 7 dias</p>
+      <% if @xp_por_dia.any? %>
+        <%= bar_chart @xp_por_dia,
+              colors: ["#4A6FA5"],
+              height: "160px",
+              library: {
+                plugins: { legend: { display: false } },
+                scales: {
+                  x: { grid: { display: false },
+                       ticks: { color: "#7A726C", font: { size: 11 } } },
+                  y: { grid: { color: "#D4E0F0" },
+                       ticks: { color: "#7A726C", font: { size: 11 } },
+                       beginAtZero: true }
+                }
+              } %>
+      <% else %>
+        <p class="text-sm text-center py-6" style="color: #7A726C;">
+          Complete missões para ver seu progresso aqui.
+        </p>
+      <% end %>
+    </div>
+
+    <%# GRÁFICO — MISSÕES POR TIPO %>
+    <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
+      <p class="text-sm font-semibold mb-3" style="color: #7A726C;">Missões por tipo — esta semana</p>
+      <% if @missoes_por_tipo.any? %>
+        <%= pie_chart @missoes_por_tipo,
+              colors: ["#4A6FA5", "#4A8C5C", "#9C7A2E"],
+              height: "180px",
+              library: {
+                plugins: {
+                  legend: {
+                    position: "bottom",
+                    labels: { color: "#4A4540", font: { size: 12 }, padding: 16 }
+                  }
+                }
+              } %>
+      <% else %>
+        <p class="text-sm text-center py-6" style="color: #7A726C;">
+          Nenhuma missão esta semana ainda.
+        </p>
+      <% end %>
+    </div>
+
+    <%# COMPARATIVO SEMANAS %>
+    <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
+      <p class="text-sm font-semibold mb-3" style="color: #7A726C;">Esta semana vs semana passada</p>
+      <div class="flex gap-4">
+        <div class="flex-1 rounded-xl p-3 text-center" style="background-color: #D4E0F0;">
+          <p class="text-xs mb-1" style="color: #7A726C;">Semana passada</p>
+          <p class="text-2xl font-bold" style="color: #4A6FA5;">
+            <%= @tentativas_semana_passada.count %>
+          </p>
+          <p class="text-xs" style="color: #7A726C;">missões</p>
+        </div>
+        <div class="flex items-center" style="color: #7A726C;">→</div>
+        <div class="flex-1 rounded-xl p-3 text-center" style="background-color: #4A6FA5;">
+          <p class="text-xs mb-1 text-white opacity-80">Esta semana</p>
+          <p class="text-2xl font-bold text-white">
+            <%= @tentativas_semana.count %>
+          </p>
+          <p class="text-xs text-white opacity-80">missões</p>
+        </div>
+      </div>
+      <% diff = @tentativas_semana.count - @tentativas_semana_passada.count %>
+      <p class="text-sm text-center mt-3"
+         style="color: <%= diff >= 0 ? '#4A8C5C' : '#9C7A2E' %>;">
+        <% if diff > 0 %>
+          +<%= diff %> missões a mais que na semana passada.
+        <% elsif diff == 0 %>
+          Mesmo ritmo da semana passada.
+        <% else %>
+          Você consegue superar a semana passada.
+        <% end %>
+      </p>
+    </div>
+
+    <%# BOTÃO MISSÃO %>
+    <div class="pt-2 pb-6">
+      <%= link_to "Iniciar uma Missão",
+            "#",
+            class: "block w-full text-center font-semibold text-white py-4 rounded-full text-base",
+            style: "background-color: #4A6FA5;" %>
+    </div>
+
+  </div>
+
+</div>

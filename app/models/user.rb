@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   has_secure_password
   has_many :sessions, dependent: :destroy
+  has_many :tentativas, foreign_key: :aluno_id, dependent: :destroy
   belongs_to :turma, optional: true
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
@@ -15,6 +16,14 @@ class User < ApplicationRecord
   validates :role, presence: true, inclusion: { in: ROLES }
   validates :perfil_acessibilidade, inclusion: { in: PROFILES }, allow_nil: true
   validates :perfil_acessibilidade, presence: true, if: :require_profile_completion?
+
+  def professor?
+    role == "professor"
+  end
+
+  def aluno?
+    role == "aluno"
+  end
 
   def onboarding_pending?
     perfil_acessibilidade.blank?
