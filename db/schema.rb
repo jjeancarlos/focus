@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_15_221847) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_16_000232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,6 +21,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_15_221847) do
     t.string "user_agent"
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "tentativas", force: :cascade do |t|
+    t.bigint "aluno_id", null: false
+    t.datetime "concluida_em", null: false
+    t.datetime "created_at", null: false
+    t.integer "pontuacao", default: 0, null: false
+    t.integer "tempo_gasto", default: 0, null: false
+    t.string "tipo_missao", null: false
+    t.datetime "updated_at", null: false
+    t.integer "xp_ganho", default: 0, null: false
+    t.index ["aluno_id"], name: "index_tentativas_on_aluno_id"
+    t.index ["concluida_em"], name: "index_tentativas_on_concluida_em"
+    t.index ["tipo_missao"], name: "index_tentativas_on_tipo_missao"
   end
 
   create_table "turmas", force: :cascade do |t|
@@ -48,5 +62,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_15_221847) do
   end
 
   add_foreign_key "sessions", "users"
+  add_foreign_key "tentativas", "users", column: "aluno_id"
   add_foreign_key "users", "turmas"
 end
