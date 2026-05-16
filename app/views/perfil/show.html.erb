@@ -1,0 +1,131 @@
+<div class="min-h-screen pb-24 px-4 pt-8"
+     style="background-color: #F5F0E8;">
+
+  <%# FLASH MESSAGES %>
+  <% if notice.present? %>
+    <div class="mb-4 rounded-xl px-4 py-3 text-sm font-medium"
+         style="background-color: #D6EAD9; color: #2A2520;">
+      <%= notice %>
+    </div>
+  <% end %>
+  <% if alert.present? %>
+    <div class="mb-4 rounded-xl px-4 py-3 text-sm font-medium"
+         style="background-color: #F5E9C8; color: #2A2520;">
+      <%= alert %>
+    </div>
+  <% end %>
+
+  <%= form_with model: @user, url: perfil_path, method: :patch,
+        local: true, class: "space-y-5" do |form| %>
+
+    <%# FOTO DO PERFIL %>
+    <div class="flex flex-col items-center mb-6">
+      <div class="relative">
+        <% if @user.foto.attached? %>
+          <%= image_tag @user.foto,
+                class: "rounded-full object-cover",
+                style: "width: 100px; height: 100px;" %>
+        <% else %>
+          <div class="rounded-full flex items-center justify-center
+                      text-white text-3xl font-bold"
+               style="width: 100px; height: 100px;
+                      background-color: #4A6FA5;">
+            <%= @user.name.first.upcase %>
+          </div>
+        <% end %>
+
+        <%# BOTÃO DE EDITAR FOTO %>
+        <label for="foto-input"
+               class="absolute bottom-0 right-0 rounded-full
+                      flex items-center justify-center cursor-pointer
+                      text-white text-sm font-bold"
+               style="width: 32px; height: 32px;
+                      background-color: #2C4A7C;">
+          ✎
+        </label>
+        <%= form.file_field :foto,
+              id: "foto-input",
+              accept: "image/*",
+              class: "hidden",
+              onchange: "this.form.submit()" %>
+      </div>
+
+      <p class="mt-3 text-lg font-bold" style="color: #2C4A7C;">
+        <%= @user.name %>
+      </p>
+      <p class="text-sm" style="color: #7A726C;">
+        <%= @user.email_address %>
+      </p>
+    </div>
+
+    <%# NOME %>
+    <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
+      <%= form.label :name, "Nome completo",
+            class: "block text-sm font-semibold mb-2",
+            style: "color: #7A726C;" %>
+      <%= form.text_field :name,
+            class: "w-full rounded-xl px-4 py-3 text-base outline-none",
+            style: "background-color: #F5F0E8; border: 1.5px solid #D9D0C4;
+                    color: #2A2520; font-size: 16px;" %>
+    </div>
+
+    <%# EMAIL %>
+    <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
+      <%= form.label :email_address, "Email",
+            class: "block text-sm font-semibold mb-2",
+            style: "color: #7A726C;" %>
+      <%= form.email_field :email_address,
+            class: "w-full rounded-xl px-4 py-3 text-base outline-none",
+            style: "background-color: #F5F0E8; border: 1.5px solid #D9D0C4;
+                    color: #2A2520; font-size: 16px;" %>
+    </div>
+
+    <%# PERFIL DE ACESSIBILIDADE %>
+    <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
+      <p class="text-sm font-semibold mb-2" style="color: #7A726C;">
+        Perfil de acessibilidade
+      </p>
+      <% perfil = @user.perfil_acessibilidade %>
+      <% if perfil.present? %>
+        <span class="inline-block px-4 py-2 rounded-full text-sm
+                     font-semibold text-white"
+              style="background-color: #4A6FA5;">
+          <%= case perfil
+              when "dislexia" then "🔤 Dislexia"
+              when "tdh"      then "🎯 TDH"
+              when "ambos"    then "🔤🎯 Dislexia + TDH"
+              end %>
+        </span>
+      <% else %>
+        <p class="text-sm" style="color: #7A726C;">Não definido</p>
+      <% end %>
+    </div>
+
+    <%# NÍVEL E XP %>
+    <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
+      <p class="text-sm font-semibold mb-1" style="color: #7A726C;">
+        Nível e XP
+      </p>
+      <p class="text-base font-bold" style="color: #2C4A7C;">
+        Nível <%= @user.nivel %> · <%= @user.xp_total %> XP
+      </p>
+    </div>
+
+    <%# BOTÃO SALVAR %>
+    <%= form.submit "Salvar alterações",
+          class: "w-full rounded-full px-6 py-4 text-base font-semibold
+                  text-white cursor-pointer min-h-12",
+          style: "background-color: #4A6FA5; border: none;" %>
+
+  <% end %>
+
+  <%# BOTÃO SAIR %>
+  <%= button_to "Sair da conta",
+        session_path,
+        method: :delete,
+        class: "w-full rounded-full px-6 py-4 text-base font-semibold
+                cursor-pointer min-h-12 mt-4",
+        style: "background-color: #F5F0E8; color: #7A726C;
+                border: 1.5px solid #D9D0C4;" %>
+
+</div>
