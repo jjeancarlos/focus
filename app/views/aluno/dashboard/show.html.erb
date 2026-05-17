@@ -13,8 +13,8 @@
           <h1 class="mt-2 text-2xl font-bold text-white">Olá, <%= Current.user.name.split.first %>!</h1>
           <p class="mt-2 text-base leading-relaxed text-white opacity-90">Acompanhe seu ritmo, suas conquistas e sua evolução nas missões.</p>
         </div>
-        <div class="flex h-16 w-16 items-center justify-center rounded-full text-white" style="background-color: rgba(245, 240, 232, 0.18);">
-          <i class="fa-solid fa-chart-line text-2xl" aria-hidden="true"></i>
+        <div class="flex flex-shrink-0 items-center justify-center rounded-full text-white self-center" style="width: 64px; height: 64px; min-width: 64px; min-height: 64px; background-color: rgba(245, 240, 232, 0.18); line-height: 1;">
+          <i class="fa-solid fa-chart-line text-2xl leading-none" aria-hidden="true"></i>
         </div>
       </div>
 
@@ -24,8 +24,8 @@
             <p class="text-sm font-semibold text-white opacity-80">Nível atual</p>
             <p class="mt-1 text-lg font-bold text-white">Nível <%= Current.user.nivel %> · <%= nivel_nome(Current.user.nivel) %></p>
           </div>
-          <span class="inline-flex min-h-10 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold text-white leading-none" style="background-color: rgba(245, 240, 232, 0.18);">
-            <%= Current.user.xp_total %> XP
+          <span class="inline-flex flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white leading-none self-center" style="height: 40px; min-width: 92px; padding: 0 16px; background-color: rgba(245, 240, 232, 0.18); line-height: 1;">
+            <span class="leading-none"><%= Current.user.xp_total %> XP</span>
           </span>
         </div>
 
@@ -42,28 +42,28 @@
     </div>
 
     <div class="grid grid-cols-2 gap-3">
-      <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
-        <div class="flex items-center justify-between gap-3">
-          <div>
-            <p class="text-sm font-semibold" style="color: #7A726C;">Sequência</p>
-            <p class="mt-1 text-3xl font-bold" style="color: #2C4A7C;"><%= dias_seguidos %></p>
-            <p class="text-sm" style="color: #7A726C;">dias seguidos</p>
+      <div class="rounded-2xl p-4 shadow-sm overflow-hidden" style="background-color: #EDE8DF;">
+        <div class="flex items-center justify-between gap-2">
+          <div class="min-w-0 flex-1 pr-1">
+            <p class="text-sm font-semibold leading-none" style="color: #7A726C;">Sequência</p>
+            <p class="mt-2 text-2xl font-bold leading-none" style="color: #2C4A7C;"><%= dias_seguidos %></p>
+            <p class="mt-1 text-xs leading-none" style="color: #7A726C;">dias seguidos</p>
           </div>
-          <div class="flex h-12 w-12 items-center justify-center rounded-full" style="background-color: #D4E0F0; color: #2C4A7C;">
-            <i class="fa-solid fa-bolt text-lg" aria-hidden="true"></i>
+          <div class="flex flex-shrink-0 items-center justify-center rounded-full" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background-color: #D4E0F0; color: #2C4A7C; line-height: 1;">
+            <i class="fa-solid fa-bolt text-sm leading-none" aria-hidden="true"></i>
           </div>
         </div>
       </div>
 
-      <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
-        <div class="flex items-center justify-between gap-3">
-          <div>
-            <p class="text-sm font-semibold" style="color: #7A726C;">Missões</p>
-            <p class="mt-1 text-3xl font-bold" style="color: #2C4A7C;"><%= missoes_semana %></p>
-            <p class="text-sm" style="color: #7A726C;">nesta semana</p>
+      <div class="rounded-2xl p-4 shadow-sm overflow-hidden" style="background-color: #EDE8DF;">
+        <div class="flex items-center justify-between gap-2">
+          <div class="min-w-0 flex-1 pr-1">
+            <p class="text-sm font-semibold leading-none" style="color: #7A726C;">Missões</p>
+            <p class="mt-2 text-2xl font-bold leading-none" style="color: #2C4A7C;"><%= missoes_semana %></p>
+            <p class="mt-1 text-xs leading-none" style="color: #7A726C;">nesta semana</p>
           </div>
-          <div class="flex h-12 w-12 items-center justify-center rounded-full" style="background-color: #DDE6F2; color: #2C4A7C;">
-            <i class="fa-solid fa-bullseye text-lg" aria-hidden="true"></i>
+          <div class="flex flex-shrink-0 items-center justify-center rounded-full" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background-color: #DDE6F2; color: #2C4A7C; line-height: 1;">
+            <i class="fa-solid fa-bullseye text-sm leading-none" aria-hidden="true"></i>
           </div>
         </div>
       </div>

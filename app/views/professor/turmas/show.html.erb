@@ -21,12 +21,18 @@
               class: "flex items-center gap-3 rounded-2xl p-4 shadow-sm",
               style: "background-color: #EDE8DF;" do %>
 
-          <div class="rounded-full flex items-center justify-center
-                      text-white text-sm font-bold flex-shrink-0"
-               style="width: 44px; height: 44px;
-                      background-color: #4A6FA5;">
-            <%= aluno.name.first.upcase %>
-          </div>
+          <% if aluno.foto.attached? %>
+            <%= image_tag aluno.foto,
+                  class: "rounded-full object-cover flex-shrink-0",
+                  style: "width: 44px; height: 44px;" %>
+          <% else %>
+            <div class="rounded-full flex items-center justify-center
+                        text-white text-sm font-bold flex-shrink-0"
+                 style="width: 44px; height: 44px;
+                        background-color: #4A6FA5;">
+              <%= aluno.name.first.upcase %>
+            </div>
+          <% end %>
 
           <div class="flex-1 min-w-0">
             <p class="text-sm font-semibold truncate"

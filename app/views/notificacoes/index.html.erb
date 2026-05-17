@@ -47,12 +47,18 @@
         <% @recados.each do |recado| %>
           <div class="rounded-2xl p-4 shadow-sm flex items-start gap-3"
                style="background-color: #EDE8DF;">
-            <div class="rounded-full flex items-center justify-center
-                        flex-shrink-0 text-white text-sm font-bold"
-                 style="width: 40px; height: 40px;
-                        background-color: #4A6FA5;">
-              <%= recado.professor.name.first.upcase %>
-            </div>
+            <% if recado.professor.foto.attached? %>
+              <%= image_tag recado.professor.foto,
+                    class: "rounded-full object-cover flex-shrink-0",
+                    style: "width: 40px; height: 40px;" %>
+            <% else %>
+              <div class="rounded-full flex items-center justify-center
+                          flex-shrink-0 text-white text-sm font-bold"
+                   style="width: 40px; height: 40px;
+                          background-color: #4A6FA5;">
+                <%= recado.professor.name.first.upcase %>
+              </div>
+            <% end %>
             <div class="flex-1">
               <div class="flex items-center justify-between">
                 <p class="text-sm font-semibold" style="color: #2C4A7C;">
