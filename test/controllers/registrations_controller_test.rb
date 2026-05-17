@@ -63,7 +63,7 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to cadastro_path
   end
 
-  test "update perfil completes onboarding and signs in user" do
+  test "update perfil completes onboarding and redirects to class code step" do
     post cadastro_path, params: {
       user: {
         name: "Nova Pessoa",
@@ -78,7 +78,7 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     patch cadastro_perfil_path, params: { user: { perfil_acessibilidade: "ambos" } }
 
     assert_redirected_to cadastro_turma_path
-    assert cookies[:session_id]
+    assert_nil cookies[:session_id]
     assert_equal "ambos", user.reload.perfil_acessibilidade
   end
 
