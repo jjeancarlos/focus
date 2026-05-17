@@ -4,7 +4,7 @@
   <%# HEADER %>
   <div class="mb-6">
     <h1 class="text-2xl font-bold" style="color: #2C4A7C;">
-      Olá, <%= Current.user.name.split.first %>! 👋
+      Olá, <%= Current.user.name.split.first %>! <i class="fa-solid fa-hand" aria-hidden="true"></i>
     </h1>
     <p class="text-sm mt-1" style="color: #7A726C;">
       Painel do professor
@@ -31,18 +31,17 @@
 
   <%# TURMAS %>
   <div class="mb-6">
-    <p class="text-sm font-semibold mb-3" style="color: #7A726C;">
-      🏫 Minhas turmas
-    </p>
-    
-    <div class="flex items-center justify-between mb-3">
-  <p class="text-sm font-semibold" style="color: #7A726C;">
-    🏫 Minhas turmas
-  </p>
-  <%= link_to "＋ Nova turma", new_professor_turma_path,
-        class: "text-sm font-semibold px-4 py-2 rounded-full",
-        style: "background-color: #4A6FA5; color: white;" %>
-</div>
+    <div class="mb-3 flex items-center justify-between">
+      <p class="text-sm font-semibold" style="color: #7A726C;">
+        <i class="fa-solid fa-school" aria-hidden="true"></i> Minhas turmas
+      </p>
+      <%= link_to new_professor_turma_path,
+            class: "rounded-full px-4 py-2 text-sm font-semibold",
+            style: "background-color: #4A6FA5; color: white;" do %>
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        Nova turma
+      <% end %>
+    </div>
 
     <% if @turmas.any? %>
       <div class="space-y-3">
@@ -60,7 +59,7 @@
                   Código: <span class="font-bold tracking-widest"><%= turma.invite_token %></span>
                 </p>
               </div>
-              <span style="color: #4A6FA5;">→</span>
+              <span style="color: #4A6FA5;"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
             </div>
           <% end %>
         <% end %>
@@ -78,7 +77,7 @@
   <%# ENVIAR RECADO %>
   <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
     <p class="text-sm font-semibold mb-3" style="color: #7A726C;">
-      📢 Enviar recado para todas as turmas
+      <i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Enviar recado para todas as turmas
     </p>
     <%= form_with url: professor_recados_path, method: :post,
           local: true do |form| %>
@@ -88,10 +87,13 @@
             class: "w-full rounded-xl px-4 py-3 text-base outline-none resize-none",
             style: "background-color: #F5F0E8; border: 1.5px solid #D9D0C4;
                     color: #2A2520; font-size: 16px;" %>
-      <%= form.submit "Enviar recado 📨",
-            class: "mt-3 w-full rounded-full px-6 py-3 text-base
-                    font-semibold text-white cursor-pointer min-h-12",
-            style: "background-color: #4A6FA5; border: none;" %>
+      <button type="submit"
+              class="mt-3 w-full rounded-full px-6 py-3 text-base
+                     font-semibold text-white cursor-pointer min-h-12"
+              style="background-color: #4A6FA5; border: none;">
+        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        Enviar recado
+      </button>
     <% end %>
   </div>
 

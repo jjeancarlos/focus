@@ -19,7 +19,7 @@
       <div>
         <%= form.radio_button :perfil_acessibilidade, "dislexia", class: "peer sr-only", required: true, data: { profile_option: true } %>
         <%= form.label :perfil_acessibilidade_dislexia, class: "flex min-h-20 cursor-pointer items-center gap-4 rounded-2xl border border-[#D9D0C4] bg-[#F5F0E8] p-5", data: { profile_card: true } do %>
-          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4E0F0] text-[#2C4A7C] text-2xl">🔤</span>
+          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4E0F0] text-[#2C4A7C] text-2xl"><i class="fa-solid fa-book-open" aria-hidden="true"></i></span>
           <span>
             <span class="block text-base font-semibold text-stone-900">Tenho dislexia</span>
             <span class="mt-1 block text-sm leading-relaxed text-stone-600">Adapta fonte, espaçamento e tempo de leitura</span>
@@ -30,7 +30,7 @@
       <div>
         <%= form.radio_button :perfil_acessibilidade, "tdh", class: "peer sr-only", required: true, data: { profile_option: true } %>
         <%= form.label :perfil_acessibilidade_tdh, class: "flex min-h-20 cursor-pointer items-center gap-4 rounded-2xl border border-[#D9D0C4] bg-[#F5F0E8] p-5", data: { profile_card: true } do %>
-          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4E0F0] text-[#2C4A7C] text-2xl">🎯</span>
+          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4E0F0] text-[#2C4A7C] text-2xl"><i class="fa-solid fa-bullseye" aria-hidden="true"></i></span>
           <span>
             <span class="block text-base font-semibold text-stone-900">Tenho TDH</span>
             <span class="mt-1 block text-sm leading-relaxed text-stone-600">Adapta temporizadores e foco visual</span>
@@ -41,7 +41,7 @@
       <div>
         <%= form.radio_button :perfil_acessibilidade, "ambos", class: "peer sr-only", required: true, data: { profile_option: true } %>
         <%= form.label :perfil_acessibilidade_ambos, class: "flex min-h-20 cursor-pointer items-center gap-4 rounded-2xl border border-[#D9D0C4] bg-[#F5F0E8] p-5", data: { profile_card: true } do %>
-          <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4E0F0] text-[#2C4A7C] text-2xl">🔤🎯</span>
+          <span class="flex h-12 w-12 items-center justify-center gap-2 rounded-full bg-[#D4E0F0] text-[#2C4A7C] text-xl"><i class="fa-solid fa-book-open" aria-hidden="true"></i><i class="fa-solid fa-bullseye" aria-hidden="true"></i></span>
           <span>
             <span class="block text-base font-semibold text-stone-900">Tenho os dois</span>
             <span class="mt-1 block text-sm leading-relaxed text-stone-600">Aplica todas as adaptações</span>

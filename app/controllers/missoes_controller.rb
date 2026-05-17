@@ -3,11 +3,13 @@ class MissoesController < ApplicationController
   before_action :set_tipo
   before_action :set_tentativa, only: :resultado
   before_action :set_atividade, only: %i[show responder resultado]
+  before_action :bloquear_limite_diario!, only: %i[show responder]
 
   def index
     @missoes_por_tipo = Atividade::TIPOS.index_with do |tipo|
       Atividade.ativas.por_tipo(tipo).exists?
     end
+    @limite_diario_atingido = Current.user.limite_diario_atingido?
   end
 
   def show
@@ -15,6 +17,7 @@ class MissoesController < ApplicationController
     @tempo_visual = @atividade.tempo_base
     @perguntas = @atividade.perguntas
     @palavras_embaralhadas = palavras_embaralhadas
+    @feedback_messages = feedback_messages
   end
 
   def responder
@@ -45,6 +48,9 @@ class MissoesController < ApplicationController
   def resultado
     @total_perguntas = total_perguntas_da_tentativa
     @mensagem = mensagem_resultado(@tentativa.pontuacao, @total_perguntas)
+    @missoes_hoje = Current.user.missoes_hoje
+    @xp_hoje = Current.user.xp_hoje
+    @mostrar_modal_conclusao = @missoes_hoje == 10
   end
 
   private
@@ -147,5 +153,17 @@ class MissoesController < ApplicationController
       return "Você está evoluindo. Continue praticando no seu ritmo." if acertos.positive?
 
       "Você praticou hoje e isso já conta muito. Tente novamente quando quiser."
+    end
+
+    def bloquear_limite_diario!
+      redirect_to missoes_path, alert: "limite_atingido" if Current.user.limite_diario_atingido?
+    end
+
+    def feedback_messages
+      [
+        { icon: "fa-solid fa-hand-fist", text: "Quase lá! Continue tentando." },
+        { icon: "fa-solid fa-seedling", text: "Você está aprendendo. Continue praticando." },
+        { icon: "fa-solid fa-star", text: "Boa tentativa! Na próxima você acerta." }
+      ]
     end
 end

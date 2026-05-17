@@ -36,12 +36,12 @@ class RegistrationsController < ApplicationController
 
   def entrar_turma
     turma = Turma.find_by(invite_token: params[:invite_token]&.upcase&.strip)
+
     if turma
       @user.update!(turma: turma)
       session.delete(:pending_registration_user_id)
       start_new_session_for(@user)
-      redirect_to aluno_dashboard_path,
-        notice: "Você entrou na turma #{turma.nome}! 🎉"
+      redirect_to aluno_dashboard_path, notice: "Você entrou na turma #{turma.nome}!"
     else
       flash.now[:alert] = "Código inválido. Verifique e tente novamente."
       render :codigo_turma, status: :unprocessable_entity
@@ -51,28 +51,27 @@ class RegistrationsController < ApplicationController
   def pular_turma
     session.delete(:pending_registration_user_id)
     start_new_session_for(@user)
-    redirect_to aluno_dashboard_path,
-      notice: "Sua experiência está pronta para começar. 🚀"
+    redirect_to aluno_dashboard_path, notice: "Sua experiência está pronta para começar."
   end
 
   private
+    def registration_params
+      params.require(:user).permit(:name, :email_address, :password, :password_confirmation)
+    end
 
-  def registration_params
-    params.require(:user).permit(:name, :email_address, :password, :password_confirmation)
-  end
+    def profile_params
+      params.require(:user).permit(:perfil_acessibilidade)
+    end
 
-  def profile_params
-    params.require(:user).permit(:perfil_acessibilidade)
-  end
+    def set_pending_user
+      @user = User.find_by(id: session[:pending_registration_user_id])
+      return if @user.present?
 
-  def set_pending_user
-    @user = User.find_by(id: session[:pending_registration_user_id])
-    return if @user.present?
-    session.delete(:pending_registration_user_id)
-    redirect_to cadastro_path, alert: "Quase lá! Comece criando sua conta."
-  end
+      session.delete(:pending_registration_user_id)
+      redirect_to cadastro_path, alert: "Quase lá! Comece criando sua conta."
+    end
 
-  def redirect_authenticated_user
-    redirect_to root_path if authenticated?
-  end
+    def redirect_authenticated_user
+      redirect_to root_path if authenticated?
+    end
 end

@@ -11,7 +11,6 @@
   </div>
 
   <div class="w-full max-w-md rounded-2xl bg-[#EDE8DF] p-8 shadow-sm">
-
     <% if alert.present? %>
       <div class="mb-5 rounded-xl px-4 py-3 text-sm font-medium"
            style="background-color: #F5E9C8; color: #2A2520;">
@@ -35,17 +34,20 @@
       </div>
 
       <div class="space-y-3 pt-2">
-        <%= submit_tag "Entrar na turma 🎓",
-              class: "min-h-12 w-full rounded-full bg-[#4A6FA5] px-6
-                      py-3 text-base font-semibold text-white cursor-pointer" %>
+        <button type="submit"
+                class="min-h-12 w-full rounded-full bg-[#4A6FA5] px-6
+                       py-3 text-base font-semibold text-white cursor-pointer">
+          <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+          Entrar na turma
+        </button>
       </div>
     <% end %>
 
-    <%= button_to "Pular por agora →", cadastro_pular_path,
+    <%= button_to cadastro_pular_path,
           method: :post,
-          class: "mt-3 w-full text-center text-base py-3 cursor-pointer
-                  rounded-full",
-          style: "background-color: transparent; color: #7A726C;
-                  border: none;" %>
+          class: "mt-3 w-full rounded-full px-6 py-3 text-base font-semibold cursor-pointer",
+          style: "background-color: transparent; color: #7A726C; border: none;" do %>
+      Pular por agora <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+    <% end %>
   </div>
 </div>

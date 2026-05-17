@@ -4,8 +4,10 @@
   <%# HEADER %>
   <div class="flex items-center gap-3 mb-6">
     <%= link_to professor_dashboard_path,
-          style: "color: #4A6FA5; font-size: 20px;" do %>
-      ←
+          class: "inline-flex items-center gap-2 text-sm font-semibold",
+          style: "color: #4A6FA5;" do %>
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      <span>Voltar</span>
     <% end %>
     <div>
       <h1 class="text-xl font-bold" style="color: #2C4A7C;">
