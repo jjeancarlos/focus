@@ -1,8 +1,74 @@
-<section class="mx-auto flex w-full max-w-2xl flex-col justify-center py-8">
-  <div class="rounded-2xl bg-[#EDE8DF] p-8 shadow-sm">
-    <h1 class="text-2xl font-bold text-[#2C4A7C]">Bem-vindo ao Focus</h1>
-    <p class="mt-3 text-base leading-relaxed text-stone-700">
-      Sua experiência foi preparada para apoiar seu ritmo de aprendizagem com clareza, foco e inclusão.
+<section class="mx-auto flex w-full max-w-3xl flex-col gap-5 py-6">
+  <% frases = [
+    "Seu ritmo importa. Cada missão concluída é um passo a mais.",
+    "Você está construindo progresso com foco e constância.",
+    "Hoje é um bom dia para aprender com calma e confiança.",
+    "Pequenos avanços de hoje viram grandes conquistas amanhã."
+  ] %>
+  <% frase_do_dia = frases[Date.current.yday % frases.size] %>
+
+  <div class="rounded-2xl bg-[#EDE8DF] px-6 py-8 shadow-sm">
+    <div class="space-y-4">
+      <div>
+        <h1 class="text-2xl font-bold" style="color: #2C4A7C;">
+          Olá, <%= Current.user.name.split.first %>!
+        </h1>
+        <p class="mt-2 text-base leading-relaxed" style="color: #44403C;">
+          Sua jornada continua hoje com foco, inclusão e progresso no seu ritmo.
+        </p>
+      </div>
+
+      <span class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white"
+            style="background-color: <%= nivel_color(Current.user.nivel) %>;">
+        <i class="fa-solid fa-medal" aria-hidden="true"></i>
+        Nível <%= Current.user.nivel %> · <%= nivel_nome(Current.user.nivel) %>
+      </span>
+
+      <%= link_to missoes_path,
+            class: "flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-base font-semibold text-white",
+            style: "background-color: #4A6FA5;" do %>
+        <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
+        Iniciar Missão
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    <article class="rounded-2xl bg-[#EDE8DF] p-5 shadow-sm">
+      <p class="text-sm font-semibold" style="color: #7A726C;">XP atual</p>
+      <div class="mt-2 flex items-end justify-between gap-3">
+        <p class="text-3xl font-bold" style="color: #2C4A7C;">
+          <%= Current.user.xp_total %> XP
+        </p>
+        <p class="text-sm" style="color: #7A726C;">
+          Próximo marco: <%= proximo_nivel_xp(Current.user.nivel) %>
+        </p>
+      </div>
+      <div class="mt-4 h-4 w-full rounded-full" style="background-color: #D4E0F0;">
+        <div class="h-4 rounded-full"
+             style="background-color: #4A6FA5; width: <%= xp_percentual(Current.user) %>%; transition: width 0.6s ease;"></div>
+      </div>
+    </article>
+
+    <article class="rounded-2xl bg-[#EDE8DF] p-5 shadow-sm">
+      <p class="text-sm font-semibold" style="color: #7A726C;">Sequência de dias</p>
+      <div class="mt-2 flex items-baseline gap-2">
+        <span class="text-4xl font-bold" style="color: #2C4A7C;">
+          <%= Current.user.sequencia_dias %>
+        </span>
+        <span class="text-base" style="color: #7A726C;">dias seguidos</span>
+      </div>
+      <p class="mt-3 text-sm font-semibold" style="color: #4A8C5C;">
+        <%= Current.user.sequencia_dias.positive? ? "Continue assim." : "Faça sua primeira missão hoje." %>
+      </p>
+    </article>
+  </div>
+
+  <div class="rounded-2xl bg-[#EDE8DF] p-5 shadow-sm">
+    <p class="text-sm font-semibold" style="color: #7A726C;">Frase do dia</p>
+    <p class="mt-3 text-lg leading-relaxed" style="color: #44403C;">
+      <i class="fa-solid fa-star" style="color: #CA8A04;" aria-hidden="true"></i>
+      <%= frase_do_dia %>
     </p>
   </div>
 </section>
