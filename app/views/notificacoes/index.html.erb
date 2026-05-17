@@ -1,0 +1,87 @@
+<div class="min-h-screen pb-24 px-4 pt-8"
+     style="background-color: #F5F0E8;">
+
+  <div class="flex items-center gap-3 mb-6">
+    <%= link_to "javascript:history.back()",
+          style: "color: #4A6FA5;" do %>
+      <i class="fa-solid fa-arrow-left text-xl"></i>
+    <% end %>
+    <h1 class="text-xl font-bold" style="color: #2C4A7C;">
+      Notificações
+    </h1>
+  </div>
+
+  <%# ALERTAS DO SISTEMA %>
+  <% if @alertas.any? %>
+    <div class="mb-4">
+      <p class="text-xs font-semibold mb-2 uppercase tracking-wide"
+         style="color: #7A726C;">Hoje</p>
+      <div class="space-y-3">
+        <% @alertas.each do |alerta| %>
+          <div class="rounded-2xl p-4 shadow-sm flex items-start gap-3"
+               style="background-color: #EDE8DF;">
+            <div class="rounded-full flex items-center justify-center flex-shrink-0"
+                 style="width: 40px; height: 40px;
+                        background-color: #F5F0E8;">
+              <i class="fa-solid <%= alerta[:icone] %>"
+                 style="color: <%= alerta[:cor] %>; font-size: 18px;"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold" style="color: #2C4A7C;">
+                <%= alerta[:titulo] %>
+              </p>
+              <p class="text-sm mt-1" style="color: #4A4540;">
+                <%= alerta[:mensagem] %>
+              </p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# RECADOS DO PROFESSOR %>
+  <div>
+    <p class="text-xs font-semibold mb-2 uppercase tracking-wide"
+       style="color: #7A726C;">Recados do professor</p>
+
+    <% if @recados.any? %>
+      <div class="space-y-3">
+        <% @recados.each do |recado| %>
+          <div class="rounded-2xl p-4 shadow-sm flex items-start gap-3"
+               style="background-color: #EDE8DF;">
+            <div class="rounded-full flex items-center justify-center
+                        flex-shrink-0 text-white text-sm font-bold"
+                 style="width: 40px; height: 40px;
+                        background-color: #4A6FA5;">
+              <%= recado.professor.name.first.upcase %>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-semibold" style="color: #2C4A7C;">
+                  <%= recado.professor.name %>
+                </p>
+                <p class="text-xs" style="color: #7A726C;">
+                  <%= recado.created_at.strftime("%d/%m") %>
+                </p>
+              </div>
+              <p class="text-sm mt-1" style="color: #4A4540;">
+                <%= recado.mensagem %>
+              </p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="rounded-2xl p-6 text-center shadow-sm"
+           style="background-color: #EDE8DF;">
+        <i class="fa-solid fa-bell-slash text-2xl mb-2"
+           style="color: #7A726C;"></i>
+        <p class="text-sm" style="color: #7A726C;">
+          Nenhum recado do professor ainda
+        </p>
+      </div>
+    <% end %>
+  </div>
+
+</div>

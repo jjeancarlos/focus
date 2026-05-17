@@ -3,5 +3,7 @@ class Recado < ApplicationRecord
   belongs_to :turma
 
   validates :mensagem, presence: true
-  scope :recentes, -> { order(created_at: :desc).limit(5) }
+
+  scope :recentes,   -> { order(created_at: :desc) }
+  scope :nao_lidos,  -> { where(lido: false) }
 end
