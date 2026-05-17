@@ -74,8 +74,13 @@
         if (selected) hasSelection = true;
         if (!card) return;
 
-        card.classList.toggle("border-[#4A6FA5]", selected);
-        card.classList.toggle("bg-[#D4E0F0]", selected);
+        if (selected) {
+          card.style.borderColor = "#4A6FA5";
+          card.style.backgroundColor = "#D4E0F0";
+        } else {
+          card.style.borderColor = "#D9D0C4";
+          card.style.backgroundColor = "#F5F0E8";
+        }
       });
 
       container.classList.toggle("hidden", !hasSelection);

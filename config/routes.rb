@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   get   "perfil",           to: "perfil#show",              as: :perfil
   patch "perfil",           to: "perfil#update"
 
+  get  "notificacoes", to: "notificacoes#index",    as: :notificacoes
+  get  "notificacoes/contagem", to: "notificacoes#contagem", as: :notificacoes_contagem
+
   namespace :professor do
     get "dashboard",        to: "dashboard#show",           as: :dashboard
     resources :turmas, only: %i[show new create] do
