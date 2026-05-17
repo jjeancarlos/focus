@@ -6,4 +6,27 @@ class Professor::TurmasController < ApplicationController
     )
     @alunos = @turma.alunos.order(:name)
   end
+
+  def new
+    @turma = Turma.new
+  end
+
+  def create
+    @turma = Turma.new(turma_params)
+    @turma.professor_id = Current.user.id
+
+    if @turma.save
+      redirect_to professor_dashboard_path,
+        notice: "Turma criada! Código: #{@turma.invite_token} 🎉"
+    else
+      flash.now[:alert] = "Verifique os campos e tente novamente."
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def turma_params
+    params.require(:turma).permit(:nome)
+  end
 end
