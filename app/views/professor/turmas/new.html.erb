@@ -39,8 +39,9 @@
         <%= form.submit "Criar turma 🏫",
               class: "min-h-12 w-full rounded-full bg-[#4A6FA5] px-6
                       py-3 text-base font-semibold text-white cursor-pointer" %>
-        <%= link_to "← Voltar", professor_dashboard_path,
-              class: "block text-center text-base py-3 text-[#7A726C]" %>
+        <div class="flex justify-center">
+          <%= back_button_to(professor_dashboard_path) %>
+        </div>
       </div>
 
     <% end %>
