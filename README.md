@@ -96,6 +96,36 @@ DB_NAME_TEST=focus_test
 bin/rails db:prepare
 ```
 
+### Seeds de demonstração
+
+Para carregar os dados iniciais de demonstração:
+
+```bash
+bin/rails db:seed
+```
+
+As seeds criam:
+
+- professor demo
+- turma padrão com código de convite
+- aluno demo vinculado à turma
+- atividades de leitura, foco e desafio
+
+Credenciais geradas pelas seeds:
+
+```txt
+Professor
+email: professor@focus.com
+senha: focus123
+
+Aluno
+email: aluno@focus.com
+senha: focus123
+
+Código da turma
+FOCUS2026
+```
+
 ### Executar em desenvolvimento
 
 ```bash

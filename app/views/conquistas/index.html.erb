@@ -1,0 +1,63 @@
+<div class="min-h-screen px-4 pt-8 pb-24" style="background-color: #F5F0E8;">
+  <div class="mb-6 flex items-center gap-3">
+    <%= link_to "javascript:history.back()", style: "color: #4A6FA5;" do %>
+      <i class="fa-solid fa-arrow-left text-xl" aria-hidden="true"></i>
+    <% end %>
+    <h1 class="text-xl font-bold" style="color: #2C4A7C;">Conquistas</h1>
+  </div>
+
+  <div class="space-y-4">
+    <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
+      <p class="text-sm font-semibold mb-3" style="color: #7A726C;">Seu progresso</p>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div class="rounded-2xl p-4" style="background-color: #F5F0E8;">
+          <p class="text-sm" style="color: #7A726C;">Missões de leitura</p>
+          <p class="text-2xl font-bold" style="color: #2C4A7C;"><%= @totais_por_tipo["leitura"] %></p>
+        </div>
+        <div class="rounded-2xl p-4" style="background-color: #F5F0E8;">
+          <p class="text-sm" style="color: #7A726C;">Missões de foco</p>
+          <p class="text-2xl font-bold" style="color: #2C4A7C;"><%= @totais_por_tipo["foco"] %></p>
+        </div>
+        <div class="rounded-2xl p-4" style="background-color: #F5F0E8;">
+          <p class="text-sm" style="color: #7A726C;">Desafios</p>
+          <p class="text-2xl font-bold" style="color: #2C4A7C;"><%= @totais_por_tipo["desafio"] %></p>
+        </div>
+        <div class="rounded-2xl p-4" style="background-color: #F5F0E8;">
+          <p class="text-sm" style="color: #7A726C;">XP total ganho</p>
+          <p class="text-2xl font-bold" style="color: #2C4A7C;"><%= @xp_total %></p>
+        </div>
+        <div class="rounded-2xl p-4 sm:col-span-2" style="background-color: #F5F0E8;">
+          <p class="text-sm" style="color: #7A726C;">Sequência atual de dias</p>
+          <p class="text-2xl font-bold" style="color: #2C4A7C;"><%= @sequencia_atual %></p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p class="mb-3 text-sm font-semibold uppercase tracking-wide" style="color: #7A726C;">Marcos alcançados</p>
+      <div class="space-y-3">
+        <% @conquistas.each do |conquista| %>
+          <% bloqueada = !conquista[:desbloqueada] %>
+          <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF; opacity: <%= bloqueada ? 0.7 : 1 %>;">
+            <div class="flex items-start gap-3">
+              <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full"
+                   style="background-color: <%= bloqueada ? '#D6D3D1' : '#F5F0E8' %>; color: <%= bloqueada ? '#78716C' : conquista[:cor] %>;">
+                <i class="<%= bloqueada ? 'fa-solid fa-lock' : conquista[:icone] %> text-xl" aria-hidden="true"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between gap-3">
+                  <h2 class="text-base font-semibold" style="color: <%= bloqueada ? '#57534E' : '#2C4A7C' %>;"><%= conquista[:titulo] %></h2>
+                  <span class="rounded-full px-3 py-1 text-sm font-semibold"
+                        style="background-color: <%= bloqueada ? '#D6D3D1' : '#DDE6F2' %>; color: <%= bloqueada ? '#57534E' : conquista[:cor] %>;">
+                    <%= bloqueada ? 'Bloqueada' : 'Desbloqueada' %>
+                  </span>
+                </div>
+                <p class="mt-1 text-sm leading-relaxed" style="color: #7A726C;"><%= conquista[:descricao] %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
