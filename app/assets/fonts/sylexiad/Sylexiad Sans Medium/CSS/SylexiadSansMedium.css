@@ -1,0 +1,43 @@
+@font-face {
+	font-family: 'SylexiadSansMedium';
+	src: url('SylexiadSansMedium.ttf') format('opentype'),
+       url('SylexiadSansMedium.woff') format('woff');
+	font-weight: 500;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'SylexiadSansMedium-Italic';
+	src: url('SylexiadSansMedium-Italic.ttf') format('opentype'),
+       url('SylexiadSansMedium-Italic.woff') format('woff');
+	font-weight: 500;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'SylexiadSansMedium-Bold';
+	src: url('SylexiadSansMedium-Bold.ttf') format('opentype'),
+       url('SylexiadSansMedium-Bold.woff') format('woff');
+	font-weight: 500;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'SylexiadSansMedium-BItalic';
+	src: url('SylexiadSansMedium-BItalic.ttf') format('opentype'),
+       url('SylexiadSansMedium-BItalic.woff') format('woff');
+	font-weight: 500;
+	font-style: italic;
+}
+
+.sample-css-class {
+  font-family: 'SylexiadSansMedium', Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.sample-css-class-for-an-italic {
+  font-family: 'SylexiadSansMedium-Italic', Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}

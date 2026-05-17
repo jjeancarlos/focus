@@ -37,3 +37,4 @@
 /config/*.key
 
 /vendor/bundle
+/.docs
