@@ -1,0 +1,139 @@
+<div class="min-h-screen pb-24 px-4 pt-8"
+     style="background-color: #F5F0E8;">
+
+  <%# HEADER %>
+  <div class="flex items-center gap-3 mb-6">
+    <%= link_to professor_turma_path(@turma),
+          style: "color: #4A6FA5; font-size: 20px;" do %>
+      ←
+    <% end %>
+    <div>
+      <h1 class="text-xl font-bold" style="color: #2C4A7C;">
+        <%= @aluno.name %>
+      </h1>
+      <p class="text-sm" style="color: #7A726C;">
+        <%= @turma.nome %> ·
+        <%= case @aluno.perfil_acessibilidade
+            when "dislexia" then "🔤 Dislexia"
+            when "tdh"      then "🎯 TDH"
+            when "ambos"    then "🔤🎯 Ambos"
+            else "Sem perfil"
+            end %>
+      </p>
+    </div>
+  </div>
+
+  <%# KPIs DO ALUNO %>
+  <div class="grid grid-cols-3 gap-3 mb-4">
+    <div class="rounded-2xl p-3 text-center shadow-sm"
+         style="background-color: #EDE8DF;">
+      <p class="text-xl font-bold" style="color: #2C4A7C;">
+        <%= @aluno.nivel %>
+      </p>
+      <p class="text-xs mt-1" style="color: #7A726C;">nível</p>
+    </div>
+    <div class="rounded-2xl p-3 text-center shadow-sm"
+         style="background-color: #EDE8DF;">
+      <p class="text-xl font-bold" style="color: #4A6FA5;">
+        <%= @aluno.xp_total %>
+      </p>
+      <p class="text-xs mt-1" style="color: #7A726C;">XP total</p>
+    </div>
+    <div class="rounded-2xl p-3 text-center shadow-sm"
+         style="background-color: #EDE8DF;">
+      <p class="text-xl font-bold" style="color: #4A8C5C;">
+        <%= @aluno.sequencia_dias %>
+      </p>
+      <p class="text-xs mt-1" style="color: #7A726C;">dias seguidos</p>
+    </div>
+  </div>
+
+  <%# GRÁFICO XP POR DIA %>
+  <div class="rounded-2xl p-4 mb-4 shadow-sm"
+       style="background-color: #EDE8DF;">
+    <p class="text-sm font-semibold mb-3" style="color: #7A726C;">
+      📈 XP por dia — últimos 7 dias
+    </p>
+    <% if @xp_por_dia.any? %>
+      <%= bar_chart @xp_por_dia,
+            colors: ["#4A6FA5"],
+            height: "140px",
+            library: {
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { grid: { display: false },
+                     ticks: { color: "#7A726C", font: { size: 10 } } },
+                y: { grid: { color: "#D4E0F0" },
+                     ticks: { color: "#7A726C", font: { size: 10 } },
+                     beginAtZero: true }
+              }
+            } %>
+    <% else %>
+      <p class="text-sm text-center py-4" style="color: #7A726C;">
+        Nenhuma missão esta semana 🌱
+      </p>
+    <% end %>
+  </div>
+
+  <%# MISSÕES POR TIPO %>
+  <div class="rounded-2xl p-4 mb-4 shadow-sm"
+       style="background-color: #EDE8DF;">
+    <p class="text-sm font-semibold mb-3" style="color: #7A726C;">
+      🧩 Missões por tipo — esta semana
+    </p>
+    <% if @missoes_por_tipo.any? %>
+      <%= pie_chart @missoes_por_tipo,
+            colors: ["#4A6FA5", "#4A8C5C", "#9C7A2E"],
+            height: "160px",
+            library: {
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: { color: "#4A4540", font: { size: 11 }, padding: 12 }
+                }
+              }
+            } %>
+    <% else %>
+      <p class="text-sm text-center py-4" style="color: #7A726C;">
+        Nenhuma missão esta semana 🌱
+      </p>
+    <% end %>
+  </div>
+
+  <%# MISSÕES RECENTES %>
+  <div class="rounded-2xl shadow-sm" style="background-color: #EDE8DF;">
+    <div class="px-4 pt-4 pb-2">
+      <p class="text-sm font-semibold" style="color: #7A726C;">
+        📋 Missões recentes
+      </p>
+    </div>
+    <% tentativas = @aluno.tentativas.order(concluida_em: :desc).limit(5) %>
+    <% if tentativas.any? %>
+      <% tentativas.each do |t| %>
+        <div class="flex items-center justify-between px-4 py-3 border-t"
+             style="border-color: #D9D0C4;">
+          <div>
+            <p class="text-sm font-semibold" style="color: #2A2520;">
+              <%= case t.tipo_missao
+                  when "leitura" then "🔤 Leitura Guiada"
+                  when "foco"    then "🎯 Missão de Foco"
+                  when "desafio" then "🧩 Desafio"
+                  end %>
+            </p>
+            <p class="text-xs" style="color: #7A726C;">
+              <%= t.concluida_em.strftime("%d/%m às %H:%M") %>
+            </p>
+          </div>
+          <span class="text-sm font-bold" style="color: #4A8C5C;">
+            +<%= t.xp_ganho %> XP
+          </span>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-sm text-center py-6 px-4" style="color: #7A726C;">
+        Nenhuma missão registrada ainda
+      </p>
+    <% end %>
+  </div>
+
+</div>

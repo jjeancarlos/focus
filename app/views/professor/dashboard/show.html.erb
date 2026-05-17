@@ -1,0 +1,89 @@
+<div class="min-h-screen pb-24 px-4 pt-8"
+     style="background-color: #F5F0E8;">
+
+  <%# HEADER %>
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold" style="color: #2C4A7C;">
+      Olá, <%= Current.user.name.split.first %>! 👋
+    </h1>
+    <p class="text-sm mt-1" style="color: #7A726C;">
+      Painel do professor
+    </p>
+  </div>
+
+  <%# KPIs %>
+  <div class="grid grid-cols-2 gap-3 mb-6">
+    <div class="rounded-2xl p-4 text-center shadow-sm"
+         style="background-color: #EDE8DF;">
+      <p class="text-3xl font-bold" style="color: #2C4A7C;">
+        <%= @total_alunos %>
+      </p>
+      <p class="text-xs mt-1" style="color: #7A726C;">alunos no total</p>
+    </div>
+    <div class="rounded-2xl p-4 text-center shadow-sm"
+         style="background-color: #EDE8DF;">
+      <p class="text-3xl font-bold" style="color: #4A6FA5;">
+        <%= @missoes_hoje %>
+      </p>
+      <p class="text-xs mt-1" style="color: #7A726C;">missões hoje</p>
+    </div>
+  </div>
+
+  <%# TURMAS %>
+  <div class="mb-6">
+    <p class="text-sm font-semibold mb-3" style="color: #7A726C;">
+      🏫 Minhas turmas
+    </p>
+
+    <% if @turmas.any? %>
+      <div class="space-y-3">
+        <% @turmas.each do |turma| %>
+          <%= link_to professor_turma_path(turma),
+                class: "block rounded-2xl p-5 shadow-sm",
+                style: "background-color: #EDE8DF;" do %>
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-base font-semibold" style="color: #2C4A7C;">
+                  <%= turma.nome %>
+                </p>
+                <p class="text-sm mt-1" style="color: #7A726C;">
+                  <%= turma.alunos.count %> alunos ·
+                  Código: <span class="font-bold tracking-widest"><%= turma.invite_token %></span>
+                </p>
+              </div>
+              <span style="color: #4A6FA5;">→</span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="rounded-2xl p-6 text-center shadow-sm"
+           style="background-color: #EDE8DF;">
+        <p class="text-base" style="color: #7A726C;">
+          Nenhuma turma criada ainda
+        </p>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ENVIAR RECADO %>
+  <div class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
+    <p class="text-sm font-semibold mb-3" style="color: #7A726C;">
+      📢 Enviar recado para todas as turmas
+    </p>
+    <%= form_with url: professor_recados_path, method: :post,
+          local: true do |form| %>
+      <%= form.text_area :mensagem,
+            placeholder: "Escreva uma mensagem de incentivo...",
+            rows: 3,
+            class: "w-full rounded-xl px-4 py-3 text-base outline-none resize-none",
+            style: "background-color: #F5F0E8; border: 1.5px solid #D9D0C4;
+                    color: #2A2520; font-size: 16px;" %>
+      <%= form.submit "Enviar recado 📨",
+            class: "mt-3 w-full rounded-full px-6 py-3 text-base
+                    font-semibold text-white cursor-pointer min-h-12",
+            style: "background-color: #4A6FA5; border: none;" %>
+    <% end %>
+  </div>
+
+</div>

@@ -14,14 +14,21 @@ module ApplicationHelper
   end
 
   def bottom_nav_items
+  if Current.user&.professor?
     [
-      { label: "Home", path: "/", icon: :home },
-      { label: "Missões", path: "/missoes", icon: :missions },
-      { label: "Histórico", path: "/aluno/dashboard", icon: :history },
-      { label: "Conquistas", path: "/conquistas", icon: :achievements },
-      { label: "Perfil", path: "/perfil", icon: :profile }
+      { label: "Dashboard", path: "/professor/dashboard", icon: :home },
+      { label: "Perfil",    path: "/perfil",              icon: :profile }
+    ]
+  else
+    [
+      { label: "Home",       path: "/",               icon: :home },
+      { label: "Missões",    path: "/missoes",         icon: :missions },
+      { label: "Histórico",  path: "/aluno/dashboard", icon: :history },
+      { label: "Conquistas", path: "/conquistas",      icon: :achievements },
+      { label: "Perfil",     path: "/perfil",          icon: :profile }
     ]
   end
+end
 
   def bottom_nav_link(item)
     active = bottom_nav_active?(item[:path])
@@ -40,9 +47,9 @@ module ApplicationHelper
   private
 
   def bottom_nav_active?(path)
-    return request.path == "/" if path == "/"
-    request.path == path || request.path.start_with?("#{path}/")
-  end
+  return request.path == "/" if path == "/"
+  request.path == path || request.path.start_with?("#{path}/")
+end
 
   def bottom_nav_icon(name, active:)
     color = active ? "#4A6FA5" : "#7A726C"

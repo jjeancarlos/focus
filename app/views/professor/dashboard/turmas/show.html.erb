@@ -1,0 +1,78 @@
+<div class="min-h-screen pb-24 px-4 pt-8"
+     style="background-color: #F5F0E8;">
+
+  <%# HEADER %>
+  <div class="flex items-center gap-3 mb-6">
+    <%= link_to professor_dashboard_path,
+          style: "color: #4A6FA5; font-size: 20px;" do %>
+      ←
+    <% end %>
+    <div>
+      <h1 class="text-xl font-bold" style="color: #2C4A7C;">
+        <%= @turma.nome %>
+      </h1>
+      <p class="text-sm" style="color: #7A726C;">
+        Código: <span class="font-bold tracking-widest"><%= @turma.invite_token %></span>
+        · <%= @alunos.count %> alunos
+      </p>
+    </div>
+  </div>
+
+  <%# LISTA DE ALUNOS %>
+  <% if @alunos.any? %>
+    <div class="space-y-3">
+      <% @alunos.each do |aluno| %>
+        <% ativo = aluno.tentativas.where(concluida_em: 5.days.ago..).any? %>
+        <%= link_to professor_turma_aluno_path(@turma, aluno),
+              class: "flex items-center gap-3 rounded-2xl p-4 shadow-sm",
+              style: "background-color: #EDE8DF;" do %>
+
+          <%# AVATAR %>
+          <div class="rounded-full flex items-center justify-center
+                      text-white text-sm font-bold flex-shrink-0"
+               style="width: 44px; height: 44px;
+                      background-color: #4A6FA5;">
+            <%= aluno.name.first.upcase %>
+          </div>
+
+          <%# INFO %>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-semibold truncate"
+               style="color: #2A2520;">
+              <%= aluno.name %>
+            </p>
+            <p class="text-xs" style="color: #7A726C;">
+              Nível <%= aluno.nivel %> · <%= aluno.xp_total %> XP ·
+              <%= aluno.sequencia_dias %> dias seguidos
+            </p>
+          </div>
+
+          <%# STATUS %>
+          <div class="flex flex-col items-center gap-1 flex-shrink-0">
+            <div class="rounded-full"
+                 style="width: 10px; height: 10px;
+                        background-color: <%= ativo ? '#4A8C5C' : '#9C7A2E' %>;">
+            </div>
+            <span class="text-xs" style="color: #7A726C;">
+              <%= ativo ? "ativo" : "inativo" %>
+            </span>
+          </div>
+
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="rounded-2xl p-8 text-center shadow-sm"
+         style="background-color: #EDE8DF;">
+      <p class="text-base" style="color: #7A726C;">
+        Nenhum aluno nessa turma ainda
+      </p>
+      <p class="text-sm mt-2" style="color: #7A726C;">
+        Compartilhe o código
+        <span class="font-bold text-[#4A6FA5]"><%= @turma.invite_token %></span>
+        com seus alunos
+      </p>
+    </div>
+  <% end %>
+
+</div>
