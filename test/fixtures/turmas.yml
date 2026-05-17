@@ -1,11 +1,9 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  nome: MyString
-  invite_token: MyString
-  professor_id: 1
+  nome: Turma A
+  invite_token: TURMAA1
+  professor: two
 
 two:
-  nome: MyString
-  invite_token: MyString
-  professor_id: 1
+  nome: Turma B
+  invite_token: TURMAB1
+  professor: two

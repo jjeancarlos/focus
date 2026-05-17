@@ -37,4 +37,5 @@
 /config/*.key
 
 /vendor/bundle
-/.docs
+/.docsPRIVATE
+/fix

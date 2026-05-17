@@ -16,8 +16,10 @@ class NotificacoesController < ApplicationController
   private
 
   def recados_do_aluno
-    return Recado.none unless Current.user.turma
+    return Recado.where(aluno_id: Current.user.id) if Current.user.turma.blank?
+
     Recado.where(turma: Current.user.turma)
+          .or(Recado.where(aluno_id: Current.user.id))
   end
 
   def recados_nao_lidos

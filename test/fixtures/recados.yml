@@ -1,11 +1,23 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+turma_recado:
+  id: 1001
+  mensagem: Recado da turma
+  professor: two
+  turma: one
+  aluno_id:
+  lido: false
 
-one:
-  mensagem: MyText
-  professor_id: 1
-  turma_id: 1
+individual_recado:
+  id: 1002
+  mensagem: Recado individual
+  professor: two
+  turma_id:
+  aluno_id: 980190962
+  lido: false
 
-two:
-  mensagem: MyText
-  professor_id: 1
-  turma_id: 1
+outro_individual:
+  id: 1003
+  mensagem: Recado para outro aluno
+  professor: two
+  turma_id:
+  aluno_id: 113629430
+  lido: false
