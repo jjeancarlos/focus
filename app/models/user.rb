@@ -19,6 +19,7 @@ class User < ApplicationRecord
          dependent: :destroy
   has_many :sessions, dependent: :destroy
   has_many :tentativas, foreign_key: :aluno_id, dependent: :destroy
+  has_many :recados_individuais, class_name: "Recado", foreign_key: :aluno_id, dependent: :nullify
   has_many :atividades, through: :tentativas
   belongs_to :turma, optional: true
   has_one_attached :foto

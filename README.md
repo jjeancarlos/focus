@@ -28,10 +28,11 @@ Problemas que o software se propõe a resolver:
 
 ### Frontend
 
-- Tailwind CSS
-- Stimulus
+- Tailwind CSS v4 via `tailwindcss-rails`
+- Chartkick
+- Chart.js
+- Propshaft
 - Turbo
-- Importmap
 
 ### Bibliotecas e ferramentas principais
 
@@ -46,7 +47,6 @@ Problemas que o software se propõe a resolver:
 
 - Foreman
 - Docker
-- Docker Compose
 - dotenv
 
 ## Abordagens e metodologias utilizadas
@@ -67,10 +67,8 @@ Problemas que o software se propõe a resolver:
 - Bundler 4.0.3
 - PostgreSQL
 - Node.js
-- Yarn
 - Foreman
 - Docker
-- Docker Compose
 
 ### Configuração inicial
 
@@ -79,16 +77,7 @@ bundle install
 cp .env.example .env
 ```
 
-Preencha o arquivo `.env` com as variáveis necessárias:
-
-```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=seu_usuario
-DB_PASSWORD=sua_senha
-DB_NAME_DEV=focus_development
-DB_NAME_TEST=focus_test
-```
+Preencha o arquivo `.env` com as variáveis necessárias.
 
 ### Banco de dados
 
@@ -140,7 +129,7 @@ foreman start -f Procfile.dev
 
 ### Acesso local
 
-Após iniciar o projeto, a aplicação ficará disponível no endereço padrão do Rails:
+Após iniciar o projeto, a aplicação ficará disponível em:
 
 ```txt
 http://localhost:3000
@@ -149,8 +138,8 @@ http://localhost:3000
 ### Execução com Docker
 
 ```bash
-docker compose build
-docker compose up
+docker build -t focus .
+docker run --env-file .env -p 3000:3000 focus
 ```
 
 ## Estrutura funcional do projeto
@@ -162,12 +151,18 @@ Atualmente o sistema possui funcionalidades como:
 - missões por tipo: leitura, foco e desafio
 - cálculo de XP por desempenho
 - acompanhamento de nível e sequência
+- tela de conquistas
+- histórico do aluno com gráficos semanais
 - edição de perfil com foto
+- gestão de turmas para professores
+- envio de recados para alunos
+- PWA com manifesto e service worker
 
-## Diagrama do modelo lógico do banco de dados
+## Tipos de usuário
 
-> Inserir imagem do modelo lógico aqui
+- `aluno`
+- `professor`
 
-```md
-![Diagrama do modelo lógico](./docs/modelo-logico.png)
-```
+## Modelo lógico do banco de dados
+
+![Diagrama do modelo lógico](./.docs/modelo-logico-banco.png)

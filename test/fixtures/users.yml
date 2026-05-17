@@ -9,6 +9,7 @@ one:
   xp_total: 0
   nivel: 1
   sequencia_dias: 0
+  turma: one
 
 two:
   name: Professor Dois
@@ -19,3 +20,14 @@ two:
   xp_total: 10
   nivel: 2
   sequencia_dias: 3
+
+three:
+  name: Aluno Três
+  email_address: three@example.com
+  password_digest: <%= password_digest %>
+  role: aluno
+  perfil_acessibilidade: ambos
+  xp_total: 5
+  nivel: 1
+  sequencia_dias: 1
+  turma: one
