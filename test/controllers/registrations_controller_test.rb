@@ -1,6 +1,8 @@
 require "test_helper"
 
 class RegistrationsControllerTest < ActionDispatch::IntegrationTest
+  setup { @existing_user = User.take }
+
   test "new" do
     get cadastro_path
     assert_response :success
@@ -35,6 +37,24 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
+    assert_select "div", /Quase lá! Revise os campos para continuar\./
+  end
+
+  test "create with duplicated email shows login link" do
+    assert_no_difference("User.count") do
+      post cadastro_path, params: {
+        user: {
+          name: "Pessoa Duplicada",
+          email_address: @existing_user.email_address.upcase,
+          password: "password",
+          password_confirmation: "password"
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "a[href='#{new_session_path}']", /fazer login/
+    assert_select "li", /Esse email já está cadastrado\./
   end
 
   test "perfil redirects when no pending user exists" do
@@ -62,6 +82,21 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "ambos", user.reload.perfil_acessibilidade
   end
 
+  test "update perfil ignores stale return path and goes to root" do
+    post cadastro_path, params: {
+      user: {
+        name: "Nova Pessoa",
+        email_address: "stale@example.com",
+        password: "password",
+        password_confirmation: "password"
+      }
+    }
+
+    patch cadastro_perfil_path, params: { user: { perfil_acessibilidade: "tdh" }, return_to: "/missoes" }
+
+    assert_redirected_to root_path
+  end
+
   test "update perfil with invalid params rerenders step" do
     post cadastro_path, params: {
       user: {
@@ -78,5 +113,6 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
     assert_nil user.reload.perfil_acessibilidade
+    assert_select "div", /Quase lá! Escolha o perfil que combina com você\./
   end
 end

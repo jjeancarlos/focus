@@ -24,12 +24,12 @@ class User < ApplicationRecord
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
-  validates :name,          presence: true
-  validates :email_address, presence: true, uniqueness: true
-  validates :role,          presence: true, inclusion: { in: ROLES }
+  validates :name, presence: true
+  validates :email_address, presence: true, uniqueness: { message: "Esse email já está cadastrado. Tente fazer login." }
+  validates :role, presence: true, inclusion: { in: ROLES }
   validates :perfil_acessibilidade, inclusion: { in: PROFILES }, allow_nil: true
   validates :perfil_acessibilidade, presence: true, if: :require_profile_completion?
-  validate  :foto_deve_ser_imagem
+  validate :foto_deve_ser_imagem
 
   def self.nivel_para_xp(xp_total)
     NIVEIS.each do |nivel, dados|
@@ -78,9 +78,11 @@ class User < ApplicationRecord
 
   def foto_deve_ser_imagem
     return unless foto.attached?
+
     unless foto.content_type.in?(%w[image/png image/jpeg image/jpg image/webp])
       errors.add(:foto, "deve ser uma imagem PNG, JPG ou WEBP")
     end
+
     if foto.byte_size > 5.megabytes
       errors.add(:foto, "deve ter menos de 5MB")
     end
