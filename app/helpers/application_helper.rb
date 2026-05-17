@@ -23,7 +23,7 @@ module ApplicationHelper
     end
   end
 
-  def bottom_nav_items
+ def bottom_nav_items
   if Current.user&.professor?
     [
       { label: "Dashboard", path: "/professor/dashboard", icon: :home },
@@ -31,7 +31,6 @@ module ApplicationHelper
     ]
   else
     [
-      { label: "Home",       path: "/",               icon: :home },
       { label: "Missões",    path: "/missoes",         icon: :missions },
       { label: "Histórico",  path: "/aluno/dashboard", icon: :history },
       { label: "Conquistas", path: "/conquistas",      icon: :achievements },
