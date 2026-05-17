@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-3xl space-y-6 pb-8">
+<div class="mx-auto max-w-3xl space-y-6 pb-8" data-resultado-root>
   <div class="rounded-2xl p-6 text-center shadow-sm" style="background-color: #EDE8DF;">
     <p class="text-sm font-semibold uppercase tracking-wide" style="color: #7A726C;">Missão concluída</p>
     <h1 class="mt-2 text-4xl font-bold" style="color: #2C4A7C;">+<%= @tentativa.xp_ganho %> XP</h1>
@@ -7,7 +7,22 @@
   </div>
 
   <div class="space-y-3">
-    <%= link_to "Fazer outra missão", missoes_path, class: "block w-full rounded-full px-6 py-4 text-center text-base font-semibold text-white", style: "background-color: #4A6FA5;" %>
-    <%= link_to "Ver meu progresso", aluno_dashboard_path, class: "block w-full rounded-full px-6 py-4 text-center text-base font-semibold", style: "background-color: #EDE8DF; color: #2C4A7C;" %>
+    <%= link_to "Fazer outra missão", missoes_path, class: "block w-full rounded-full px-6 py-4 text-center text-base font-semibold text-white", style: "background-color: #4A6FA5; min-height: 48px;" %>
+    <%= link_to "Ver meu progresso", aluno_dashboard_path, class: "block w-full rounded-full px-6 py-4 text-center text-base font-semibold", style: "background-color: #EDE8DF; color: #2C4A7C; min-height: 48px;" %>
   </div>
 </div>
+
+<% if @mostrar_modal_conclusao %>
+  <div class="fixed inset-0 z-50 flex items-center justify-center px-4" data-conclusao-modal>
+    <div class="absolute inset-0" style="background-color: rgba(28, 25, 23, 0.65);"></div>
+    <div class="relative z-10 w-full max-w-lg rounded-2xl px-6 py-8 text-center shadow-xl" style="background-color: #EDE8DF;">
+      <div class="space-y-4">
+        <div class="text-5xl" style="color: #3B6FE8;"><i class="fa-solid fa-party-horn" aria-hidden="true"></i></div>
+        <h2 class="text-2xl font-bold" style="color: #2C4A7C;">Incrível! Você completou o dia!</h2>
+        <p class="text-base leading-relaxed" style="color: #7A726C;">Você fez 10 missões hoje. Descanse e volte amanhã para continuar sua sequência!</p>
+        <p class="text-lg font-semibold" style="color: #4A6FA5;">XP ganho hoje: <%= @xp_hoje %> XP</p>
+        <%= link_to "Ver meu progresso", aluno_dashboard_path, class: "block w-full rounded-full px-6 py-4 text-base font-semibold text-white", style: "background-color: #4A6FA5; min-height: 48px;" %>
+      </div>
+    </div>
+  </div>
+<% end %>

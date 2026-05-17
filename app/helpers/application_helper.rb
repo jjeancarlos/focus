@@ -7,6 +7,16 @@ module ApplicationHelper
     end
   end
 
+  def flash_message_icon(type)
+    icon_classes = if type.to_sym.in?([:notice, :success])
+      "fa-solid fa-circle-check"
+    else
+      "fa-solid fa-triangle-exclamation"
+    end
+
+    content_tag(:i, nil, class: icon_classes, aria: { hidden: true })
+  end
+
   def mission_icon(name)
     content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", stroke: "#2C4A7C", "stroke-width": 1.8, class: "h-8 w-8", aria: { hidden: true }) do
       safe_join(mission_icon_elements(name))

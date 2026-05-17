@@ -4,6 +4,12 @@
     <p class="text-base" style="color: #7A726C;">Selecione o tipo de prática que faz mais sentido para você agora.</p>
   </div>
 
+  <% if flash[:alert] == "limite_atingido" %>
+    <div class="rounded-2xl px-4 py-4 shadow-sm" style="background-color: #F5E9C8;">
+      <p class="text-base font-semibold leading-relaxed" style="color: #7A5A00;">Você completou suas 10 missões de hoje. Descanse um pouco e volte amanhã para continuar sua sequência.</p>
+    </div>
+  <% end %>
+
   <div class="space-y-4">
     <% cards = [
       {
@@ -34,7 +40,23 @@
       <% classes = "block rounded-2xl px-4 py-6 shadow-sm" %>
       <% style = "background-color: #EDE8DF;" %>
 
-      <% if disponivel %>
+      <% if @limite_diario_atingido %>
+        <div class="relative rounded-2xl px-4 py-6 shadow-sm opacity-50 cursor-not-allowed" style="background-color: #EDE8DF;">
+          <div class="absolute right-4 top-4 rounded-full px-3 py-2 text-sm font-semibold" style="background-color: #F5E9C8; color: #7A5A00;">
+            Disponível amanhã <i class="fa-solid fa-clock" aria-hidden="true"></i>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full" style="background-color: #DDE6F2;">
+              <%= mission_icon(card[:icon]) %>
+            </div>
+            <div class="space-y-2">
+              <h2 class="text-xl font-semibold" style="color: #2C4A7C;"><%= card[:titulo] %></h2>
+              <p class="text-base leading-relaxed" style="color: #7A726C;"><%= card[:descricao] %></p>
+              <p class="text-base font-semibold" style="color: #4A8C5C;"><%= card[:xp] %></p>
+            </div>
+          </div>
+        </div>
+      <% elsif disponivel %>
         <%= link_to missao_path(card[:tipo]), class: classes, style: style do %>
           <div class="flex items-start gap-4">
             <div class="flex h-12 w-12 items-center justify-center rounded-full" style="background-color: #DDE6F2;">

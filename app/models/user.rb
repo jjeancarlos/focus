@@ -50,6 +50,18 @@ class User < ApplicationRecord
     perfil_acessibilidade.blank?
   end
 
+  def missoes_hoje
+    tentativas.where(concluida_em: Time.zone.today.all_day).count
+  end
+
+  def limite_diario_atingido?
+    missoes_hoje >= 10
+  end
+
+  def xp_hoje
+    tentativas.where(concluida_em: Time.zone.today.all_day).sum(:xp_ganho)
+  end
+
   def recalcular_nivel!
     self.nivel = self.class.nivel_para_xp(xp_total)
   end

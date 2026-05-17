@@ -1,9 +1,8 @@
 class Professor::TurmasController < ApplicationController
+  before_action :require_professor
+
   def show
-    @turma = Turma.find_by!(
-      id: params[:id],
-      professor_id: Current.user.id
-    )
+    @turma = Turma.find_by!(id: params[:id], professor_id: Current.user.id)
     @alunos = @turma.alunos.order(:name)
   end
 
@@ -16,8 +15,7 @@ class Professor::TurmasController < ApplicationController
     @turma.professor_id = Current.user.id
 
     if @turma.save
-      redirect_to professor_dashboard_path,
-        notice: "Turma criada! Código: #{@turma.invite_token} 🎉"
+      redirect_to professor_dashboard_path, notice: "Turma criada! Código: #{@turma.invite_token}"
     else
       flash.now[:alert] = "Verifique os campos e tente novamente."
       render :new, status: :unprocessable_entity
@@ -25,8 +23,11 @@ class Professor::TurmasController < ApplicationController
   end
 
   private
+    def turma_params
+      params.require(:turma).permit(:nome)
+    end
 
-  def turma_params
-    params.require(:turma).permit(:nome)
-  end
+    def require_professor
+      redirect_to root_path, alert: "Quase lá! Esta área é exclusiva para professores." unless Current.user&.professor?
+    end
 end

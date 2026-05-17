@@ -4,8 +4,10 @@
   <%# HEADER %>
   <div class="flex items-center gap-3 mb-6">
     <%= link_to professor_turma_path(@turma),
-          style: "color: #4A6FA5; font-size: 20px;" do %>
-      ←
+          class: "inline-flex items-center gap-2 text-sm font-semibold",
+          style: "color: #4A6FA5;" do %>
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      <span>Voltar</span>
     <% end %>
     <div>
       <h1 class="text-xl font-bold" style="color: #2C4A7C;">
@@ -14,9 +16,9 @@
       <p class="text-sm" style="color: #7A726C;">
         <%= @turma.nome %> ·
         <%= case @aluno.perfil_acessibilidade
-            when "dislexia" then "🔤 Dislexia"
-            when "tdh"      then "🎯 TDH"
-            when "ambos"    then "🔤🎯 Ambos"
+            when "dislexia" then raw('<i class="fa-solid fa-book-open" aria-hidden="true"></i> Dislexia')
+            when "tdh"      then raw('<i class="fa-solid fa-bullseye" aria-hidden="true"></i> TDH')
+            when "ambos"    then raw('<i class="fa-solid fa-book-open" aria-hidden="true"></i> <i class="fa-solid fa-bullseye" aria-hidden="true"></i> Ambos')
             else "Sem perfil"
             end %>
       </p>
@@ -52,7 +54,7 @@
   <div class="rounded-2xl p-4 mb-4 shadow-sm"
        style="background-color: #EDE8DF;">
     <p class="text-sm font-semibold mb-3" style="color: #7A726C;">
-      📈 XP por dia — últimos 7 dias
+      <i class="fa-solid fa-chart-line" aria-hidden="true"></i> XP por dia — últimos 7 dias
     </p>
     <% if @xp_por_dia.any? %>
       <%= bar_chart @xp_por_dia,
@@ -70,7 +72,7 @@
             } %>
     <% else %>
       <p class="text-sm text-center py-4" style="color: #7A726C;">
-        Nenhuma missão esta semana 🌱
+        <i class="fa-solid fa-seedling" aria-hidden="true"></i> Nenhuma missão esta semana
       </p>
     <% end %>
   </div>
@@ -79,7 +81,7 @@
   <div class="rounded-2xl p-4 mb-4 shadow-sm"
        style="background-color: #EDE8DF;">
     <p class="text-sm font-semibold mb-3" style="color: #7A726C;">
-      🧩 Missões por tipo — esta semana
+      <i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i> Missões por tipo — esta semana
     </p>
     <% if @missoes_por_tipo.any? %>
       <%= pie_chart @missoes_por_tipo,
@@ -95,7 +97,7 @@
             } %>
     <% else %>
       <p class="text-sm text-center py-4" style="color: #7A726C;">
-        Nenhuma missão esta semana 🌱
+        <i class="fa-solid fa-seedling" aria-hidden="true"></i> Nenhuma missão esta semana
       </p>
     <% end %>
   </div>
@@ -104,7 +106,7 @@
   <div class="rounded-2xl shadow-sm" style="background-color: #EDE8DF;">
     <div class="px-4 pt-4 pb-2">
       <p class="text-sm font-semibold" style="color: #7A726C;">
-        📋 Missões recentes
+        <i class="fa-solid fa-clipboard-list" aria-hidden="true"></i> Missões recentes
       </p>
     </div>
     <% tentativas = @aluno.tentativas.order(concluida_em: :desc).limit(5) %>
@@ -115,9 +117,9 @@
           <div>
             <p class="text-sm font-semibold" style="color: #2A2520;">
               <%= case t.tipo_missao
-                  when "leitura" then "🔤 Leitura Guiada"
-                  when "foco"    then "🎯 Missão de Foco"
-                  when "desafio" then "🧩 Desafio"
+                  when "leitura" then raw('<i class="fa-solid fa-book-open" aria-hidden="true"></i> Leitura Guiada')
+                  when "foco"    then raw('<i class="fa-solid fa-bullseye" aria-hidden="true"></i> Missão de Foco')
+                  when "desafio" then raw('<i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i> Desafio')
                   end %>
             </p>
             <p class="text-xs" style="color: #7A726C;">

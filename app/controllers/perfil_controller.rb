@@ -6,7 +6,7 @@ class PerfilController < ApplicationController
   def update
     @user = Current.user
     if @user.update(perfil_params)
-      redirect_to perfil_path, notice: "Perfil atualizado com sucesso! ✅"
+      redirect_to perfil_path, notice: "Perfil atualizado com sucesso!"
     else
       flash.now[:alert] = "Quase lá! Revise as informações."
       render :show, status: :unprocessable_entity

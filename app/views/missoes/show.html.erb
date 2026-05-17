@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-3xl space-y-6 pb-8" data-missao-root data-missao-tipo="<%= @atividade.tipo %>" data-duration="<%= @tempo_visual %>">
+<div class="mx-auto max-w-3xl space-y-6 pb-8" data-missao-root data-missao-tipo="<%= @atividade.tipo %>" data-duration="<%= @tempo_visual %>" data-feedback-messages="<%= json_escape(@feedback_messages.to_json) %>">
   <div class="space-y-2">
     <p class="text-sm font-semibold uppercase tracking-wide" style="color: #7A726C;"><%= @atividade.tipo.humanize %></p>
     <h1 class="text-2xl font-bold" style="color: #2C4A7C;"><%= @atividade.titulo %></h1>
@@ -19,7 +19,7 @@
     </div>
   <% end %>
 
-  <%= form_with url: responder_missao_path(@atividade.tipo), method: :post, local: true, class: "space-y-6" do |form| %>
+  <%= form_with url: responder_missao_path(@atividade.tipo), method: :post, local: true, class: "space-y-6", data: { missao_form: true } do |form| %>
     <% if @atividade.tipo == "leitura" %>
       <div class="rounded-2xl p-6 shadow-sm" style="background-color: #EDE8DF;">
         <p class="text-base leading-loose" style="color: #1C1917;"><%= simple_format(@atividade.conteudo) %></p>
@@ -42,72 +42,67 @@
           <%= image_tag asset_path(@atividade.imagem_url), class: "w-full rounded-2xl object-cover", style: "max-height: 280px;", alt: "Imagem da missão de foco" %>
         </div>
       </div>
-      <p class="hidden rounded-2xl px-4 py-3 text-base font-medium" data-foco-feedback style="background-color: #DDE6F2; color: #2C4A7C;">
-        Boa observação. Continue assim.
-      </p>
     <% end %>
 
     <div data-perguntas-container class="space-y-4 <%= @atividade.tipo == "foco" ? "hidden" : "" %>">
       <% @perguntas.each_with_index do |pergunta, index| %>
-        <% if @atividade.tipo == "desafio" %>
-          <div class="rounded-2xl p-5 shadow-sm" style="background-color: #EDE8DF;" data-desafio-item data-desafio-id="<%= pergunta["id"] %>">
-            <div class="space-y-4">
-              <div>
-                <p class="text-sm font-semibold" style="color: #7A726C;">Etapa <%= index + 1 %></p>
-                <h2 class="text-lg font-semibold" style="color: #2C4A7C;"><%= pergunta["enunciado"] %></h2>
-              </div>
+        <% correta_texto = if @atividade.tipo == "desafio"
+             Array(pergunta["ordem_correta"]).join(" ")
+           else
+             Array(pergunta["opcoes"])[pergunta["correta_index"].to_i]
+           end %>
+        <% proximo_label = index == @perguntas.size - 1 ? "Ver resultado" : "Próxima pergunta" %>
 
-              <div class="flex min-h-16 flex-wrap gap-2 rounded-2xl border border-dashed p-3" style="border-color: #B8C9E0; background-color: #F5F0E8;" data-desafio-resposta></div>
-              <input type="hidden" name="desafio_respostas[<%= pergunta["id"] %>]" value="" data-desafio-input>
-
-              <div class="flex flex-wrap gap-2" data-desafio-banco>
-                <% @palavras_embaralhadas[pergunta].each do |palavra| %>
-                  <button type="button" class="rounded-full px-4 py-3 text-base font-semibold" style="background-color: #DDE6F2; color: #2C4A7C;" data-palavra><%= palavra %></button>
-                <% end %>
-              </div>
+        <div class="rounded-2xl p-5 shadow-sm <%= index.zero? ? "" : "hidden" %>" style="background-color: #EDE8DF;" data-question-card data-question-index="<%= index %>" data-next-label="<%= proximo_label %>" data-correct-text="<%= correta_texto %>">
+          <div class="space-y-4">
+            <div>
+              <p class="text-sm font-semibold" style="color: #7A726C;">
+                <%= @atividade.tipo == "desafio" ? "Etapa" : "Pergunta" %> <%= index + 1 %>
+              </p>
+              <h2 class="text-lg font-semibold" style="color: #2C4A7C;"><%= pergunta["enunciado"] %></h2>
             </div>
-          </div>
-        <% elsif @atividade.tipo == "foco" %>
-          <div class="rounded-2xl p-5 shadow-sm <%= index.zero? ? "" : "hidden" %>" style="background-color: #EDE8DF;" data-foco-pergunta>
-            <div class="space-y-4">
-              <div>
-                <p class="text-sm font-semibold" style="color: #7A726C;">Pergunta <%= index + 1 %></p>
-                <h2 class="text-lg font-semibold" style="color: #2C4A7C;"><%= pergunta["enunciado"] %></h2>
-              </div>
 
+            <% if @atividade.tipo == "desafio" %>
+              <div class="space-y-4" data-desafio-item data-correct-order="<%= Array(pergunta["ordem_correta"]).join("||") %>">
+                <div class="flex min-h-16 flex-wrap gap-2 rounded-2xl border border-dashed p-3" style="border-color: #B8C9E0; background-color: #F5F0E8;" data-desafio-resposta></div>
+                <input type="hidden" name="desafio_respostas[<%= pergunta["id"] %>]" value="" data-desafio-input>
+
+                <div class="flex flex-wrap gap-2" data-desafio-banco>
+                  <% @palavras_embaralhadas[pergunta].each do |palavra| %>
+                    <button type="button" class="rounded-full px-4 py-3 text-base font-semibold" style="background-color: #DDE6F2; color: #2C4A7C; min-height: 48px;" data-palavra><%= palavra %></button>
+                  <% end %>
+                </div>
+
+                <button type="button" class="w-full rounded-full px-6 py-4 text-base font-semibold text-white" style="background-color: #4A6FA5; min-height: 48px;" data-check-answer>
+                  <%= proximo_label %>
+                </button>
+              </div>
+            <% else %>
               <div class="space-y-3">
                 <% Array(pergunta["opcoes"]).each_with_index do |opcao, opcao_index| %>
-                  <label class="block cursor-pointer rounded-2xl border px-4 py-4 text-base font-semibold transition" style="border-color: #D9D0C4; background-color: #F5F0E8; min-height: 48px; color: #1C1917;" data-foco-opcao>
-                    <%= radio_button_tag "respostas[#{pergunta["id"]}]", opcao_index, false, class: "sr-only", required: true %>
+                  <label class="block cursor-pointer rounded-2xl border px-4 py-4 text-base font-semibold transition" style="border-color: #D9D0C4; background-color: #F5F0E8; min-height: 48px; color: #1C1917;" data-choice-option data-correct="<%= opcao_index == pergunta["correta_index"].to_i %>">
+                    <%= radio_button_tag "respostas[#{pergunta["id"]}]", opcao_index, false, class: "sr-only", required: index.zero? %>
                     <span><%= opcao %></span>
                   </label>
                 <% end %>
               </div>
-            </div>
-          </div>
-        <% else %>
-          <div class="rounded-2xl p-5 shadow-sm" style="background-color: #EDE8DF;">
-            <div class="space-y-4">
-              <div>
-                <p class="text-sm font-semibold" style="color: #7A726C;">Pergunta <%= index + 1 %></p>
-                <h2 class="text-lg font-semibold" style="color: #2C4A7C;"><%= pergunta["enunciado"] %></h2>
-              </div>
+            <% end %>
 
-              <div class="space-y-3">
-                <% Array(pergunta["opcoes"]).each_with_index do |opcao, opcao_index| %>
-                  <label class="flex cursor-pointer items-center gap-3 rounded-2xl border px-4 py-4" style="border-color: #D9D0C4; background-color: #F5F0E8; min-height: 48px;">
-                    <%= radio_button_tag "respostas[#{pergunta["id"]}]", opcao_index, false, class: "h-5 w-5", required: true %>
-                    <span class="text-base" style="color: #1C1917;"><%= opcao %></span>
-                  </label>
-                <% end %>
-              </div>
+            <div class="hidden space-y-4 rounded-2xl px-4 py-4" data-answer-feedback style="background-color: #F5E9C8;">
+              <p class="text-base font-semibold leading-relaxed" data-feedback-message style="color: #7A5A00;"></p>
+              <p class="text-base leading-relaxed" style="color: #7A726C;">
+                Resposta correta: <span class="font-semibold" data-feedback-correct style="color: #2C4A7C;"></span>
+              </p>
+              <button type="button" class="w-full rounded-full px-6 py-4 text-base font-semibold text-white" style="background-color: #4A6FA5; min-height: 48px;" data-feedback-next>
+                <%= proximo_label %>
+              </button>
             </div>
           </div>
-        <% end %>
+        </div>
       <% end %>
     </div>
 
-    <%= form.submit "Concluir missão", class: "w-full rounded-full px-6 py-4 text-base font-semibold text-white #{@atividade.tipo == "foco" ? "hidden" : ""}", style: "background-color: #4A6FA5;", disabled: (@atividade.tipo == "foco"), data: { submit_missao: true } %>
+    <%= form.submit "Ver resultado", class: "hidden w-full rounded-full px-6 py-4 text-base font-semibold text-white", style: "background-color: #4A6FA5; min-height: 48px;", data: { submit_missao: true } %>
   <% end %>
 </div>
 
@@ -122,6 +117,146 @@
     const duration = Number(root.dataset.duration || 0);
     const timerBar = root.querySelector("[data-timer-bar]");
     const timerMessage = root.querySelector("[data-timer-message]");
+    const questions = Array.from(root.querySelectorAll("[data-question-card]"));
+    const submit = root.querySelector("[data-submit-missao]");
+    const feedbackTemplates = JSON.parse(root.dataset.feedbackMessages || "[]");
+
+    const feedbackMessageFor = () => {
+      const templates = feedbackTemplates.length > 0 ? feedbackTemplates : [{ icon: "fa-solid fa-hand-fist", text: "Quase lá! Continue tentando." }];
+      return templates[Math.floor(Math.random() * templates.length)];
+    };
+
+    const showQuestion = (index) => {
+      questions.forEach((question, currentIndex) => {
+        question.classList.toggle("hidden", currentIndex !== index);
+      });
+    };
+
+    const finishMission = () => {
+      if (submit) {
+        submit.classList.remove("hidden");
+        submit.click();
+      }
+    };
+
+    const goToNextStep = (index) => {
+      const nextQuestion = questions[index + 1];
+      if (nextQuestion) {
+        showQuestion(index + 1);
+      } else {
+        finishMission();
+      }
+    };
+
+    const showFeedback = (question, message) => {
+      const feedback = question.querySelector("[data-answer-feedback]");
+      const feedbackText = question.querySelector("[data-feedback-message]");
+      const feedbackCorrect = question.querySelector("[data-feedback-correct]");
+
+      if (!feedback || !feedbackText || !feedbackCorrect) return;
+
+      feedbackText.innerHTML = `<i class="${message.icon}" aria-hidden="true"></i> ${message.text}`;
+      feedbackCorrect.textContent = question.dataset.correctText;
+      feedback.classList.remove("hidden");
+    };
+
+    const hideFeedback = (question) => {
+      const feedback = question.querySelector("[data-answer-feedback]");
+      if (feedback) feedback.classList.add("hidden");
+    };
+
+    const lockChoices = (question) => {
+      question.querySelectorAll("[data-choice-option]").forEach((option) => {
+        option.classList.add("pointer-events-none");
+      });
+    };
+
+    const updateChoiceStyles = (question) => {
+      question.querySelectorAll("[data-choice-option]").forEach((option) => {
+        const input = option.querySelector('input[type="radio"]');
+        if (input.checked) {
+          option.style.backgroundColor = "#D4E0F0";
+          option.style.borderColor = "#AFC4E0";
+          option.style.color = "#2C4A7C";
+        } else {
+          option.style.backgroundColor = "#F5F0E8";
+          option.style.borderColor = "#D9D0C4";
+          option.style.color = "#1C1917";
+        }
+      });
+    };
+
+    questions.forEach((question, index) => {
+      const nextButton = question.querySelector("[data-feedback-next]");
+      if (nextButton) {
+        nextButton.addEventListener("click", () => {
+          hideFeedback(question);
+          goToNextStep(index);
+        });
+      }
+
+      question.querySelectorAll('input[type="radio"]').forEach((input) => {
+        input.addEventListener("change", () => {
+          updateChoiceStyles(question);
+          lockChoices(question);
+          input.required = false;
+
+          if (input.closest("[data-choice-option]")?.dataset.correct === "true") {
+            goToNextStep(index);
+          } else {
+            showFeedback(question, feedbackMessageFor());
+          }
+        });
+      });
+
+      const desafioItem = question.querySelector("[data-desafio-item]");
+      if (desafioItem) {
+        const banco = desafioItem.querySelector("[data-desafio-banco]");
+        const resposta = desafioItem.querySelector("[data-desafio-resposta]");
+        const input = desafioItem.querySelector("[data-desafio-input]");
+        const checkButton = desafioItem.querySelector("[data-check-answer]");
+        const correctOrder = desafioItem.dataset.correctOrder || "";
+
+        const sync = () => {
+          const palavras = Array.from(resposta.querySelectorAll("button[data-palavra-selecionada]")).map((node) => node.dataset.value);
+          input.value = palavras.join("||");
+        };
+
+        banco.querySelectorAll("[data-palavra]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const selected = document.createElement("button");
+            selected.type = "button";
+            selected.dataset.palavraSelecionada = "true";
+            selected.dataset.value = button.textContent.trim();
+            selected.className = "rounded-full px-4 py-3 text-base font-semibold";
+            selected.style.backgroundColor = "#4A6FA5";
+            selected.style.color = "#FFFFFF";
+            selected.style.minHeight = "48px";
+            selected.textContent = button.textContent.trim();
+
+            selected.addEventListener("click", () => {
+              button.classList.remove("hidden");
+              selected.remove();
+              sync();
+            });
+
+            resposta.appendChild(selected);
+            button.classList.add("hidden");
+            sync();
+          });
+        });
+
+        checkButton?.addEventListener("click", () => {
+          if (!input.value.length) return;
+
+          if (input.value === correctOrder) {
+            goToNextStep(index);
+          } else {
+            showFeedback(question, feedbackMessageFor());
+          }
+        });
+      }
+    });
 
     if (timerBar && duration > 0) {
       requestAnimationFrame(() => {
@@ -133,44 +268,7 @@
     if (tipo === "foco") {
       const imagem = root.querySelector("[data-foco-imagem]");
       const perguntasContainer = root.querySelector("[data-perguntas-container]");
-      const perguntas = Array.from(root.querySelectorAll("[data-foco-pergunta]"));
-      const feedback = root.querySelector("[data-foco-feedback]");
-      const submit = root.querySelector("[data-submit-missao]");
       const focusTimer = root.querySelector("[data-foco-timer]");
-
-      const showQuestion = (index) => {
-        perguntas.forEach((pergunta, currentIndex) => {
-          pergunta.classList.toggle("hidden", currentIndex !== index);
-        });
-      };
-
-      const updateOptionStyles = (question) => {
-        question.querySelectorAll("[data-foco-opcao]").forEach((option) => {
-          const input = option.querySelector('input[type="radio"]');
-          option.style.backgroundColor = input.checked ? "#D4E0F0" : "#F5F0E8";
-          option.style.borderColor = input.checked ? "#AFC4E0" : "#D9D0C4";
-        });
-      };
-
-      perguntas.forEach((question, index) => {
-        question.querySelectorAll('input[type="radio"]').forEach((input) => {
-          input.addEventListener("change", () => {
-            updateOptionStyles(question);
-            if (feedback) {
-              feedback.classList.remove("hidden");
-              feedback.textContent = index === perguntas.length - 1 ? "Boa observação. Você já pode concluir sua missão." : "Boa observação. Vamos para a próxima.";
-            }
-
-            const nextQuestion = perguntas[index + 1];
-            if (nextQuestion) {
-              window.setTimeout(() => showQuestion(index + 1), 300);
-            } else if (submit) {
-              submit.disabled = false;
-              submit.classList.remove("hidden");
-            }
-          });
-        });
-      });
 
       let remaining = duration || 10;
       if (focusTimer) focusTimer.textContent = `${remaining}s`;
@@ -189,46 +287,10 @@
       }, 1000);
     }
 
-    if (tipo === "desafio") {
-      root.querySelectorAll("[data-desafio-item]").forEach((item) => {
-        const banco = item.querySelector("[data-desafio-banco]");
-        const resposta = item.querySelector("[data-desafio-resposta]");
-        const input = item.querySelector("[data-desafio-input]");
-
-        const sync = () => {
-          const palavras = Array.from(resposta.querySelectorAll("button[data-palavra-selecionada]")).map((node) => node.dataset.value);
-          input.value = palavras.join("||");
-        };
-
-        banco.querySelectorAll("[data-palavra]").forEach((button) => {
-          button.addEventListener("click", () => {
-            const selected = document.createElement("button");
-            selected.type = "button";
-            selected.dataset.palavraSelecionada = "true";
-            selected.dataset.value = button.textContent.trim();
-            selected.className = "rounded-full px-4 py-3 text-base font-semibold";
-            selected.style.backgroundColor = "#4A6FA5";
-            selected.style.color = "#FFFFFF";
-            selected.textContent = button.textContent.trim();
-
-            selected.addEventListener("click", () => {
-              button.classList.remove("hidden");
-              selected.remove();
-              sync();
-            });
-
-            resposta.appendChild(selected);
-            button.classList.add("hidden");
-            sync();
-          });
-        });
-      });
-
-      if (timerMessage && duration > 0) {
-        window.setTimeout(() => {
-          timerMessage.textContent = "Você já pode concluir quando quiser.";
-        }, duration * 1000);
-      }
+    if (tipo === "desafio" && timerMessage && duration > 0) {
+      window.setTimeout(() => {
+        timerMessage.textContent = "Você já pode concluir quando quiser.";
+      }, duration * 1000);
     }
   };
 
