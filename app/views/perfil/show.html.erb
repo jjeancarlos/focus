@@ -1,20 +1,6 @@
 <div class="min-h-screen pb-24 px-4 pt-8"
      style="background-color: #F5F0E8;">
 
-  <%# FLASH MESSAGES %>
-  <% if notice.present? %>
-    <div class="mb-4 rounded-xl px-4 py-3 text-sm font-medium"
-         style="background-color: #D6EAD9; color: #2A2520;">
-      <%= notice %>
-    </div>
-  <% end %>
-  <% if alert.present? %>
-    <div class="mb-4 rounded-xl px-4 py-3 text-sm font-medium"
-         style="background-color: #F5E9C8; color: #2A2520;">
-      <%= alert %>
-    </div>
-  <% end %>
-
   <%= form_with model: @user, url: perfil_path, method: :patch,
         local: true, class: "space-y-5" do |form| %>
 

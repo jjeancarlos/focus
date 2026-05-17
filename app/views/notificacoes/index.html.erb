@@ -15,9 +15,8 @@
          style="color: #7A726C;">Hoje</p>
       <div class="space-y-3">
         <% @alertas.each do |alerta| %>
-          <div class="rounded-2xl p-4 shadow-sm flex items-start gap-3 relative overflow-hidden"
-               style="background-color: #EDE8DF;"
-               data-system-alert data-alert-duration="6000">
+          <div class="rounded-2xl p-4 shadow-sm flex items-start gap-3"
+               style="background-color: #EDE8DF;">
             <div class="rounded-full flex items-center justify-center flex-shrink-0"
                  style="width: 40px; height: 40px;
                         background-color: #F5F0E8;">
@@ -32,7 +31,6 @@
                 <%= alerta[:mensagem] %>
               </p>
             </div>
-            <div class="absolute bottom-0 left-0 h-1 rounded-full" data-alert-bar style="width: 100%; background-color: #D4E0F0;"></div>
           </div>
         <% end %>
       </div>

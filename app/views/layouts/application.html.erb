@@ -9,8 +9,6 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= yield :head %>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic-regular.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -26,13 +24,13 @@
         <header class="fixed top-0 left-0 right-0 z-30 px-4 py-3 flex items-center justify-between"
                 style="background-color: #F5F0E8; border-bottom: 1px solid #D9D0C4;">
         <%= link_to root_path do %>
-          <h1 class="text-lg font-bold" style="color: #2C4A7C;">Focus</h1>
+          <%= image_tag "focus_logo1.png", alt: "Focus", class: "h-10 w-auto" %>
         <% end %>
           <%= link_to notificacoes_path, class: "relative" do %>
             <i class="fa-solid fa-bell text-xl" style="color: #4A6FA5;"></i>
             <span id="badge-notificacoes"
                   class="absolute -top-1 -right-1 rounded-full text-white text-xs
-                         font-bold flex items-center justify-center hidden"
+                         font-bold items-center justify-center hidden leading-none"
                   style="width: 18px; height: 18px; background-color: #9C7A2E;">
             </span>
           <% end %>
@@ -41,15 +39,16 @@
 
       <%# FLASH MESSAGES %>
       <% if flash.any? %>
-        <div class="px-4 pt-4">
+        <div class="fixed inset-x-0 z-50 px-4 <%= authenticated? && Current.user&.aluno? ? 'top-16' : 'top-4' %>">
           <div class="mx-auto flex w-full max-w-5xl flex-col gap-3">
             <% flash.each do |type, message| %>
               <% next if message.blank? %>
-              <div id="<%= type %>" class="<%= flash_message_classes(type) %>" role="status" aria-live="polite">
+              <div id="<%= type %>" class="<%= flash_message_classes(type) %> relative overflow-hidden" role="status" aria-live="polite" data-system-alert data-alert-duration="6000">
                 <p class="flex items-start gap-2">
                   <span class="pt-0.5"><%= flash_message_icon(type) %></span>
                   <span><%= message %></span>
                 </p>
+                <div class="absolute bottom-0 left-0 h-1 rounded-full" data-alert-bar style="width: 100%; background-color: #D4E0F0;"></div>
               </div>
             <% end %>
           </div>
