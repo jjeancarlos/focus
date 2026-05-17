@@ -35,7 +35,7 @@ class RegistrationsController < ApplicationController
   end
 
   def entrar_turma
-    turma = Turma.find_by(invite_token: params[:invite_token]&.upcase&.strip)
+    turma = Turma.find_by_invite_token(params[:invite_token])
 
     if turma
       @user.update!(turma: turma)

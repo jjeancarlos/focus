@@ -2,22 +2,14 @@
      style="background-color: #F5F0E8;">
 
   <%# HEADER %>
-  <div class="flex items-center gap-3 mb-6">
-    <%= link_to professor_dashboard_path,
-          class: "inline-flex items-center gap-2 text-sm font-semibold",
-          style: "color: #4A6FA5;" do %>
-      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-      <span>Voltar</span>
-    <% end %>
+  <div class="space-y-4 mb-6">
+    <%= back_button_to(professor_dashboard_path) %>
     <div>
       <h1 class="text-xl font-bold" style="color: #2C4A7C;">
         <%= @turma.nome %>
       </h1>
-      <p class="text-sm" style="color: #7A726C;">
-        Código: <span class="font-bold tracking-widest"><%= @turma.invite_token %></span>
-        · <%= @alunos.count %> alunos
-      </p>
     </div>
+    <%= turma_code_badge(@turma, show_count: true) %>
   </div>
 
   <%# LISTA DE ALUNOS %>

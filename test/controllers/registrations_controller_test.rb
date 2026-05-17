@@ -40,6 +40,22 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_select "div", /Quase lá! Revise os campos para continuar\./
   end
 
+  test "create with short password rerenders form" do
+    assert_no_difference("User.count") do
+      post cadastro_path, params: {
+        user: {
+          name: "Nova Pessoa",
+          email_address: "curta@example.com",
+          password: "1234567",
+          password_confirmation: "1234567"
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "li", /Senha deve ter pelo menos 8 caracteres/
+  end
+
   test "create with duplicated email shows login link" do
     assert_no_difference("User.count") do
       post cadastro_path, params: {

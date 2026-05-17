@@ -2,10 +2,7 @@
      style="background-color: #F5F0E8;">
 
   <div class="flex items-center gap-3 mb-6">
-    <%= link_to "javascript:history.back()",
-          style: "color: #4A6FA5;" do %>
-      <i class="fa-solid fa-arrow-left text-xl"></i>
-    <% end %>
+    <%= back_button_to(aluno_dashboard_path) %>
     <h1 class="text-xl font-bold" style="color: #2C4A7C;">
       Notificações
     </h1>
@@ -18,8 +15,9 @@
          style="color: #7A726C;">Hoje</p>
       <div class="space-y-3">
         <% @alertas.each do |alerta| %>
-          <div class="rounded-2xl p-4 shadow-sm flex items-start gap-3"
-               style="background-color: #EDE8DF;">
+          <div class="rounded-2xl p-4 shadow-sm flex items-start gap-3 relative overflow-hidden"
+               style="background-color: #EDE8DF;"
+               data-system-alert data-alert-duration="6000">
             <div class="rounded-full flex items-center justify-center flex-shrink-0"
                  style="width: 40px; height: 40px;
                         background-color: #F5F0E8;">
@@ -34,6 +32,7 @@
                 <%= alerta[:mensagem] %>
               </p>
             </div>
+            <div class="absolute bottom-0 left-0 h-1 rounded-full" data-alert-bar style="width: 100%; background-color: #D4E0F0;"></div>
           </div>
         <% end %>
       </div>

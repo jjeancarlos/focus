@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   get   "conquistas",       to: "conquistas#index",         as: :conquistas
   get   "perfil",           to: "perfil#show",              as: :perfil
   patch "perfil",           to: "perfil#update"
+  patch "perfil/turma",     to: "perfil#update_turma",      as: :perfil_turma
 
   get  "notificacoes", to: "notificacoes#index",    as: :notificacoes
   get  "notificacoes/contagem", to: "notificacoes#contagem", as: :notificacoes_contagem

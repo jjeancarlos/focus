@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   PROFILES = %w[dislexia tdh ambos].freeze
   ROLES = %w[aluno professor].freeze
+  MIN_PASSWORD_LENGTH = 8
   NIVEIS = {
     1 => { nome: "Iniciante",      cor: "#9CA3AF", limite_xp: 100 },
     2 => { nome: "Explorador",     cor: "#4A8C5C", limite_xp: 250 },
@@ -26,6 +27,7 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :email_address, presence: true, uniqueness: { message: "Esse email já está cadastrado. Tente fazer login." }
+  validates :password, length: { minimum: MIN_PASSWORD_LENGTH, message: "deve ter pelo menos #{MIN_PASSWORD_LENGTH} caracteres" }, allow_nil: true
   validates :role, presence: true, inclusion: { in: ROLES }
   validates :perfil_acessibilidade, inclusion: { in: PROFILES }, allow_nil: true
   validates :perfil_acessibilidade, presence: true, if: :require_profile_completion?

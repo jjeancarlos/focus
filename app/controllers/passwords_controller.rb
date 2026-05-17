@@ -22,7 +22,8 @@ class PasswordsController < ApplicationController
       @user.sessions.destroy_all
       redirect_to new_session_path, notice: t("auth.password.reset_success")
     else
-      redirect_to edit_password_path(params[:token]), alert: t("auth.password.mismatch")
+      flash.now[:alert] = t("auth.password.mismatch")
+      render :edit, status: :unprocessable_entity
     end
   end
 

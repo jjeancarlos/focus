@@ -23,7 +23,47 @@ module ApplicationHelper
     end
   end
 
- def bottom_nav_items
+  def accessibility_profile_badge(perfil)
+    case perfil
+    when "dislexia"
+      raw('<i class="fa-solid fa-book-open" aria-hidden="true"></i> Dislexia')
+    when "tdh"
+      raw('<i class="fa-solid fa-bullseye" aria-hidden="true"></i> TDH')
+    when "ambos"
+      raw('<i class="fa-solid fa-book-open" aria-hidden="true"></i> <i class="fa-solid fa-bullseye" aria-hidden="true"></i> Dislexia + TDH')
+    else
+      "Sem perfil"
+    end
+  end
+
+  def back_button_to(path, label: "Voltar")
+    link_to path, class: "inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold", style: "background-color: #EDE8DF; color: #4A6FA5; border: 1px solid #D9D0C4;" do
+      safe_join([
+        content_tag(:i, nil, class: "fa-solid fa-arrow-left", aria: { hidden: true }),
+        content_tag(:span, label)
+      ])
+    end
+  end
+
+  def turma_code_badge(turma, show_count: false)
+    details = ["Código: #{turma.invite_token}"]
+    details << "#{turma.alunos.count} alunos" if show_count
+
+    content_tag(:div, class: "rounded-2xl p-4", style: "background-color: #F5F0E8;") do
+      safe_join([
+        content_tag(:p, details.join(" · "), class: "text-sm font-semibold tracking-widest", style: "color: #2C4A7C;"),
+        content_tag(:button, class: "mt-3 inline-flex min-h-12 items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold", style: "background-color: #4A6FA5; color: #F5F0E8;", data: { copy_text: turma.invite_token, copy_label: "Copiar código" }, type: "button") do
+          safe_join([
+            content_tag(:i, nil, class: "fa-solid fa-copy", aria: { hidden: true }),
+            content_tag(:span, "Copiar código")
+          ])
+        end,
+        content_tag(:p, "Código copiado.", class: "mt-2 hidden text-sm font-semibold", style: "color: #4A8C5C;", data: { copy_feedback: true })
+      ])
+    end
+  end
+
+  def bottom_nav_items
   if Current.user&.professor?
     [
       { label: "Dashboard", path: "/professor/dashboard", icon: :home },

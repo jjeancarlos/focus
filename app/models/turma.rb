@@ -4,6 +4,13 @@ class Turma < ApplicationRecord
 
   before_create :gerar_invite_token
 
+  def self.find_by_invite_token(token)
+    normalized_token = token.to_s.upcase.strip
+    return if normalized_token.blank?
+
+    find_by(invite_token: normalized_token)
+  end
+
   private
 
   def gerar_invite_token
