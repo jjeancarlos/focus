@@ -1,3 +1,46 @@
+# ============================================================
+# PROFESSOR FIXO — login: professor@focus.com / senha: focus123
+# ============================================================
+professor = User.find_or_initialize_by(email_address: "professor@focus.com")
+professor.name                  = "Prof. Ana Silva"
+professor.password              = "focus123"
+professor.password_confirmation = "focus123"
+professor.role                  = "professor"
+professor.perfil_acessibilidade = nil
+professor.save!
+
+puts "Professor criado: professor@focus.com / focus123"
+
+# ============================================================
+# TURMA PADRÃO
+# ============================================================
+turma = Turma.find_or_initialize_by(nome: "Turma Focus")
+turma.professor_id  = professor.id
+turma.invite_token  = "FOCUS2026"
+turma.save!
+
+puts "Turma criada: #{turma.nome}"
+
+# ============================================================
+# ALUNO DE DEMONSTRAÇÃO
+# ============================================================
+aluno = User.find_or_initialize_by(email_address: "aluno@focus.com")
+aluno.name                  = "João Silva"
+aluno.password              = "focus123"
+aluno.password_confirmation = "focus123"
+aluno.role                  = "aluno"
+aluno.perfil_acessibilidade = "dislexia"
+aluno.turma                 = turma
+aluno.xp_total              = 124
+aluno.nivel                 = 2
+aluno.sequencia_dias        = 3
+aluno.save!
+
+puts " Alno criado: aluno@focus.com / focus123"
+
+# ============================================================
+# ATIVIDADES — LEITURA
+# ============================================================
 Atividade.find_or_initialize_by(titulo: "Leitura no parque").tap do |atividade|
   atividade.tipo = "leitura"
   atividade.descricao = "Treino de leitura com foco em compreensão"
@@ -21,6 +64,11 @@ Atividade.find_or_initialize_by(titulo: "Leitura no parque").tap do |atividade|
   atividade.save!
 end
 
+puts "Atividade de leitura criada"
+
+# ============================================================
+# ATIVIDADES — FOCO
+# ============================================================
 [
   {
     titulo: "Foco na sala de aula",
@@ -66,6 +114,11 @@ end
   end
 end
 
+puts "Atividades de foco criadas"
+
+# ============================================================
+# ATIVIDADES — DESAFIO
+# ============================================================
 Atividade.find_or_initialize_by(titulo: "Monte a frase").tap do |atividade|
   atividade.tipo = "desafio"
   atividade.descricao = "Sequência de palavras com imagens"
@@ -83,3 +136,9 @@ Atividade.find_or_initialize_by(titulo: "Monte a frase").tap do |atividade|
   atividade.ativo = true
   atividade.save!
 end
+
+puts "Atividade de desafio criada"
+puts ""
+puts " Seeds concluídos!"
+puts "   Professor: professor@focus.com / focus123"
+puts "   Aluno:     aluno@focus.com / focus123"

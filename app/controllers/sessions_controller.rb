@@ -7,17 +7,21 @@ class SessionsController < ApplicationController
   end
 
   def create
-    if user = User.authenticate_by(params.permit(:email_address, :password))
-      start_new_session_for user
-      redirect_to after_authentication_url
+  if user = User.authenticate_by(params.permit(:email_address, :password))
+    start_new_session_for user
+    if user.professor?
+      redirect_to professor_dashboard_path
     else
-      if User.exists?(email_address: params[:email_address])
-        redirect_to new_session_path, alert: "Senha incorreta. Tente novamente."
-      else
-        redirect_to new_session_path, alert: "Não encontramos uma conta com esse email."
-      end
+      redirect_to after_authentication_url
+    end
+  else
+    if User.exists?(email_address: params[:email_address])
+      redirect_to new_session_path, alert: "Senha incorreta. Tente novamente."
+    else
+      redirect_to new_session_path, alert: "Não encontramos uma conta com esse email."
     end
   end
+end
 
   def destroy
     terminate_session

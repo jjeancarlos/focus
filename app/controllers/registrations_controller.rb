@@ -56,4 +56,19 @@ class RegistrationsController < ApplicationController
     def redirect_authenticated_user
       redirect_to root_path if authenticated?
     end
+
+  def codigo_turma
+end
+
+def entrar_turma
+  turma = Turma.find_by(invite_token: params[:invite_token]&.upcase&.strip)
+  if turma
+    Current.user.update!(turma: turma)
+    redirect_to aluno_dashboard_path,
+      notice: "Você entrou na turma #{turma.nome}! 🎉"
+  else
+    flash.now[:alert] = "Código inválido. Verifique e tente novamente."
+    render :codigo_turma, status: :unprocessable_entity
+  end
+end
 end

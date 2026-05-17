@@ -12,6 +12,10 @@ class User < ApplicationRecord
   attr_accessor :require_profile_completion
 
   has_secure_password
+  has_many :turmas_como_professor,
+         class_name: "Turma",
+         foreign_key: :professor_id,
+         dependent: :destroy
   has_many :sessions, dependent: :destroy
   has_many :tentativas, foreign_key: :aluno_id, dependent: :destroy
   has_many :atividades, through: :tentativas
