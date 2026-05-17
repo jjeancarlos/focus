@@ -3,10 +3,10 @@
 
   <div class="mb-8 text-center">
     <h1 class="text-2xl font-bold text-[#2C4A7C]">
-      Você tem um código de turma?
+      Nova turma
     </h1>
     <p class="mt-3 text-base leading-relaxed text-[#7A726C]">
-      Digite o código do seu professor para entrar na turma
+      O código de convite será gerado automaticamente
     </p>
   </div>
 
@@ -19,33 +19,30 @@
       </div>
     <% end %>
 
-    <%= form_with url: cadastro_turma_path, method: :post,
+    <%= form_with model: @turma, url: professor_turmas_path,
           local: true, class: "space-y-5" do |form| %>
+
       <div>
-        <%= label_tag :invite_token, "Código da turma",
+        <%= form.label :nome, "Nome da turma",
               class: "block text-base font-semibold text-stone-800" %>
-        <%= text_field_tag :invite_token, nil,
-              placeholder: "Ex: FOCO2026",
+        <%= form.text_field :nome,
+              required: true,
               autofocus: true,
+              placeholder: "Ex: 3º Ano B — 2026",
               class: "mt-2 block min-h-12 w-full rounded-2xl border
                       border-[#D9D0C4] bg-[#F5F0E8] px-4 py-3 text-base
                       text-stone-900 outline-none focus:border-[#4A6FA5]
-                      focus:ring-2 focus:ring-[#4A6FA5]/20 uppercase
-                      tracking-widest text-center text-lg font-bold" %>
+                      focus:ring-2 focus:ring-[#4A6FA5]/20" %>
       </div>
 
       <div class="space-y-3 pt-2">
-        <%= submit_tag "Entrar na turma 🎓",
+        <%= form.submit "Criar turma 🏫",
               class: "min-h-12 w-full rounded-full bg-[#4A6FA5] px-6
                       py-3 text-base font-semibold text-white cursor-pointer" %>
+        <%= link_to "← Voltar", professor_dashboard_path,
+              class: "block text-center text-base py-3 text-[#7A726C]" %>
       </div>
-    <% end %>
 
-    <%= button_to "Pular por agora →", cadastro_pular_path,
-          method: :post,
-          class: "mt-3 w-full text-center text-base py-3 cursor-pointer
-                  rounded-full",
-          style: "background-color: transparent; color: #7A726C;
-                  border: none;" %>
+    <% end %>
   </div>
 </div>

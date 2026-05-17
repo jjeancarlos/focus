@@ -34,6 +34,15 @@
     <p class="text-sm font-semibold mb-3" style="color: #7A726C;">
       🏫 Minhas turmas
     </p>
+    
+    <div class="flex items-center justify-between mb-3">
+  <p class="text-sm font-semibold" style="color: #7A726C;">
+    🏫 Minhas turmas
+  </p>
+  <%= link_to "＋ Nova turma", new_professor_turma_path,
+        class: "text-sm font-semibold px-4 py-2 rounded-full",
+        style: "background-color: #4A6FA5; color: white;" %>
+</div>
 
     <% if @turmas.any? %>
       <div class="space-y-3">
