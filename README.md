@@ -61,29 +61,65 @@ Problemas que o software se propõe a resolver:
 
 ## Como executar o projeto
 
-### Pré-requisitos
+### Pré-requisitos locais
 
 - Ruby 3.4.8
-- Bundler 4.0.3
+- Bundler
 - PostgreSQL
 - Node.js
-- Foreman
-- Docker
 
-### Configuração inicial
+### Configuração local
+
+1. Instale as dependências:
 
 ```bash
 bundle install
+```
+
+2. Crie o arquivo de ambiente:
+
+```bash
 cp .env.example .env
 ```
 
-Preencha o arquivo `.env` com as variáveis necessárias.
+3. Preencha o `.env` com os dados do seu PostgreSQL local:
 
-### Banco de dados
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+DB_NAME_DEV=focus_development
+DB_NAME_TEST=focus_test
+```
+
+4. Prepare o banco de dados:
 
 ```bash
 bin/rails db:prepare
 ```
+
+5. Inicie a aplicação em desenvolvimento:
+
+```bash
+bin/dev
+```
+
+O projeto ficará disponível em:
+
+```txt
+http://localhost:3000
+```
+
+### Setup automático
+
+Na primeira execução, você também pode usar:
+
+```bash
+bin/setup
+```
+
+Esse comando instala as dependências, prepara o banco e inicia o servidor de desenvolvimento.
 
 ### Seeds de demonstração
 
@@ -115,32 +151,32 @@ Código da turma
 FOCUS2026
 ```
 
-### Executar em desenvolvimento
+### Executar com Docker Compose
+
+O projeto possui um ambiente de desenvolvimento com `compose.yml` e `Dockerfile.dev`.
+
+1. Crie o arquivo de ambiente:
 
 ```bash
-bin/dev
+cp .env.example .env
 ```
 
-Ou com Foreman:
+2. Preencha ao menos as variáveis de banco no `.env`:
+
+```env
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+DB_NAME_DEV=focus_development
+DB_NAME_TEST=focus_test
+```
+
+3. Suba os containers:
 
 ```bash
-foreman start -f Procfile.dev
+docker compose up --build
 ```
 
-### Acesso local
-
-Após iniciar o projeto, a aplicação ficará disponível em:
-
-```txt
-http://localhost:3000
-```
-
-### Execução com Docker
-
-```bash
-docker build -t focus .
-docker run --env-file .env -p 3000:3000 focus
-```
+A aplicação ficará disponível em `http://localhost:3000`.
 
 ## Estrutura funcional do projeto
 
