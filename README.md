@@ -1,5 +1,13 @@
 # Focus
 
+<p align="center">
+  <img src="./.docs/Samsung-Galaxy-S20-focus-cd64.onrender.com.png" alt="Tela inicial do Focus" width="320" />
+</p>
+
+<p align="center">
+  <img src="./.docs/Samsung-Galaxy-S20-focus-cd64.onrender.com2.png" alt="Tela de missão do Focus" width="320" />
+</p>
+
 ## Descrição do projeto
 
 Focus é uma PWA inclusiva voltada para estudantes com dislexia e TDAH, desenvolvida para o 2º Hackathon SIF/UniRios 2026.
