@@ -22,10 +22,11 @@ class Professor::TurmaAlunosController < ApplicationController
       type: "application/pdf",
       disposition: "attachment"
   rescue => e
-    Rails.logger.error("[RelatorioIA] #{e.message}")
-    redirect_to professor_turma_aluno_path(@turma, @aluno),
-      alert: "Não foi possível gerar o relatório. Tente novamente."
-  end
+  Rails.logger.error("[RelatorioIA] #{e.class}: #{e.message}")
+  Rails.logger.error(e.backtrace.first(10).join("\n"))
+  redirect_to professor_turma_aluno_path(@turma, @aluno),
+    alert: "Erro: #{e.message}"
+end
 
   private
     def require_professor
