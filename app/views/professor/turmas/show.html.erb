@@ -13,37 +13,53 @@
     <div class="space-y-3">
       <% @alunos.each do |aluno| %>
         <% ativo = aluno.tentativas.where(concluida_em: 5.days.ago..).any? %>
-        <%= link_to professor_turma_aluno_path(@turma, aluno),
-              class: "bg-surface shadow-soft flex items-center gap-3 rounded-2xl p-4" do %>
+        <div class="bg-surface shadow-soft rounded-2xl p-4">
+          <div class="flex items-start gap-3">
+            <%= link_to professor_turma_aluno_path(@turma, aluno), class: "flex min-w-0 flex-1 items-center gap-3" do %>
+              <% if aluno.foto.attached? %>
+                <%= image_tag aluno.foto,
+                      class: "h-11 w-11 rounded-full object-cover flex-shrink-0" %>
+              <% else %>
+                <div class="btn-primary flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold text-white">
+                  <%= aluno.name.first.upcase %>
+                </div>
+              <% end %>
 
-          <% if aluno.foto.attached? %>
-            <%= image_tag aluno.foto,
-                  class: "h-11 w-11 rounded-full object-cover flex-shrink-0" %>
-          <% else %>
-            <div class="btn-primary flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold text-white">
-              <%= aluno.name.first.upcase %>
-            </div>
-          <% end %>
+              <div class="min-w-0 flex-1">
+                <p class="text-primary truncate text-sm font-semibold">
+                  <%= aluno.name %>
+                </p>
+                <p class="text-muted text-xs">
+                  Nível <%= aluno.nivel %> · <%= aluno.xp_total %> XP ·
+                  <%= aluno.sequencia_dias %> dias seguidos
+                </p>
+              </div>
 
-          <div class="min-w-0 flex-1">
-            <p class="text-primary truncate text-sm font-semibold">
-              <%= aluno.name %>
-            </p>
-            <p class="text-muted text-xs">
-              Nível <%= aluno.nivel %> · <%= aluno.xp_total %> XP ·
-              <%= aluno.sequencia_dias %> dias seguidos
-            </p>
+              <div class="flex flex-col items-center gap-1 flex-shrink-0">
+                <div class="h-2.5 w-2.5 rounded-full"
+                     style="background-color: <%= ativo ? 'var(--success)' : 'var(--warning)' %>;"></div>
+                <span class="text-muted text-xs">
+                  <%= ativo ? "ativo" : "inativo" %>
+                </span>
+              </div>
+            <% end %>
           </div>
 
-          <div class="flex flex-col items-center gap-1 flex-shrink-0">
-            <div class="h-2.5 w-2.5 rounded-full"
-                 style="background-color: <%= ativo ? 'var(--success)' : 'var(--warning)' %>;"></div>
-            <span class="text-muted text-xs">
-              <%= ativo ? "ativo" : "inativo" %>
-            </span>
+          <div class="border-subtle mt-4 flex justify-center border-t pt-4">
+            <button type="button"
+                    class="btn-warning inline-flex min-h-12 items-center justify-center rounded-full px-3 py-2 text-sm font-semibold"
+                    aria-label="Remover <%= aluno.name %> da turma"
+                    data-confirm-modal-open
+                    data-confirm-title="Remover aluno da turma?"
+                    data-confirm-message="A conta e o histórico do aluno serão mantidos."
+                    data-confirm-action="<%= professor_turma_aluno_path(@turma, aluno) %>"
+                    data-confirm-method="delete"
+                    data-confirm-button="Remover da turma">
+              <i class="fa-solid fa-user-minus" aria-hidden="true"></i>
+              <span class="ml-2">Remover da turma</span>
+            </button>
           </div>
-
-        <% end %>
+        </div>
       <% end %>
     </div>
   <% else %>
@@ -76,4 +92,35 @@
       </button>
     <% end %>
   </div>
+
+  <div id="confirm-modal" class="modal-overlay-theme hidden" aria-hidden="true">
+    <div class="modal-card-theme">
+      <div class="mb-6 text-center">
+        <div class="modal-icon-warning mb-4">
+          <i class="fa-solid fa-triangle-exclamation text-3xl" aria-hidden="true"></i>
+        </div>
+        <h3 class="text-primary mb-2 text-xl font-bold" data-confirm-modal-title>Confirmar ação?</h3>
+        <p class="text-muted text-sm" data-confirm-modal-message>Revise a ação antes de continuar.</p>
+      </div>
+
+      <form id="confirm-modal-form" method="post">
+        <input type="hidden" name="_method" value="delete" data-confirm-modal-method>
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+        <div class="flex gap-3">
+          <button type="button"
+                  class="btn-secondary text-primary flex-1 rounded-xl px-4 py-3 text-base font-semibold"
+                  data-confirm-modal-cancel>
+            Cancelar
+          </button>
+          <button type="submit"
+                  class="btn-warning flex-1 rounded-xl px-4 py-3 text-base font-semibold"
+                  data-confirm-modal-submit>
+            Confirmar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
+

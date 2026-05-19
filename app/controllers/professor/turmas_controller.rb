@@ -1,8 +1,8 @@
 class Professor::TurmasController < ApplicationController
   before_action :require_professor
+  before_action :set_turma, only: %i[show destroy]
 
   def show
-    @turma = Turma.find_by!(id: params[:id], professor_id: Current.user.id)
     @alunos = @turma.alunos.order(:name)
   end
 
@@ -22,7 +22,16 @@ class Professor::TurmasController < ApplicationController
     end
   end
 
+  def destroy
+    @turma.destroy_with_students_unassigned!
+    redirect_to professor_dashboard_path, notice: "Turma excluída e alunos desvinculados com sucesso."
+  end
+
   private
+    def set_turma
+      @turma = Turma.find_by!(id: params[:id], professor_id: Current.user.id)
+    end
+
     def turma_params
       params.require(:turma).permit(:nome)
     end

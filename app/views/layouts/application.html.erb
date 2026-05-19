@@ -185,10 +185,49 @@
         });
       }
 
+      function initializeProfessorConfirmModal() {
+        const modal = document.getElementById('confirm-modal');
+        if (!modal || modal.dataset.initialized === 'true') return;
+        modal.dataset.initialized = 'true';
+
+        const title = modal.querySelector('[data-confirm-modal-title]');
+        const message = modal.querySelector('[data-confirm-modal-message]');
+        const form = modal.querySelector('#confirm-modal-form');
+        const method = modal.querySelector('[data-confirm-modal-method]');
+        const submit = modal.querySelector('[data-confirm-modal-submit]');
+        const cancel = modal.querySelector('[data-confirm-modal-cancel]');
+
+        const hideModal = () => {
+          modal.classList.add('hidden');
+          modal.setAttribute('aria-hidden', 'true');
+        };
+
+        cancel?.addEventListener('click', hideModal);
+        modal.addEventListener('click', (event) => {
+          if (event.target === modal) hideModal();
+        });
+
+        document.querySelectorAll('[data-confirm-modal-open]').forEach((button) => {
+          if (button.dataset.modalInitialized === 'true') return;
+          button.dataset.modalInitialized = 'true';
+
+          button.addEventListener('click', () => {
+            if (title) title.textContent = button.dataset.confirmTitle || 'Confirmar ação?';
+            if (message) message.textContent = button.dataset.confirmMessage || 'Revise a ação antes de continuar.';
+            if (form) form.action = button.dataset.confirmAction || '#';
+            if (method) method.value = button.dataset.confirmMethod || 'delete';
+            if (submit) submit.textContent = button.dataset.confirmButton || 'Confirmar';
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+          });
+        });
+      }
+
       function initializeLayoutScripts() {
         initializeUiEnhancements();
         syncThemeToggle();
         atualizarBadge();
+        initializeProfessorConfirmModal();
       }
 
       document.addEventListener('turbo:load', initializeLayoutScripts);
