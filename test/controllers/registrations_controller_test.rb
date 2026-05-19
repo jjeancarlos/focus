@@ -1,7 +1,7 @@
 require "test_helper"
 
 class RegistrationsControllerTest < ActionDispatch::IntegrationTest
-  setup { @existing_user = User.take }
+  setup { @existing_user = users(:one) }
 
   test "new" do
     get cadastro_path
@@ -130,5 +130,39 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_nil user.reload.perfil_acessibilidade
     assert_select "div", /Quase lá! Escolha o perfil que combina com você\./
+  end
+
+  test "entrar turma redirects aluno to missoes" do
+    post cadastro_path, params: {
+      user: {
+        name: "Com Turma",
+        email_address: "comturma@example.com",
+        password: "password",
+        password_confirmation: "password"
+      }
+    }
+
+    post cadastro_turma_path, params: { invite_token: turmas(:one).invite_token }
+
+    assert_redirected_to missoes_path
+    assert cookies[:session_id]
+    assert_equal turmas(:one).id, User.find_by!(email_address: "comturma@example.com").turma_id
+  end
+
+  test "pular turma redirects aluno to missoes" do
+    post cadastro_path, params: {
+      user: {
+        name: "Sem Turma",
+        email_address: "semturma@example.com",
+        password: "password",
+        password_confirmation: "password"
+      }
+    }
+
+    post cadastro_pular_path
+
+    assert_redirected_to missoes_path
+    assert cookies[:session_id]
+    assert_nil User.find_by!(email_address: "semturma@example.com").turma_id
   end
 end

@@ -20,7 +20,7 @@ class SessionsController < ApplicationController
       else
         redirect_to after_authentication_url(
           return_to: params[:return_to],
-          fallback: root_path
+          fallback: missoes_path
         )
       end
     else

@@ -1,17 +1,26 @@
 require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
-  setup { @user = User.take }
+  setup { @user = users(:one) }
 
   test "new" do
     get new_session_path
     assert_response :success
   end
 
-  test "create with valid credentials" do
+  test "create with valid aluno credentials" do
     post session_path, params: { email_address: @user.email_address, password: "password" }
 
-    assert_redirected_to root_path
+    assert_redirected_to missoes_path
+    assert cookies[:session_id]
+  end
+
+  test "create with valid professor credentials redirects to dashboard" do
+    professor = users(:two)
+
+    post session_path, params: { email_address: professor.email_address, password: "password" }
+
+    assert_redirected_to professor_dashboard_path
     assert cookies[:session_id]
   end
 
@@ -25,7 +34,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "create with valid credentials ignores unsafe return path" do
     post session_path, params: { email_address: @user.email_address, password: "password", return_to: "https://evil.example.com" }
 
-    assert_redirected_to root_path
+    assert_redirected_to missoes_path
     assert cookies[:session_id]
   end
 
@@ -50,7 +59,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "destroy" do
-    sign_in_as(User.take)
+    sign_in_as(users(:one))
 
     delete session_path
 

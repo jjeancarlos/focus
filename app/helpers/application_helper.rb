@@ -1,9 +1,9 @@
 module ApplicationHelper
   def flash_message_classes(type)
     if type.to_sym.in?([:notice, :success])
-      "rounded-2xl border border-[#bfd8c2] bg-[#D6EAD9] px-4 py-3 text-base font-medium text-stone-800 shadow-sm"
+      "rounded-2xl border border-subtle bg-surface-success px-4 py-3 text-base font-medium text-primary shadow-soft"
     else
-      "rounded-2xl border border-[#e5ce94] bg-[#F5E9C8] px-4 py-3 text-base font-medium text-[#8a6510] shadow-sm"
+      "rounded-2xl border border-subtle bg-surface-warning px-4 py-3 text-base font-medium text-warning shadow-soft"
     end
   end
 
@@ -18,7 +18,7 @@ module ApplicationHelper
   end
 
   def mission_icon(name)
-    content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", stroke: "#2C4A7C", "stroke-width": 1.8, class: "h-8 w-8", aria: { hidden: true }) do
+    content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", "stroke-width": 1.8, class: "h-8 w-8 text-accent", aria: { hidden: true }) do
       safe_join(mission_icon_elements(name))
     end
   end
@@ -37,7 +37,7 @@ module ApplicationHelper
   end
 
   def back_button_to(path, label: "Voltar")
-    link_to path, class: "inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold", style: "background-color: #EDE8DF; color: #4A6FA5; border: 1px solid #D9D0C4;" do
+    link_to path, class: "btn-secondary inline-flex min-h-12 items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold" do
       safe_join([
         content_tag(:i, nil, class: "fa-solid fa-arrow-left", aria: { hidden: true }),
         content_tag(:span, label)
@@ -49,41 +49,41 @@ module ApplicationHelper
     details = ["Código: #{turma.invite_token}"]
     details << "#{turma.alunos.count} alunos" if show_count
 
-    content_tag(:div, class: "rounded-2xl p-4", style: "background-color: #F5F0E8;") do
+    content_tag(:div, class: "bg-app rounded-2xl p-4") do
       safe_join([
-        content_tag(:p, details.join(" · "), class: "text-sm font-semibold tracking-widest", style: "color: #2C4A7C;"),
-        content_tag(:button, class: "mt-3 inline-flex min-h-12 items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold", style: "background-color: #4A6FA5; color: #F5F0E8;", data: { copy_text: turma.invite_token, copy_label: "Copiar código" }, type: "button") do
+        content_tag(:p, details.join(" · "), class: "text-accent text-sm font-semibold tracking-widest"),
+        content_tag(:button, class: "btn-primary mt-3 inline-flex min-h-12 items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold", data: { copy_text: turma.invite_token, copy_label: "Copiar código" }, type: "button") do
           safe_join([
             content_tag(:i, nil, class: "fa-solid fa-copy", aria: { hidden: true }),
             content_tag(:span, "Copiar código")
           ])
         end,
-        content_tag(:p, "Código copiado.", class: "mt-2 hidden text-sm font-semibold", style: "color: #4A8C5C;", data: { copy_feedback: true })
+        content_tag(:p, "Código copiado.", class: "text-success mt-2 hidden text-sm font-semibold", data: { copy_feedback: true })
       ])
     end
   end
 
   def bottom_nav_items
-  if Current.user&.professor?
-    [
-      { label: "Dashboard", path: "/professor/dashboard", icon: :home },
-      { label: "Perfil",    path: "/perfil",              icon: :profile }
-    ]
-  else
-    [
-      { label: "Missões",    path: "/missoes",         icon: :missions },
-      { label: "Histórico",  path: "/aluno/dashboard", icon: :history },
-      { label: "Conquistas", path: "/conquistas",      icon: :achievements },
-      { label: "Perfil",     path: "/perfil",          icon: :profile }
-    ]
+    if Current.user&.professor?
+      [
+        { label: "Dashboard", path: "/professor/dashboard", icon: :home },
+        { label: "Perfil",    path: "/perfil",              icon: :profile }
+      ]
+    else
+      [
+        { label: "Missões",    path: "/missoes",         icon: :missions },
+        { label: "Histórico",  path: "/aluno/dashboard", icon: :history },
+        { label: "Conquistas", path: "/conquistas",      icon: :achievements },
+        { label: "Perfil",     path: "/perfil",          icon: :profile }
+      ]
+    end
   end
-end
 
   def bottom_nav_link(item)
     active = bottom_nav_active?(item[:path])
-    color = active ? "text-[#4A6FA5]" : "text-[#7A726C]"
+    color = active ? "text-accent" : "text-muted"
     link_to item[:path], class: [
-      "flex min-h-14 flex-col items-center justify-center gap-1 px-2 py-2 text-center text-[13px] font-semibold leading-none",
+      "flex min-h-14 flex-col items-center justify-center gap-1 px-2 py-2 text-center text-[13px] font-semibold leading-none transition-colors",
       color
     ].join(" "), aria: { current: active ? "page" : nil } do
       safe_join([
@@ -96,13 +96,13 @@ end
   private
 
   def bottom_nav_active?(path)
-  return request.path == "/" if path == "/"
-  request.path == path || request.path.start_with?("#{path}/")
-end
+    return request.path == "/" if path == "/"
+    request.path == path || request.path.start_with?("#{path}/")
+  end
 
   def bottom_nav_icon(name, active:)
-    color = active ? "#4A6FA5" : "#7A726C"
-    content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", stroke: color, "stroke-width": 1.8, class: "h-5 w-5", aria: { hidden: true }) do
+    color = active ? "text-accent" : "text-muted"
+    content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", "stroke-width": 1.8, class: "h-5 w-5 #{color}", aria: { hidden: true }) do
       safe_join(bottom_nav_elements(name))
     end
   end

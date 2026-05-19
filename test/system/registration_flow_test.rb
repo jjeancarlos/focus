@@ -1,7 +1,7 @@
 require "application_system_test_case"
 
 class RegistrationFlowTest < ApplicationSystemTestCase
-  test "user signs up in two steps" do
+  test "user signs up and lands on class code step" do
     visit new_session_path
 
     click_on "Criar conta"
@@ -22,7 +22,7 @@ class RegistrationFlowTest < ApplicationSystemTestCase
     assert_button "Começar", disabled: false
     click_on "Começar"
 
-    assert_current_path root_path
-    assert_text "Bem-vindo ao Focus"
+    assert_current_path cadastro_turma_path
+    assert_text "Você tem um código de turma?"
   end
 end

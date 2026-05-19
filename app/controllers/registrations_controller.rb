@@ -41,7 +41,7 @@ class RegistrationsController < ApplicationController
       @user.update!(turma: turma)
       session.delete(:pending_registration_user_id)
       start_new_session_for(@user)
-      redirect_to aluno_dashboard_path, notice: "Você entrou na turma #{turma.nome}!"
+      redirect_to missoes_path, notice: "Você entrou na turma #{turma.nome}!"
     else
       flash.now[:alert] = "Código inválido. Verifique e tente novamente."
       render :codigo_turma, status: :unprocessable_entity
@@ -51,7 +51,7 @@ class RegistrationsController < ApplicationController
   def pular_turma
     session.delete(:pending_registration_user_id)
     start_new_session_for(@user)
-    redirect_to aluno_dashboard_path, notice: "Sua experiência está pronta para começar."
+    redirect_to missoes_path, notice: "Sua experiência está pronta para começar."
   end
 
   private
