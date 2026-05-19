@@ -24,36 +24,74 @@
   </div>
 
   <div class="mb-6">
-    <div class="mb-3 flex items-center justify-between gap-3">
+    <div class="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <p class="text-muted text-sm font-semibold">
         <i class="fa-solid fa-school" aria-hidden="true"></i> Minhas turmas
       </p>
       <%= link_to new_professor_turma_path,
-            class: "btn-primary inline-flex min-h-12 items-center rounded-full px-4 py-2 text-sm font-semibold transition-colors" do %>
+            class: "btn-primary inline-flex min-h-12 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-colors" do %>
         <i class="fa-solid fa-plus" aria-hidden="true"></i>
         <span class="ml-2">Nova turma</span>
+      <% end %>
+    </div>
+
+    <div class="bg-surface shadow-soft mb-4 rounded-2xl p-4">
+      <%= form_with url: professor_dashboard_path, method: :get, local: true, class: "space-y-3" do |form| %>
+        <label for="dashboard-search" class="text-primary block text-base font-semibold">
+          Buscar turma ou aluno
+        </label>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <%= form.search_field :q,
+                value: @query,
+                id: "dashboard-search",
+                placeholder: "Nome da turma ou aluno",
+                class: "form-input-theme min-h-12 w-full rounded-full px-4 py-3 text-base outline-none",
+                autocomplete: "off" %>
+          <div class="flex gap-3 sm:flex-shrink-0">
+            <%= form.button type: "submit", class: "btn-primary min-h-12 flex-1 rounded-full px-5 py-3 text-base font-semibold sm:flex-none" do %>
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <span class="ml-2">Buscar</span>
+            <% end %>
+            <% if @query.present? %>
+              <%= link_to professor_dashboard_path,
+                    class: "btn-secondary inline-flex min-h-12 flex-1 items-center justify-center rounded-full px-5 py-3 text-base font-semibold sm:flex-none" do %>
+                <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+                <span class="ml-2">Limpar</span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
       <% end %>
     </div>
 
     <% if @turmas.any? %>
       <div class="space-y-3">
         <% @turmas.each do |turma| %>
+          <% alunos_encontrados = @alunos_encontrados_por_turma[turma] || [] %>
           <div class="bg-surface shadow-soft rounded-2xl p-5">
             <div class="flex items-start justify-between gap-3">
-              <div class="flex-1">
+              <div class="flex-1 min-w-0">
                 <%= link_to professor_turma_path(turma), class: "block" do %>
-                  <p class="text-primary text-base font-semibold">
+                  <p class="text-primary text-base font-semibold break-words">
                     <%= turma.nome %>
                   </p>
                   <p class="text-muted mt-1 text-sm">
-                    <%= turma.alunos.count %> alunos
+                    <%= turma.alunos.size %> alunos
                   </p>
+                <% end %>
+                <% if alunos_encontrados.any? %>
+                  <div class="bg-app mt-3 rounded-2xl p-3">
+                    <p class="text-muted text-sm font-semibold">Alunos encontrados</p>
+                    <p class="text-primary mt-2 text-base leading-relaxed break-words">
+                      <%= alunos_encontrados.map(&:name).join(", ") %>
+                    </p>
+                  </div>
                 <% end %>
                 <div class="mt-3">
                   <%= turma_code_badge(turma) %>
                 </div>
               </div>
-              <%= link_to professor_turma_path(turma), class: "text-accent" do %>
+              <%= link_to professor_turma_path(turma), class: "text-accent shrink-0", aria: { label: "Abrir turma #{turma.nome}" } do %>
                 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
               <% end %>
             </div>
@@ -63,7 +101,7 @@
     <% else %>
       <div class="bg-surface shadow-soft rounded-2xl p-6 text-center">
         <p class="text-muted text-base">
-          Nenhuma turma criada ainda
+          <%= @query.present? ? "Nenhuma turma ou aluno encontrado" : "Nenhuma turma criada ainda" %>
         </p>
       </div>
     <% end %>
