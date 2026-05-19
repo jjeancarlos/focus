@@ -28,7 +28,11 @@ Rails.application.routes.draw do
   namespace :professor do
     get "dashboard",        to: "dashboard#show",           as: :dashboard
     resources :turmas, only: %i[show new create] do
-      resources :alunos, only: %i[show], controller: "turma_alunos"
+      resources :alunos, only: %i[show], controller: "turma_alunos" do
+        member do
+          get :relatorio_ia
+        end
+      end
     end
     resources :recados, only: :create
   end
