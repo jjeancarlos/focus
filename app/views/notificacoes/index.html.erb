@@ -1,33 +1,25 @@
-<div class="min-h-screen pb-24 px-4 pt-8"
-     style="background-color: #F5F0E8;">
-
-  <div class="flex items-center gap-3 mb-6">
+<div class="bg-app min-h-screen px-4 pt-8 pb-24">
+  <div class="mb-6 flex items-center gap-3">
     <%= back_button_to(aluno_dashboard_path) %>
-    <h1 class="text-xl font-bold" style="color: #2C4A7C;">
+    <h1 class="text-primary text-xl font-bold">
       Notificações
     </h1>
   </div>
 
-  <%# ALERTAS DO SISTEMA %>
   <% if @alertas.any? %>
     <div class="mb-4">
-      <p class="text-xs font-semibold mb-2 uppercase tracking-wide"
-         style="color: #7A726C;">Hoje</p>
+      <p class="text-muted mb-2 text-xs font-semibold uppercase tracking-wide">Hoje</p>
       <div class="space-y-3">
         <% @alertas.each do |alerta| %>
-          <div class="rounded-2xl p-4 shadow-sm flex items-start gap-3"
-               style="background-color: #EDE8DF;">
-            <div class="rounded-full flex items-center justify-center flex-shrink-0"
-                 style="width: 40px; height: 40px;
-                        background-color: #F5F0E8;">
-              <i class="fa-solid <%= alerta[:icone] %>"
-                 style="color: <%= alerta[:cor] %>; font-size: 18px;"></i>
+          <div class="bg-surface shadow-soft rounded-2xl flex items-start gap-3 p-4">
+            <div class="bg-app flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full">
+              <i class="fa-solid <%= alerta[:icone] %>" aria-hidden="true" style="color: <%= alerta[:cor] %>; font-size: 18px;"></i>
             </div>
             <div>
-              <p class="text-sm font-semibold" style="color: #2C4A7C;">
+              <p class="text-primary text-sm font-semibold">
                 <%= alerta[:titulo] %>
               </p>
-              <p class="text-sm mt-1" style="color: #4A4540;">
+              <p class="text-secondary mt-1 text-sm">
                 <%= alerta[:mensagem] %>
               </p>
             </div>
@@ -37,38 +29,31 @@
     </div>
   <% end %>
 
-  <%# RECADOS DO PROFESSOR %>
   <div>
-    <p class="text-xs font-semibold mb-2 uppercase tracking-wide"
-       style="color: #7A726C;">Recados do professor</p>
+    <p class="text-muted mb-2 text-xs font-semibold uppercase tracking-wide">Recados do professor</p>
 
     <% if @recados.any? %>
       <div class="space-y-3">
         <% @recados.each do |recado| %>
-          <div class="rounded-2xl p-4 shadow-sm flex items-start gap-3"
-               style="background-color: #EDE8DF;">
+          <div class="bg-surface shadow-soft rounded-2xl flex items-start gap-3 p-4">
             <% if recado.professor.foto.attached? %>
               <%= image_tag recado.professor.foto,
-                    class: "rounded-full object-cover flex-shrink-0",
-                    style: "width: 40px; height: 40px;" %>
+                    class: "h-10 w-10 rounded-full object-cover flex-shrink-0" %>
             <% else %>
-              <div class="rounded-full flex items-center justify-center
-                          flex-shrink-0 text-white text-sm font-bold"
-                   style="width: 40px; height: 40px;
-                          background-color: #4A6FA5;">
+              <div class="btn-primary flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold text-white">
                 <%= recado.professor.name.first.upcase %>
               </div>
             <% end %>
             <div class="flex-1">
               <div class="flex items-center justify-between">
-                <p class="text-sm font-semibold" style="color: #2C4A7C;">
+                <p class="text-primary text-sm font-semibold">
                   <%= recado.professor.name %>
                 </p>
-                <p class="text-xs" style="color: #7A726C;">
+                <p class="text-muted text-xs">
                   <%= recado.created_at.strftime("%d/%m") %>
                 </p>
               </div>
-              <p class="text-sm mt-1" style="color: #4A4540;">
+              <p class="text-secondary mt-1 text-sm">
                 <%= recado.mensagem %>
               </p>
             </div>
@@ -76,15 +61,12 @@
         <% end %>
       </div>
     <% else %>
-      <div class="rounded-2xl p-6 text-center shadow-sm"
-           style="background-color: #EDE8DF;">
-        <i class="fa-solid fa-bell-slash text-2xl mb-2"
-           style="color: #7A726C;"></i>
-        <p class="text-sm" style="color: #7A726C;">
+      <div class="bg-surface shadow-soft rounded-2xl p-6 text-center">
+        <i class="fa-solid fa-bell-slash text-muted mb-2 text-2xl" aria-hidden="true"></i>
+        <p class="text-muted text-sm">
           Nenhum recado do professor ainda
         </p>
       </div>
     <% end %>
   </div>
-
 </div>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-full bg-[#F5F0E8]">
+<html class="h-full bg-app" data-theme="light">
   <head>
     <title><%= content_for(:title) || "Focus" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,6 +9,14 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= yield :head %>
+    <script>
+      (() => {
+        const storedTheme = window.localStorage.getItem("focus-theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = storedTheme || (prefersDark ? "dark" : "light");
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -16,30 +24,42 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "chartkick", "Chart.bundle", "data-turbo-track": "reload", defer: true %>
   </head>
-  <body class="min-h-screen bg-[#F5F0E8] font-sans text-base text-stone-900 antialiased">
-    <div class="flex min-h-screen flex-col bg-[#F5F0E8]">
-
-      <%# HEADER COM SININHO — só para alunos logados %>
+  <body class="min-h-screen bg-app font-sans text-base text-primary antialiased">
+    <div class="flex min-h-screen flex-col bg-app">
       <% if authenticated? && Current.user&.aluno? %>
-        <header class="fixed top-0 left-0 right-0 z-30 px-4 py-3 flex items-center justify-between"
-                style="background-color: #F5F0E8; border-bottom: 1px solid #D9D0C4;">
-        <%= link_to root_path do %>
-          <%= image_tag "focus_logo1.png", alt: "Focus", class: "h-10 w-auto" %>
-        <% end %>
-          <%= link_to notificacoes_path, class: "relative" do %>
-            <i class="fa-solid fa-bell text-xl" style="color: #4A6FA5;"></i>
-            <span id="badge-notificacoes"
-                  class="absolute -top-1 -right-1 flex rounded-full text-white text-[10px]
-                         font-bold items-center justify-center hidden leading-none"
-                  style="width: 18px; height: 18px; min-width: 18px; min-height: 18px; background-color: #9C7A2E; line-height: 1;">
-            </span>
+        <header class="fixed top-0 left-0 right-0 z-30 flex items-center justify-between border-b border-subtle bg-app px-4 py-3">
+          <%= link_to missoes_path do %>
+            <%= image_tag "focus_logo1.png", alt: "Focus", class: "h-10 w-auto" %>
           <% end %>
+          <div class="flex items-center gap-2">
+            <button type="button"
+                    id="theme-toggle"
+                    class="theme-toggle"
+                    aria-label="Ativar modo escuro">
+              <i class="fa-solid fa-moon" aria-hidden="true" data-theme-icon></i>
+              <span class="sr-only" data-theme-label>Modo escuro</span>
+            </button>
+            <%= link_to notificacoes_path, class: "theme-toggle relative text-accent", aria: { label: "Notificações" } do %>
+              <i class="fa-solid fa-bell text-base" aria-hidden="true"></i>
+              <span class="sr-only">Notificações</span>
+              <span id="badge-notificacoes"
+                    class="bg-[#CA8A04] absolute -top-1 -right-1 hidden min-h-[18px] min-w-[18px] items-center justify-center rounded-full text-[10px] leading-none font-bold text-white">
+              </span>
+            <% end %>
+          </div>
         </header>
+      <% else %>
+        <button type="button"
+                id="theme-toggle"
+                class="theme-toggle theme-toggle--floating"
+                aria-label="Ativar modo escuro">
+          <i class="fa-solid fa-moon" aria-hidden="true" data-theme-icon></i>
+          <span class="sr-only" data-theme-label>Modo escuro</span>
+        </button>
       <% end %>
 
-      <%# FLASH MESSAGES %>
       <% if flash.any? %>
-        <div class="fixed inset-x-0 z-50 px-4 <%= authenticated? && Current.user&.aluno? ? 'top-16' : 'top-4' %>">
+        <div class="fixed inset-x-0 z-50 px-4 <%= authenticated? && Current.user&.aluno? ? 'top-16' : 'top-20' %>">
           <div class="mx-auto flex w-full max-w-5xl flex-col gap-3">
             <% flash.each do |type, message| %>
               <% next if message.blank? %>
@@ -48,23 +68,21 @@
                   <span class="pt-0.5"><%= flash_message_icon(type) %></span>
                   <span><%= message %></span>
                 </p>
-                <div class="absolute bottom-0 left-0 h-1 rounded-full" data-alert-bar style="width: 100%; background-color: #D4E0F0;"></div>
+                <div class="absolute bottom-0 left-0 h-1 rounded-full bg-surface-muted" data-alert-bar style="width: 100%;"></div>
               </div>
             <% end %>
           </div>
         </div>
       <% end %>
 
-      <main class="flex flex-1 items-center
-                   <%= authenticated? && Current.user&.aluno? ? 'pt-14' : '' %>
-                   <%= authenticated? ? 'pb-24' : '' %>">
+      <main class="flex flex-1 items-center <%= authenticated? && Current.user&.aluno? ? 'pt-14' : '' %> <%= authenticated? ? 'pb-24' : '' %>">
         <div class="mx-auto w-full max-w-5xl px-4 py-6">
           <%= yield %>
         </div>
       </main>
 
       <% if authenticated? %>
-        <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-[#D9D0C4] bg-[#F5F0E8]/95 backdrop-blur-sm" aria-label="Navegação principal">
+        <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-subtle backdrop-blur-sm" style="background-color: var(--nav-bg);" aria-label="Navegação principal">
           <div class="mx-auto grid min-h-14 max-w-5xl px-2 pb-[env(safe-area-inset-bottom)]"
                style="grid-template-columns: repeat(<%= bottom_nav_items.count %>, minmax(0, 1fr));">
             <% bottom_nav_items.each do |item| %>
@@ -73,7 +91,6 @@
           </div>
         </nav>
       <% end %>
-
     </div>
 
     <script>
@@ -133,20 +150,49 @@
           if (data.total > 0) {
             badge.textContent = data.total > 9 ? '9+' : data.total;
             badge.classList.remove('hidden');
+            badge.classList.add('flex');
           } else {
             badge.classList.add('hidden');
+            badge.classList.remove('flex');
           }
         } catch (e) {}
       }
 
+      function syncThemeToggle() {
+        const toggle = document.getElementById('theme-toggle');
+        const icon = toggle?.querySelector('[data-theme-icon]');
+        const label = toggle?.querySelector('[data-theme-label]');
+        if (!toggle || !icon) return;
+
+        const theme = document.documentElement.dataset.theme || 'light';
+        const darkModeActive = theme === 'dark';
+        const nextModeLabel = darkModeActive ? 'Modo claro' : 'Modo escuro';
+
+        icon.className = darkModeActive ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        if (label) label.textContent = nextModeLabel;
+        toggle.setAttribute('aria-label', `Ativar ${nextModeLabel.toLowerCase()}`);
+        toggle.setAttribute('title', nextModeLabel);
+        toggle.setAttribute('aria-pressed', String(darkModeActive));
+
+        if (toggle.dataset.initialized === 'true') return;
+        toggle.dataset.initialized = 'true';
+        toggle.addEventListener('click', () => {
+          const currentTheme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+          const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          document.documentElement.dataset.theme = nextTheme;
+          window.localStorage.setItem('focus-theme', nextTheme);
+          syncThemeToggle();
+        });
+      }
+
       function initializeLayoutScripts() {
         initializeUiEnhancements();
+        syncThemeToggle();
         atualizarBadge();
       }
 
       document.addEventListener('turbo:load', initializeLayoutScripts);
       document.addEventListener('DOMContentLoaded', initializeLayoutScripts);
     </script>
-
   </body>
 </html>

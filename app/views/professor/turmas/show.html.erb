@@ -1,56 +1,44 @@
-<div class="min-h-screen pb-24 px-4 pt-8"
-     style="background-color: #F5F0E8;">
-
-  <%# HEADER %>
-  <div class="space-y-4 mb-6">
+<div class="bg-app min-h-screen px-4 pt-8 pb-24">
+  <div class="mb-6 space-y-4">
     <%= back_button_to(professor_dashboard_path) %>
     <div>
-      <h1 class="text-xl font-bold" style="color: #2C4A7C;">
+      <h1 class="text-primary text-xl font-bold">
         <%= @turma.nome %>
       </h1>
     </div>
     <%= turma_code_badge(@turma, show_count: true) %>
   </div>
 
-  <%# LISTA DE ALUNOS %>
   <% if @alunos.any? %>
     <div class="space-y-3">
       <% @alunos.each do |aluno| %>
         <% ativo = aluno.tentativas.where(concluida_em: 5.days.ago..).any? %>
         <%= link_to professor_turma_aluno_path(@turma, aluno),
-              class: "flex items-center gap-3 rounded-2xl p-4 shadow-sm",
-              style: "background-color: #EDE8DF;" do %>
+              class: "bg-surface shadow-soft flex items-center gap-3 rounded-2xl p-4" do %>
 
           <% if aluno.foto.attached? %>
             <%= image_tag aluno.foto,
-                  class: "rounded-full object-cover flex-shrink-0",
-                  style: "width: 44px; height: 44px;" %>
+                  class: "h-11 w-11 rounded-full object-cover flex-shrink-0" %>
           <% else %>
-            <div class="rounded-full flex items-center justify-center
-                        text-white text-sm font-bold flex-shrink-0"
-                 style="width: 44px; height: 44px;
-                        background-color: #4A6FA5;">
+            <div class="btn-primary flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold text-white">
               <%= aluno.name.first.upcase %>
             </div>
           <% end %>
 
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-semibold truncate"
-               style="color: #2A2520;">
+          <div class="min-w-0 flex-1">
+            <p class="text-primary truncate text-sm font-semibold">
               <%= aluno.name %>
             </p>
-            <p class="text-xs" style="color: #7A726C;">
+            <p class="text-muted text-xs">
               Nível <%= aluno.nivel %> · <%= aluno.xp_total %> XP ·
               <%= aluno.sequencia_dias %> dias seguidos
             </p>
           </div>
 
           <div class="flex flex-col items-center gap-1 flex-shrink-0">
-            <div class="rounded-full"
-                 style="width: 10px; height: 10px;
-                        background-color: <%= ativo ? '#4A8C5C' : '#9C7A2E' %>;">
-            </div>
-            <span class="text-xs" style="color: #7A726C;">
+            <div class="h-2.5 w-2.5 rounded-full"
+                 style="background-color: <%= ativo ? 'var(--success)' : 'var(--warning)' %>;"></div>
+            <span class="text-muted text-xs">
               <%= ativo ? "ativo" : "inativo" %>
             </span>
           </div>
@@ -59,21 +47,20 @@
       <% end %>
     </div>
   <% else %>
-    <div class="rounded-2xl p-8 text-center shadow-sm"
-         style="background-color: #EDE8DF;">
-      <p class="text-base" style="color: #7A726C;">
+    <div class="bg-surface shadow-soft rounded-2xl p-8 text-center">
+      <p class="text-muted text-base">
         Nenhum aluno nessa turma ainda
       </p>
-      <p class="text-sm mt-2" style="color: #7A726C;">
+      <p class="text-muted mt-2 text-sm">
         Compartilhe o código
-        <span class="font-bold text-[#4A6FA5]"><%= @turma.invite_token %></span>
+        <span class="text-accent font-bold"><%= @turma.invite_token %></span>
         com seus alunos
       </p>
     </div>
   <% end %>
 
-  <div class="mt-5 rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
-    <p class="text-sm font-semibold mb-3" style="color: #7A726C;">
+  <div class="bg-surface shadow-soft mt-5 rounded-2xl p-4">
+    <p class="text-muted mb-3 text-sm font-semibold">
       <i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Enviar recado para a turma
     </p>
     <%= form_with scope: :recado, url: professor_recados_path, method: :post, local: true do |form| %>
@@ -81,11 +68,9 @@
       <%= form.text_area :mensagem,
             placeholder: "Escreva uma mensagem de incentivo...",
             rows: 3,
-            class: "w-full rounded-xl px-4 py-3 text-base outline-none resize-none",
-            style: "background-color: #F5F0E8; border: 1.5px solid #D9D0C4; color: #2A2520; font-size: 16px;" %>
+            class: "form-input-theme w-full resize-none rounded-xl px-4 py-3 text-base outline-none" %>
       <button type="submit"
-              class="mt-3 w-full rounded-full px-6 py-3 text-base font-semibold text-white cursor-pointer min-h-12"
-              style="background-color: #4A6FA5; border: none;">
+              class="btn-primary min-h-12 mt-3 w-full rounded-full px-6 py-3 text-base font-semibold cursor-pointer">
         <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
         Enviar recado
       </button>

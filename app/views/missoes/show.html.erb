@@ -1,19 +1,19 @@
 <div class="mx-auto max-w-3xl space-y-6 pb-8" data-missao-root data-missao-tipo="<%= @atividade.tipo %>" data-duration="<%= @tempo_visual %>" data-feedback-messages="<%= json_escape(@feedback_messages.to_json) %>">
   <div class="space-y-2">
-    <p class="text-sm font-semibold uppercase tracking-wide" style="color: #7A726C;"><%= @atividade.tipo.humanize %></p>
-    <h1 class="text-2xl font-bold" style="color: #2C4A7C;"><%= @atividade.titulo %></h1>
-    <p class="text-base leading-relaxed" style="color: #7A726C;"><%= @atividade.descricao %></p>
+    <p class="text-muted text-sm font-semibold uppercase tracking-wide"><%= @atividade.tipo.humanize %></p>
+    <h1 class="text-primary text-2xl font-bold"><%= @atividade.titulo %></h1>
+    <p class="text-muted text-base leading-relaxed"><%= @atividade.descricao %></p>
   </div>
 
   <% if @atividade.tipo == "desafio" %>
-    <div class="mx-auto w-full max-w-2xl rounded-2xl px-4 py-4 shadow-sm" style="background-color: #EDE8DF;">
+    <div class="bg-surface shadow-soft mx-auto w-full max-w-2xl rounded-2xl px-4 py-4">
       <div class="space-y-3">
         <div class="flex items-center justify-between gap-3">
-          <p class="text-sm font-semibold" style="color: #2C4A7C;">Tempo de organização</p>
-          <p class="text-sm" data-timer-message style="color: #7A726C;">Organize as palavras no seu ritmo.</p>
+          <p class="text-primary text-sm font-semibold">Tempo de organização</p>
+          <p class="text-muted text-sm" data-timer-message>Organize as palavras no seu ritmo.</p>
         </div>
-        <div class="h-3 w-full overflow-hidden rounded-full" style="background-color: #D4E0F0;">
-          <div data-timer-bar class="h-full rounded-full" style="width: 0%; background-color: #4A6FA5;"></div>
+        <div class="bg-surface-muted h-3 w-full overflow-hidden rounded-full">
+          <div data-timer-bar class="h-full rounded-full" style="width: 0%; background-color: var(--action-primary);"></div>
         </div>
       </div>
     </div>
@@ -21,24 +21,24 @@
 
   <%= form_with url: responder_missao_path(@atividade.tipo), method: :post, local: true, class: "space-y-6", data: { missao_form: true } do |form| %>
     <% if @atividade.tipo == "leitura" %>
-      <div class="rounded-2xl p-6 shadow-sm" style="background-color: #EDE8DF;">
-        <p class="text-base leading-loose" style="color: #1C1917;"><%= simple_format(@atividade.conteudo) %></p>
+      <div class="bg-surface shadow-soft rounded-2xl p-6">
+        <p class="text-primary text-base leading-loose"><%= simple_format(@atividade.conteudo) %></p>
       </div>
     <% end %>
 
     <% if @atividade.tipo == "foco" %>
       <div class="space-y-3" data-foco-bloco>
         <div class="flex items-center justify-between">
-          <p class="text-sm font-semibold" style="color: #2C4A7C;">Tempo de observação</p>
-          <div class="rounded-full px-4 py-2 text-sm font-semibold shadow-sm" data-foco-timer style="background-color: #DDE6F2; color: #2C4A7C; min-width: 56px; text-align: center;">
+          <p class="text-primary text-sm font-semibold">Tempo de observação</p>
+          <div class="bg-surface-muted text-primary rounded-full px-4 py-2 text-sm font-semibold shadow-soft" data-foco-timer style="min-width: 56px; text-align: center;">
             10s
           </div>
         </div>
-        <div class="h-3 w-full overflow-hidden rounded-full" style="background-color: #D4E0F0;">
-          <div data-timer-bar class="h-full rounded-full" style="width: 0%; background-color: #4A6FA5;"></div>
+        <div class="bg-surface-muted h-3 w-full overflow-hidden rounded-full">
+          <div data-timer-bar class="h-full rounded-full" style="width: 0%; background-color: var(--action-primary);"></div>
         </div>
-        <p class="text-sm" data-timer-message style="color: #7A726C;">Observe a imagem com calma. As perguntas aparecem quando o tempo acabar.</p>
-        <div data-foco-imagem class="rounded-2xl p-4 shadow-sm" style="background-color: #EDE8DF;">
+        <p class="text-muted text-sm" data-timer-message>Observe a imagem com calma. As perguntas aparecem quando o tempo acabar.</p>
+        <div data-foco-imagem class="bg-surface shadow-soft rounded-2xl p-4">
           <%= image_tag asset_path(@atividade.imagem_url), class: "w-full rounded-2xl object-cover", style: "max-height: 280px;", alt: "Imagem da missão de foco" %>
         </div>
       </div>
@@ -53,34 +53,34 @@
            end %>
         <% proximo_label = index == @perguntas.size - 1 ? "Ver resultado" : "Próxima pergunta" %>
 
-        <div class="rounded-2xl p-5 shadow-sm <%= index.zero? ? "" : "hidden" %>" style="background-color: #EDE8DF;" data-question-card data-question-index="<%= index %>" data-next-label="<%= proximo_label %>" data-correct-text="<%= correta_texto %>">
+        <div class="bg-surface shadow-soft rounded-2xl p-5 <%= index.zero? ? "" : "hidden" %>" data-question-card data-question-index="<%= index %>" data-next-label="<%= proximo_label %>" data-correct-text="<%= correta_texto %>">
           <div class="space-y-4">
             <div>
-              <p class="text-sm font-semibold" style="color: #7A726C;">
+              <p class="text-muted text-sm font-semibold">
                 <%= @atividade.tipo == "desafio" ? "Etapa" : "Pergunta" %> <%= index + 1 %>
               </p>
-              <h2 class="text-lg font-semibold" style="color: #2C4A7C;"><%= pergunta["enunciado"] %></h2>
+              <h2 class="text-primary text-lg font-semibold"><%= pergunta["enunciado"] %></h2>
             </div>
 
             <% if @atividade.tipo == "desafio" %>
               <div class="space-y-4" data-desafio-item data-correct-order="<%= Array(pergunta["ordem_correta"]).join("||") %>">
-                <div class="flex min-h-16 flex-wrap gap-2 rounded-2xl border border-dashed p-3" style="border-color: #B8C9E0; background-color: #F5F0E8;" data-desafio-resposta></div>
+                <div class="bg-app border-subtle flex min-h-16 flex-wrap gap-2 rounded-2xl border border-dashed p-3" data-desafio-resposta></div>
                 <input type="hidden" name="desafio_respostas[<%= pergunta["id"] %>]" value="" data-desafio-input>
 
                 <div class="flex flex-wrap gap-2" data-desafio-banco>
                   <% @palavras_embaralhadas[pergunta].each do |palavra| %>
-                    <button type="button" class="rounded-full px-4 py-3 text-base font-semibold" style="background-color: #DDE6F2; color: #2C4A7C; min-height: 48px;" data-palavra><%= palavra %></button>
+                    <button type="button" class="bg-surface-muted text-primary rounded-full px-4 py-3 text-base font-semibold" style="min-height: 48px;" data-palavra><%= palavra %></button>
                   <% end %>
                 </div>
 
-                <button type="button" class="w-full rounded-full px-6 py-4 text-base font-semibold text-white" style="background-color: #4A6FA5; min-height: 48px;" data-check-answer>
+                <button type="button" class="btn-primary min-h-12 w-full rounded-full px-6 py-4 text-base font-semibold" data-check-answer>
                   <%= proximo_label %>
                 </button>
               </div>
             <% else %>
               <div class="space-y-3">
                 <% Array(pergunta["opcoes"]).each_with_index do |opcao, opcao_index| %>
-                  <label class="block cursor-pointer rounded-2xl border px-4 py-4 text-base font-semibold transition" style="border-color: #D9D0C4; background-color: #F5F0E8; min-height: 48px; color: #1C1917;" data-choice-option data-correct="<%= opcao_index == pergunta["correta_index"].to_i %>">
+                  <label class="bg-app border-subtle text-primary block cursor-pointer rounded-2xl border px-4 py-4 text-base font-semibold transition" style="min-height: 48px;" data-choice-option data-correct="<%= opcao_index == pergunta["correta_index"].to_i %>">
                     <%= radio_button_tag "respostas[#{pergunta["id"]}]", opcao_index, false, class: "sr-only", required: index.zero? %>
                     <span><%= opcao %></span>
                   </label>
@@ -88,12 +88,12 @@
               </div>
             <% end %>
 
-            <div class="hidden space-y-4 rounded-2xl px-4 py-4" data-answer-feedback style="background-color: #F5E9C8;">
-              <p class="text-base font-semibold leading-relaxed" data-feedback-message style="color: #7A5A00;"></p>
-              <p class="text-base leading-relaxed" style="color: #7A726C;">
-                Resposta correta: <span class="font-semibold" data-feedback-correct style="color: #2C4A7C;"></span>
+            <div class="bg-surface-warning hidden space-y-4 rounded-2xl px-4 py-4" data-answer-feedback>
+              <p class="text-warning text-base font-semibold leading-relaxed" data-feedback-message></p>
+              <p class="text-muted text-base leading-relaxed">
+                Resposta correta: <span class="text-primary font-semibold" data-feedback-correct></span>
               </p>
-              <button type="button" class="w-full rounded-full px-6 py-4 text-base font-semibold text-white" style="background-color: #4A6FA5; min-height: 48px;" data-feedback-next>
+              <button type="button" class="btn-primary min-h-12 w-full rounded-full px-6 py-4 text-base font-semibold" data-feedback-next>
                 <%= proximo_label %>
               </button>
             </div>
@@ -102,7 +102,7 @@
       <% end %>
     </div>
 
-    <%= form.submit "Ver resultado", class: "hidden w-full rounded-full px-6 py-4 text-base font-semibold text-white", style: "background-color: #4A6FA5; min-height: 48px;", data: { submit_missao: true } %>
+    <%= form.submit "Ver resultado", class: "btn-primary hidden min-h-12 w-full rounded-full px-6 py-4 text-base font-semibold", data: { submit_missao: true } %>
   <% end %>
 </div>
 
@@ -175,13 +175,13 @@
       question.querySelectorAll("[data-choice-option]").forEach((option) => {
         const input = option.querySelector('input[type="radio"]');
         if (input.checked) {
-          option.style.backgroundColor = "#D4E0F0";
-          option.style.borderColor = "#AFC4E0";
-          option.style.color = "#2C4A7C";
+          option.style.backgroundColor = "var(--surface-muted)";
+          option.style.borderColor = "var(--action-primary)";
+          option.style.color = "var(--action-primary-strong)";
         } else {
-          option.style.backgroundColor = "#F5F0E8";
-          option.style.borderColor = "#D9D0C4";
-          option.style.color = "#1C1917";
+          option.style.backgroundColor = "var(--app-bg)";
+          option.style.borderColor = "var(--border-subtle)";
+          option.style.color = "var(--text-primary)";
         }
       });
     };
@@ -228,9 +228,7 @@
             selected.type = "button";
             selected.dataset.palavraSelecionada = "true";
             selected.dataset.value = button.textContent.trim();
-            selected.className = "rounded-full px-4 py-3 text-base font-semibold";
-            selected.style.backgroundColor = "#4A6FA5";
-            selected.style.color = "#F5F0E8";
+            selected.className = "btn-primary rounded-full px-4 py-3 text-base font-semibold";
             selected.style.minHeight = "48px";
             selected.textContent = button.textContent.trim();
 

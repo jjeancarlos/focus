@@ -1,59 +1,51 @@
-<div class="min-h-screen pb-24 px-4 pt-8"
-     style="background-color: #F5F0E8;">
-
-  <%# HEADER %>
+<div class="bg-app min-h-screen px-4 pt-8 pb-24">
   <div class="mb-6">
-    <h1 class="text-2xl font-bold" style="color: #2C4A7C;">
+    <h1 class="text-primary text-2xl font-bold">
       Olá, <%= Current.user.name.split.first %>! <i class="fa-solid fa-hand" aria-hidden="true"></i>
     </h1>
-    <p class="text-sm mt-1" style="color: #7A726C;">
+    <p class="text-muted mt-1 text-sm">
       Painel do professor
     </p>
   </div>
 
-  <%# KPIs %>
-  <div class="grid grid-cols-2 gap-3 mb-6">
-    <div class="rounded-2xl p-4 text-center shadow-sm"
-         style="background-color: #EDE8DF;">
-      <p class="text-3xl font-bold" style="color: #2C4A7C;">
+  <div class="mb-6 grid grid-cols-2 gap-3">
+    <div class="bg-surface shadow-soft rounded-2xl p-4 text-center">
+      <p class="text-primary text-3xl font-bold">
         <%= @total_alunos %>
       </p>
-      <p class="text-xs mt-1" style="color: #7A726C;">alunos no total</p>
+      <p class="text-muted mt-1 text-xs">alunos no total</p>
     </div>
-    <div class="rounded-2xl p-4 text-center shadow-sm"
-         style="background-color: #EDE8DF;">
-      <p class="text-3xl font-bold" style="color: #4A6FA5;">
+    <div class="bg-surface shadow-soft rounded-2xl p-4 text-center">
+      <p class="text-accent text-3xl font-bold">
         <%= @missoes_hoje %>
       </p>
-      <p class="text-xs mt-1" style="color: #7A726C;">missões hoje</p>
+      <p class="text-muted mt-1 text-xs">missões hoje</p>
     </div>
   </div>
 
-  <%# TURMAS %>
   <div class="mb-6">
-    <div class="mb-3 flex items-center justify-between">
-      <p class="text-sm font-semibold" style="color: #7A726C;">
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <p class="text-muted text-sm font-semibold">
         <i class="fa-solid fa-school" aria-hidden="true"></i> Minhas turmas
       </p>
       <%= link_to new_professor_turma_path,
-            class: "rounded-full px-4 py-2 text-sm font-semibold",
-            style: "background-color: #4A6FA5; color: white;" do %>
+            class: "btn-primary inline-flex min-h-12 items-center rounded-full px-4 py-2 text-sm font-semibold transition-colors" do %>
         <i class="fa-solid fa-plus" aria-hidden="true"></i>
-        Nova turma
+        <span class="ml-2">Nova turma</span>
       <% end %>
     </div>
 
     <% if @turmas.any? %>
       <div class="space-y-3">
         <% @turmas.each do |turma| %>
-          <div class="rounded-2xl p-5 shadow-sm" style="background-color: #EDE8DF;">
+          <div class="bg-surface shadow-soft rounded-2xl p-5">
             <div class="flex items-start justify-between gap-3">
               <div class="flex-1">
                 <%= link_to professor_turma_path(turma), class: "block" do %>
-                  <p class="text-base font-semibold" style="color: #2C4A7C;">
+                  <p class="text-primary text-base font-semibold">
                     <%= turma.nome %>
                   </p>
-                  <p class="text-sm mt-1" style="color: #7A726C;">
+                  <p class="text-muted mt-1 text-sm">
                     <%= turma.alunos.count %> alunos
                   </p>
                 <% end %>
@@ -61,7 +53,7 @@
                   <%= turma_code_badge(turma) %>
                 </div>
               </div>
-              <%= link_to professor_turma_path(turma), style: "color: #4A6FA5;" do %>
+              <%= link_to professor_turma_path(turma), class: "text-accent" do %>
                 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
               <% end %>
             </div>
@@ -69,14 +61,11 @@
         <% end %>
       </div>
     <% else %>
-      <div class="rounded-2xl p-6 text-center shadow-sm"
-           style="background-color: #EDE8DF;">
-        <p class="text-base" style="color: #7A726C;">
+      <div class="bg-surface shadow-soft rounded-2xl p-6 text-center">
+        <p class="text-muted text-base">
           Nenhuma turma criada ainda
         </p>
       </div>
     <% end %>
   </div>
-
-
 </div>
