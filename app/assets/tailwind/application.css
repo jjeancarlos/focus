@@ -213,4 +213,47 @@
     right: 1rem;
     z-index: 50;
   }
+
+  .btn-warning {
+    background-color: var(--surface-warning);
+    color: var(--warning-text);
+    border: 1px solid color-mix(in srgb, var(--warning) 35%, var(--border-subtle));
+  }
+
+  .btn-warning:hover {
+    background-color: color-mix(in srgb, var(--surface-warning) 72%, var(--warning) 28%);
+  }
+
+  .modal-overlay-theme {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background-color: color-mix(in srgb, #000 36%, transparent);
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-card-theme {
+    width: 100%;
+    max-width: 24rem;
+    border-radius: 1rem;
+    background-color: var(--surface-bg);
+    padding: 1.5rem;
+    box-shadow: 0 20px 40px rgba(28, 25, 23, 0.18);
+  }
+
+  .modal-icon-warning {
+    display: flex;
+    height: 4rem;
+    width: 4rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: var(--surface-warning);
+    color: var(--warning-text);
+    margin-inline: auto;
+  }
 }

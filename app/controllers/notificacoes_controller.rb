@@ -1,4 +1,6 @@
 class NotificacoesController < ApplicationController
+  before_action :require_aluno
+
   def index
     @usuario = Current.user
     @recados = recados_do_aluno.recentes
@@ -14,6 +16,10 @@ class NotificacoesController < ApplicationController
   end
 
   private
+
+  def require_aluno
+    redirect_to root_path, alert: "Quase lá! Esta área é exclusiva para alunos." unless Current.user&.aluno?
+  end
 
   def recados_do_aluno
     return Recado.where(aluno_id: Current.user.id) if Current.user.turma.blank?

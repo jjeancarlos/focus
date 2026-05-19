@@ -1,4 +1,6 @@
 class Aluno::DashboardController < ApplicationController
+  before_action :require_aluno
+
   def show
     @tentativas_semana = Current.user.tentativas.da_semana
     @tentativas_semana_passada = Current.user.tentativas.semana_passada
@@ -23,5 +25,11 @@ class Aluno::DashboardController < ApplicationController
     @missoes_por_semana = weekly_counts.each_with_index.to_h do |(_, total), index|
       ["Semana #{index + 1}", total]
     end
+  end
+
+  private
+
+  def require_aluno
+    redirect_to root_path, alert: "Quase lá! Esta área é exclusiva para alunos." unless Current.user&.aluno?
   end
 end

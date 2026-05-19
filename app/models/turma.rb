@@ -14,6 +14,13 @@ class Turma < ApplicationRecord
 
   before_create :gerar_invite_token
 
+  def destroy_with_students_unassigned!
+    transaction do
+      alunos.update_all(turma_id: nil)
+      destroy!
+    end
+  end
+
   def self.find_by_invite_token(token)
     normalized_token = token.to_s.upcase.strip
     return if normalized_token.blank?

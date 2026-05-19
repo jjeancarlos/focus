@@ -66,4 +66,20 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
     assert_empty cookies[:session_id]
   end
+
+  test "root redirects authenticated professor to dashboard" do
+    sign_in_as(users(:two))
+
+    get root_path
+
+    assert_redirected_to professor_dashboard_path
+  end
+
+  test "root redirects authenticated aluno to missoes" do
+    sign_in_as(users(:one))
+
+    get root_path
+
+    assert_redirected_to missoes_path
+  end
 end

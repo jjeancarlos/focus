@@ -10,56 +10,31 @@
   <div class="bg-surface shadow-soft rounded-2xl px-6 py-8">
     <div class="space-y-4">
       <div>
-        <h1 class="text-primary text-2xl font-bold">
-          Olá, <%= Current.user.name.split.first %>!
-        </h1>
+        <h1 class="text-primary text-2xl font-bold">Focus</h1>
         <p class="text-secondary mt-2 text-base leading-relaxed">
-          Sua jornada continua hoje com foco, inclusão e progresso no seu ritmo.
+          Uma jornada de aprendizagem com foco, inclusão e progresso no seu ritmo.
         </p>
       </div>
 
-      <span class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white"
-            style="background-color: <%= nivel_color(Current.user.nivel) %>;">
-        <i class="fa-solid fa-medal" aria-hidden="true"></i>
-        Nível <%= Current.user.nivel %> · <%= nivel_nome(Current.user.nivel) %>
-      </span>
-
-      <%= link_to missoes_path,
+      <%= link_to new_session_path,
             class: "btn-primary flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-base font-semibold" do %>
-        <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
-        Iniciar Missão
+        <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+        Entrar na minha conta
       <% end %>
     </div>
   </div>
 
   <div class="grid gap-4 md:grid-cols-2">
     <article class="bg-surface shadow-soft rounded-2xl p-5">
-      <p class="text-muted text-sm font-semibold">XP atual</p>
-      <div class="mt-2 flex items-end justify-between gap-3">
-        <p class="text-primary text-3xl font-bold">
-          <%= Current.user.xp_total %> XP
-        </p>
-        <p class="text-muted text-sm">
-          Próximo marco: <%= proximo_nivel_xp(Current.user.nivel) %>
-        </p>
-      </div>
-      <div class="bg-surface-muted mt-4 h-4 w-full rounded-full">
-        <div class="h-4 rounded-full"
-             style="background-color: var(--action-primary); width: <%= xp_percentual(Current.user) %>%; transition: width 0.6s ease;"></div>
-      </div>
+      <p class="text-muted text-sm font-semibold">Para alunos</p>
+      <p class="text-primary mt-2 text-lg font-bold">Missões, progresso e conquistas</p>
+      <p class="text-muted mt-3 text-sm leading-relaxed">Acompanhe sua evolução, complete missões e mantenha sua sequência de estudos.</p>
     </article>
 
     <article class="bg-surface shadow-soft rounded-2xl p-5">
-      <p class="text-muted text-sm font-semibold">Sequência de dias</p>
-      <div class="mt-2 flex items-baseline gap-2">
-        <span class="text-primary text-4xl font-bold">
-          <%= Current.user.sequencia_dias %>
-        </span>
-        <span class="text-muted text-base">dias seguidos</span>
-      </div>
-      <p class="mt-3 text-sm font-semibold <%= Current.user.sequencia_dias.positive? ? 'text-success' : 'text-muted' %>">
-        <%= Current.user.sequencia_dias.positive? ? "Continue assim." : "Faça sua primeira missão hoje." %>
-      </p>
+      <p class="text-muted text-sm font-semibold">Para professores</p>
+      <p class="text-primary mt-2 text-lg font-bold">Turmas, alunos e acompanhamento</p>
+      <p class="text-muted mt-3 text-sm leading-relaxed">Organize turmas, acompanhe o desempenho dos alunos e envie recados com facilidade.</p>
     </article>
   </div>
 
