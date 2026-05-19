@@ -14,6 +14,22 @@ class Professor::TurmaAlunosController < ApplicationController
     redirect_to professor_turma_path(@turma), notice: "Aluno removido da turma com sucesso."
   end
 
+  def relatorio_ia
+    dados = StudentReportDataService.new(@aluno, @turma).coletar
+    analise = GeminiAnalysisService.new(dados).analisar
+    pdf = ReportPdfService.new(dados, analise).gerar
+
+    send_data pdf,
+      filename: "relatorio_#{@aluno.name.parameterize}_#{Date.today}.pdf",
+      type: "application/pdf",
+      disposition: "attachment"
+  rescue => e
+    Rails.logger.error("[RelatorioIA] #{e.class}: #{e.message}")
+    Rails.logger.error(e.backtrace.first(10).join("\n"))
+    redirect_to professor_turma_aluno_path(@turma, @aluno),
+      alert: "Erro: #{e.message}"
+  end
+
   private
     def set_turma
       @turma = Turma.find_by!(id: params[:turma_id], professor_id: Current.user.id)

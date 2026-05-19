@@ -11,6 +11,13 @@
     </div>
   </div>
 
+  <%= link_to relatorio_ia_professor_turma_aluno_path(@turma, @aluno),
+        id: "btn-relatorio-ia",
+        class: "btn-primary mb-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-semibold" do %>
+    <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+    Gerar Relatório com IA
+  <% end %>
+
   <div class="mb-4 grid grid-cols-3 gap-3">
     <div class="bg-surface shadow-soft rounded-2xl p-3 text-center">
       <p class="text-primary text-xl font-bold">
