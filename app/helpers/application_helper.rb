@@ -1,6 +1,6 @@
 module ApplicationHelper
   def flash_message_classes(type)
-    if type.to_sym.in?([:notice, :success])
+    if type.to_sym.in?([ :notice, :success ])
       "rounded-2xl border border-subtle bg-surface-success px-4 py-3 text-base font-medium text-primary shadow-soft"
     else
       "rounded-2xl border border-subtle bg-surface-warning px-4 py-3 text-base font-medium text-warning shadow-soft"
@@ -8,7 +8,7 @@ module ApplicationHelper
   end
 
   def flash_message_icon(type)
-    icon_classes = if type.to_sym.in?([:notice, :success])
+    icon_classes = if type.to_sym.in?([ :notice, :success ])
       "fa-solid fa-circle-check"
     else
       "fa-solid fa-triangle-exclamation"
@@ -46,7 +46,7 @@ module ApplicationHelper
   end
 
   def turma_code_badge(turma, show_count: false)
-    details = ["Código: #{turma.invite_token}"]
+    details = [ "Código: #{turma.invite_token}" ]
     details << "#{turma.alunos.count} alunos" if show_count
 
     content_tag(:div, class: "bg-app rounded-2xl p-4") do

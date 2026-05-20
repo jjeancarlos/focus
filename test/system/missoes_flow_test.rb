@@ -9,14 +9,12 @@ class MissoesFlowTest < ApplicationSystemTestCase
     fill_in "password", with: "password"
     click_on "Entrar"
 
-    visit aluno_dashboard_path
-    click_on "Iniciar uma Missão"
+    visit missoes_path
     click_on "Leitura Guiada"
 
     assert_text atividade.titulo
-    choose("respostas[leitura_1]", option: "0")
-    choose("respostas[leitura_2]", option: "1")
-    click_on "Concluir missão"
+    find("label", text: "Um livro azul").click
+    find("label", text: "Na escola").click
 
     assert_text "+"
     assert_text "Fazer outra missão"

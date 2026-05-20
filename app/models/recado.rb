@@ -12,7 +12,7 @@ class Recado < ApplicationRecord
   private
 
   def deve_ter_apenas_um_destino
-    destinos = [turma_id.present?, aluno_id.present?].count(true)
+    destinos = [ turma_id.present?, aluno_id.present? ].count(true)
     errors.add(:base, "Escolha uma turma ou um aluno para enviar o recado.") if destinos.zero?
     errors.add(:base, "Escolha apenas um destino para o recado.") if destinos > 1
   end

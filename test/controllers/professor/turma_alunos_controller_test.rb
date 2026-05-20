@@ -28,18 +28,24 @@ class Professor::TurmaAlunosControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "returns json error for xhr relatório request failure" do
-    failing_service = Object.new
-    failing_service.define_singleton_method(:coletar) { raise StandardError, "boom" }
+    singleton = StudentReportDataService.singleton_class
+    original_new = StudentReportDataService.method(:new)
 
-    StudentReportDataService.stub(:new, failing_service) do
-      get relatorio_ia_professor_turma_aluno_path(@turma, @aluno), headers: {
-        "X-Requested-With" => "XMLHttpRequest",
-        "Accept" => "application/pdf"
-      }
+    singleton.define_method(:new) do |*_args|
+      raise StandardError, "boom"
     end
+
+    get relatorio_ia_professor_turma_aluno_path(@turma, @aluno), headers: {
+      "X-Requested-With" => "XMLHttpRequest",
+      "Accept" => "application/pdf"
+    }
 
     assert_response :unprocessable_entity
     assert_equal "application/json", response.media_type
     assert_equal({ "error" => "Erro ao gerar o relatório." }, JSON.parse(response.body))
+  ensure
+    singleton.define_method(:new) do |*args, **kwargs, &block|
+      original_new.call(*args, **kwargs, &block)
+    end
   end
 end

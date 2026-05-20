@@ -9,7 +9,7 @@ class Atividade < ApplicationRecord
   validates :tipo, presence: true, inclusion: { in: TIPOS }
   validates :titulo, :descricao, presence: true
   validates :xp_base, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :ativo, inclusion: { in: [true, false] }
+  validates :ativo, inclusion: { in: [ true, false ] }
   validates :perguntas, presence: true
 
   def self.sorteada_para(tipo)
