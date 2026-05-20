@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_17_210702) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_20_144151) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -108,9 +108,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_17_210702) do
     t.integer "nivel", default: 1, null: false
     t.string "password_digest", null: false
     t.string "perfil_acessibilidade"
+    t.string "provider"
     t.string "role", default: "aluno", null: false
     t.integer "sequencia_dias", default: 0, null: false
     t.bigint "turma_id"
+    t.string "uid"
     t.datetime "updated_at", null: false
     t.integer "xp_total", default: 0, null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
