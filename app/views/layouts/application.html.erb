@@ -142,11 +142,12 @@
       }
 
       async function atualizarBadge() {
+        const badge = document.getElementById('badge-notificacoes');
+        if (!badge) return;
+
         try {
           const res = await fetch('/notificacoes/contagem');
           const data = await res.json();
-          const badge = document.getElementById('badge-notificacoes');
-          if (!badge) return;
           if (data.total > 0) {
             badge.textContent = data.total > 9 ? '9+' : data.total;
             badge.classList.remove('hidden');

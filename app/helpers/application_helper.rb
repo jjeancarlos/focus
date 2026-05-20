@@ -66,7 +66,7 @@ module ApplicationHelper
   def bottom_nav_items
     if Current.user&.professor?
       [
-        { label: "Dashboard", path: "/professor/dashboard", icon: :home },
+        { label: "Dashboard", path: "/professor/dashboard", icon: :dashboard_chart },
         { label: "Perfil",    path: "/perfil",              icon: :profile }
       ]
     else
@@ -122,6 +122,13 @@ module ApplicationHelper
         tag.path(d: "M12 20v2", "stroke-linecap": "round"),
         tag.path(d: "M2 12h2", "stroke-linecap": "round"),
         tag.path(d: "M20 12h2", "stroke-linecap": "round")
+      ]
+    when :dashboard_chart
+      [
+        tag.path(d: "M4 19.5h16", "stroke-linecap": "round"),
+        tag.path(d: "M7 16V11", "stroke-linecap": "round"),
+        tag.path(d: "M12 16V7", "stroke-linecap": "round"),
+        tag.path(d: "M17 16V9", "stroke-linecap": "round")
       ]
     when :history
       [
