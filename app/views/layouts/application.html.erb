@@ -186,7 +186,34 @@
         });
       }
 
-      function initializeProfessorConfirmModal() {
+      function showModalElement(modal) {
+        if (!modal) return;
+        modal.dataset.modalState = 'opening';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.setAttribute('aria-hidden', 'false');
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            modal.dataset.modalState = 'open';
+          });
+        });
+      }
+
+      function hideModalElement(modal, callback) {
+        if (!modal) return;
+        modal.dataset.modalState = 'closing';
+        modal.setAttribute('aria-hidden', 'true');
+
+        window.setTimeout(() => {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+          modal.dataset.modalState = 'closed';
+          callback?.();
+        }, 260);
+      }
+
+      function initializeConfirmModal() {
         const modal = document.getElementById('confirm-modal');
         if (!modal || modal.dataset.initialized === 'true') return;
         modal.dataset.initialized = 'true';
@@ -197,30 +224,157 @@
         const method = modal.querySelector('[data-confirm-modal-method]');
         const submit = modal.querySelector('[data-confirm-modal-submit]');
         const cancel = modal.querySelector('[data-confirm-modal-cancel]');
+        const icon = modal.querySelector('[data-confirm-modal-icon]');
 
-        const hideModal = () => {
-          modal.classList.add('hidden');
-          modal.setAttribute('aria-hidden', 'true');
+        const iconClasses = {
+          trash: 'fa-solid fa-trash-can',
+          logout: 'fa-solid fa-right-from-bracket'
+        };
+
+        const hideModal = () => hideModalElement(modal);
+
+        const showModal = (button) => {
+          if (title) title.textContent = button.dataset.confirmTitle || 'Confirmar ação?';
+          if (message) message.textContent = button.dataset.confirmMessage || 'Revise a ação antes de continuar.';
+          if (form) form.action = button.dataset.confirmAction || '#';
+          if (method) method.value = button.dataset.confirmMethod || 'delete';
+          if (submit) submit.textContent = button.dataset.confirmButton || 'Confirmar';
+          if (icon) icon.className = iconClasses[button.dataset.confirmIcon] || iconClasses.trash;
+          showModalElement(modal);
         };
 
         cancel?.addEventListener('click', hideModal);
         modal.addEventListener('click', (event) => {
           if (event.target === modal) hideModal();
         });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+            hideModal();
+          }
+        });
 
         document.querySelectorAll('[data-confirm-modal-open]').forEach((button) => {
           if (button.dataset.modalInitialized === 'true') return;
           button.dataset.modalInitialized = 'true';
+          button.addEventListener('click', () => showModal(button));
+        });
+      }
 
-          button.addEventListener('click', () => {
-            if (title) title.textContent = button.dataset.confirmTitle || 'Confirmar ação?';
-            if (message) message.textContent = button.dataset.confirmMessage || 'Revise a ação antes de continuar.';
-            if (form) form.action = button.dataset.confirmAction || '#';
-            if (method) method.value = button.dataset.confirmMethod || 'delete';
-            if (submit) submit.textContent = button.dataset.confirmButton || 'Confirmar';
-            modal.classList.remove('hidden');
-            modal.setAttribute('aria-hidden', 'false');
+      function initializeReportLoadingModal() {
+        const modal = document.getElementById('report-loading-modal');
+        const trigger = document.querySelector('[data-loading-report]');
+        if (!modal || !trigger || trigger.dataset.loadingInitialized === 'true') return;
+
+        trigger.dataset.loadingInitialized = 'true';
+        const message = modal.querySelector('[data-loading-report-message]');
+        const messages = [
+          'Conectando com a IA...',
+          'Coletando os dados do aluno...',
+          'Analisando desempenho e progresso...',
+          'Montando o relatório em PDF...',
+          'Finalizando seu arquivo...'
+        ];
+
+        const showModal = () => {
+          showModalElement(modal);
+        };
+
+        const hideModal = () => {
+          window.clearInterval(modal.loadingIntervalId);
+          window.clearTimeout(modal.loadingDelayId);
+          modal.loadingAbortController = null;
+          hideModalElement(modal, () => {
+            trigger.dataset.loadingActive = 'false';
+            trigger.classList.remove('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
           });
+        };
+
+        const abortLoading = () => {
+          modal.loadingAbortController?.abort();
+          hideModal();
+        };
+
+        const rotateMessages = () => {
+          let index = 0;
+          if (message) {
+            message.textContent = messages[0];
+            message.style.opacity = '1';
+          }
+
+          window.clearInterval(modal.loadingIntervalId);
+          modal.loadingIntervalId = window.setInterval(() => {
+            if (!message) return;
+            message.style.opacity = '0.5';
+            window.setTimeout(() => {
+              index += 1;
+              message.textContent = messages[index % messages.length];
+              message.style.opacity = '1';
+            }, 450);
+          }, 3200);
+        };
+
+        modal.addEventListener('click', (event) => {
+          if (event.target === modal && trigger.dataset.loadingActive === 'true') {
+            abortLoading();
+          }
+        });
+
+        trigger.addEventListener('click', async (event) => {
+          event.preventDefault();
+          if (trigger.dataset.loadingActive === 'true') return;
+
+          trigger.dataset.loadingActive = 'true';
+          trigger.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+          showModal();
+          rotateMessages();
+
+          const controller = new AbortController();
+          modal.loadingAbortController = controller;
+
+          try {
+            await new Promise((resolve, reject) => {
+              modal.loadingDelayId = window.setTimeout(resolve, 3000);
+              controller.signal.addEventListener('abort', () => {
+                window.clearTimeout(modal.loadingDelayId);
+                reject(new DOMException('Aborted', 'AbortError'));
+              }, { once: true });
+            });
+
+            const response = await fetch(trigger.href, {
+              method: 'GET',
+              headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/pdf'
+              },
+              signal: controller.signal
+            });
+
+            const contentType = response.headers.get('Content-Type') || '';
+
+            if (!response.ok || !contentType.includes('application/pdf')) {
+              throw new Error('Falha ao gerar relatório');
+            }
+
+            const blob = await response.blob();
+            const disposition = response.headers.get('Content-Disposition') || '';
+            const fileNameMatch = disposition.match(/filename="?([^";]+)"?/i);
+            const fileName = fileNameMatch ? fileNameMatch[1] : 'relatorio.pdf';
+            const blobUrl = window.URL.createObjectURL(blob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = blobUrl;
+            downloadLink.download = fileName;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            downloadLink.remove();
+            window.URL.revokeObjectURL(blobUrl);
+            hideModal();
+          } catch (error) {
+            hideModal();
+
+            if (error.name === 'AbortError') return;
+
+            window.location.href = trigger.href;
+          }
         });
       }
 
@@ -228,7 +382,8 @@
         initializeUiEnhancements();
         syncThemeToggle();
         atualizarBadge();
-        initializeProfessorConfirmModal();
+        initializeConfirmModal();
+        initializeReportLoadingModal();
       }
 
       document.addEventListener('turbo:load', initializeLayoutScripts);

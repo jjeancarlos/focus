@@ -13,10 +13,42 @@
 
   <%= link_to relatorio_ia_professor_turma_aluno_path(@turma, @aluno),
         id: "btn-relatorio-ia",
-        class: "btn-primary mb-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-semibold" do %>
+        class: "btn-primary mb-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-semibold",
+        data: { loading_report: true } do %>
     <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
     Gerar Relatório com IA
   <% end %>
+
+  <div id="report-loading-modal"
+       class="hidden fixed inset-0 z-50 items-center justify-center px-6 modal-overlay-theme"
+       data-modal-state="closed"
+       aria-hidden="true"
+       role="dialog"
+       aria-modal="true">
+    <div class="modal-card-theme relative overflow-hidden text-center">
+      <div class="loading-modal-accent"></div>
+
+      <div class="relative mx-auto mb-6 h-24 w-24" data-loading-report-spinner>
+        <div class="loading-modal-spinner-track absolute inset-0 rounded-full border-4"></div>
+        <div class="loading-modal-spinner-ring absolute inset-0 rounded-full border-4 border-t-transparent animate-spin"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <i class="fa-solid fa-file-arrow-down loading-modal-spinner-icon text-3xl animate-pulse" aria-hidden="true"></i>
+        </div>
+      </div>
+
+      <h3 class="text-primary mb-2 text-xl font-bold">
+        Gerando seu arquivo
+      </h3>
+
+      <p class="text-muted text-sm font-medium transition-opacity duration-500" data-loading-report-message>
+        Conectando com a IA...
+      </p>
+
+      <div class="loading-modal-progress-track mt-8 h-1.5 w-full overflow-hidden rounded-full">
+        <div class="loading-modal-progress-bar h-1.5 rounded-full"></div>
+      </div>
+    </div>
+  </div>
 
   <div class="mb-4 grid grid-cols-3 gap-3">
     <div class="bg-surface shadow-soft rounded-2xl p-3 text-center">

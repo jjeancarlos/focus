@@ -37,7 +37,7 @@
 
     <% cards.each do |card| %>
       <% disponivel = @missoes_por_tipo[card[:tipo]] %>
-      <% classes = "bg-surface shadow-soft block rounded-2xl px-4 py-6 transition-colors" %>
+      <% classes = "bg-surface shadow-soft interactive-card block rounded-2xl px-4 py-6" %>
 
       <% if @limite_diario_atingido %>
         <div class="bg-surface shadow-soft relative cursor-not-allowed rounded-2xl px-4 py-6 opacity-50">

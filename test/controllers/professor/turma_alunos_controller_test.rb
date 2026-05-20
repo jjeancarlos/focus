@@ -26,4 +26,20 @@ class Professor::TurmaAlunosControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Aluno removido da turma com sucesso.", flash[:notice]
     assert_nil @aluno.reload.turma_id
   end
+
+  test "returns json error for xhr relatório request failure" do
+    failing_service = Object.new
+    failing_service.define_singleton_method(:coletar) { raise StandardError, "boom" }
+
+    StudentReportDataService.stub(:new, failing_service) do
+      get relatorio_ia_professor_turma_aluno_path(@turma, @aluno), headers: {
+        "X-Requested-With" => "XMLHttpRequest",
+        "Accept" => "application/pdf"
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_equal "application/json", response.media_type
+    assert_equal({ "error" => "Erro ao gerar o relatório." }, JSON.parse(response.body))
+  end
 end
