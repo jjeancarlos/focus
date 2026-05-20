@@ -20,6 +20,9 @@ gem "image_processing", "~> 1.2"
 gem "dotenv-rails"
 gem "prawn"
 gem "prawn-table"
+gem "omniauth"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
