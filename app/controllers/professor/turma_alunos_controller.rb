@@ -26,8 +26,13 @@ class Professor::TurmaAlunosController < ApplicationController
   rescue => e
     Rails.logger.error("[RelatorioIA] #{e.class}: #{e.message}")
     Rails.logger.error(e.backtrace.first(10).join("\n"))
-    redirect_to professor_turma_aluno_path(@turma, @aluno),
-      alert: "Erro: #{e.message}"
+
+    if request.xhr?
+      render json: { error: "Erro ao gerar o relatório." }, status: :unprocessable_entity
+    else
+      redirect_to professor_turma_aluno_path(@turma, @aluno),
+        alert: "Erro: #{e.message}"
+    end
   end
 
   private

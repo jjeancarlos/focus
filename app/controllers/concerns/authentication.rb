@@ -34,7 +34,7 @@ module Authentication
     end
 
     def authentication_request_path
-      return_to = request.get? ? safe_return_to_path(request.fullpath) : nil
+      return_to = request.get? || request.head? ? safe_return_to_path(request.fullpath) : nil
       new_session_path(return_to:)
     end
 

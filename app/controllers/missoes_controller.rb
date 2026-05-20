@@ -97,7 +97,7 @@ class MissoesController < ApplicationController
 
     def tempo_gasto
       inicio = Time.zone.parse(session[:missao_atual]["iniciada_em"])
-      [(Time.current - inicio).round, 1].max
+      [ (Time.current - inicio).round, 1 ].max
     end
 
     def corrigir_respostas

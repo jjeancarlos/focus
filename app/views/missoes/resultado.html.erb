@@ -13,9 +13,8 @@
 </div>
 
 <% if @mostrar_modal_conclusao %>
-  <div class="fixed inset-0 z-50 flex items-center justify-center px-4" data-conclusao-modal>
-    <div class="absolute inset-0" style="background-color: rgba(28, 25, 23, 0.65);"></div>
-    <div class="bg-surface relative z-10 w-full max-w-lg rounded-2xl px-6 py-8 text-center shadow-xl">
+  <div class="modal-overlay-theme fixed inset-0 z-50 flex items-center justify-center px-4" data-modal-state="open" data-conclusao-modal>
+    <div class="modal-card-theme relative z-10 w-full max-w-lg px-6 py-8 text-center">
       <div class="space-y-4">
         <div class="text-accent text-5xl"><i class="fa-solid fa-party-horn" aria-hidden="true"></i></div>
         <h2 class="text-primary text-2xl font-bold">Incrível! Você completou o dia!</h2>

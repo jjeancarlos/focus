@@ -23,7 +23,7 @@ class Aluno::DashboardController < ApplicationController
                               .count
 
     @missoes_por_semana = weekly_counts.each_with_index.to_h do |(_, total), index|
-      ["Semana #{index + 1}", total]
+      [ "Semana #{index + 1}", total ]
     end
   end
 

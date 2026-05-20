@@ -25,7 +25,7 @@ class ReportPdfService
   def gerar
     pdf = Prawn::Document.new(
       page_size: "A4",
-      margin: [50, 50, 50, 50]
+      margin: [ 50, 50, 50, 50 ]
     )
 
     font_path = Rails.root.join("app/assets/fonts")
@@ -56,9 +56,9 @@ class ReportPdfService
 
   def titulo(pdf, texto)
     pdf.fill_color AZUL
-    pdf.fill_rectangle [0, pdf.cursor], pdf.bounds.width, 24
+    pdf.fill_rectangle [ 0, pdf.cursor ], pdf.bounds.width, 24
     pdf.fill_color BRANCO
-    pdf.draw_text texto, at: [8, pdf.cursor - 17], size: 11
+    pdf.draw_text texto, at: [ 8, pdf.cursor - 17 ], size: 11
     pdf.fill_color ESCURO
     pdf.move_down 32
   end
@@ -90,19 +90,19 @@ class ReportPdfService
     titulo(pdf, "Indicadores Gerais")
 
     dados = [
-      ["Missoes concluidas", @geral[:total_missoes].to_s],
-      ["XP total acumulado", @aluno[:xp_total].to_s],
-      ["Nivel atual", "#{@aluno[:nivel]} — #{@aluno[:nome_nivel]}"],
-      ["Sequencia de dias", "#{@aluno[:sequencia_dias]} dias"],
-      ["Missoes nos ultimos 7 dias", @geral[:missoes_ultimos_7_dias].to_s],
-      ["Missoes nos ultimos 30 dias", @geral[:missoes_ultimos_30_dias].to_s],
-      ["Tempo total dedicado", "#{@geral[:tempo_total_minutos]} minutos"],
-      ["Media de pontuacao", @geral[:media_pontuacao].to_s],
-      ["Ultima atividade", @geral[:ultima_atividade] || "Nenhuma"]
+      [ "Missoes concluidas", @geral[:total_missoes].to_s ],
+      [ "XP total acumulado", @aluno[:xp_total].to_s ],
+      [ "Nivel atual", "#{@aluno[:nivel]} — #{@aluno[:nome_nivel]}" ],
+      [ "Sequencia de dias", "#{@aluno[:sequencia_dias]} dias" ],
+      [ "Missoes nos ultimos 7 dias", @geral[:missoes_ultimos_7_dias].to_s ],
+      [ "Missoes nos ultimos 30 dias", @geral[:missoes_ultimos_30_dias].to_s ],
+      [ "Tempo total dedicado", "#{@geral[:tempo_total_minutos]} minutos" ],
+      [ "Media de pontuacao", @geral[:media_pontuacao].to_s ],
+      [ "Ultima atividade", @geral[:ultima_atividade] || "Nenhuma" ]
     ]
 
     pdf.table(dados, width: pdf.bounds.width,
-      cell_style: { size: 10, padding: [6, 8], border_color: "D9D0C4" }) do |t|
+      cell_style: { size: 10, padding: [ 6, 8 ], border_color: "D9D0C4" }) do |t|
       t.column(0).background_color = BEGE_CARD
       t.column(0).text_color = AZUL
       t.column(0).font_style = :bold
@@ -114,18 +114,18 @@ class ReportPdfService
   def desempenho_por_tipo(pdf)
     titulo(pdf, "Desempenho por Tipo de Missao")
 
-    cabecalho = [["Tipo", "Missoes", "Media Pts", "Tempo Medio", "XP Ganho"]]
+    cabecalho = [ [ "Tipo", "Missoes", "Media Pts", "Tempo Medio", "XP Ganho" ] ]
     linhas = []
 
     { "leitura" => "Leitura Guiada", "foco" => "Missao de Foco", "desafio" => "Desafio" }.each do |tipo, label|
       d = @tipos[tipo.to_sym] || @tipos[tipo]
       next unless d
       tempo = d[:media_tempo_segundos] > 0 ? "#{(d[:media_tempo_segundos] / 60.0).round(1)} min" : "—"
-      linhas << [label, d[:total].to_s, d[:media_pontuacao].to_s, tempo, d[:xp_ganho].to_s]
+      linhas << [ label, d[:total].to_s, d[:media_pontuacao].to_s, tempo, d[:xp_ganho].to_s ]
     end
 
     pdf.table(cabecalho + linhas, width: pdf.bounds.width,
-      cell_style: { size: 10, padding: [6, 8], border_color: "D9D0C4" }) do |t|
+      cell_style: { size: 10, padding: [ 6, 8 ], border_color: "D9D0C4" }) do |t|
       t.row(0).background_color = AZUL
       t.row(0).text_color = BRANCO
       t.row(0).font_style = :bold
@@ -138,13 +138,13 @@ class ReportPdfService
   def evolucao(pdf)
     titulo(pdf, "Evolucao nas Ultimas 4 Semanas")
 
-    cabecalho = [["Semana", "Missoes", "XP Ganho", "Media Pts"]]
+    cabecalho = [ [ "Semana", "Missoes", "XP Ganho", "Media Pts" ] ]
     linhas = @evolucao[:por_semana].map do |s|
-      ["Sem. #{s[:semana]}", s[:missoes].to_s, s[:xp].to_s, s[:media_pontuacao].to_s]
+      [ "Sem. #{s[:semana]}", s[:missoes].to_s, s[:xp].to_s, s[:media_pontuacao].to_s ]
     end
 
     pdf.table(cabecalho + linhas, width: pdf.bounds.width,
-      cell_style: { size: 10, padding: [6, 8], border_color: "D9D0C4" }) do |t|
+      cell_style: { size: 10, padding: [ 6, 8 ], border_color: "D9D0C4" }) do |t|
       t.row(0).background_color = AZUL
       t.row(0).text_color = BRANCO
       t.row(0).font_style = :bold
@@ -156,9 +156,9 @@ class ReportPdfService
     pdf.font("FreeSans", size: 10) do
       pdf.fill_color MARROM
       tendencia = case @evolucao[:tendencia]
-        when "crescente"   then "Tendencia: Crescente — o aluno esta evoluindo."
-        when "decrescente" then "Tendencia: Decrescente — atencao necessaria."
-        else "Tendencia: Estavel — desempenho consistente."
+      when "crescente"   then "Tendencia: Crescente — o aluno esta evoluindo."
+      when "decrescente" then "Tendencia: Decrescente — atencao necessaria."
+      else "Tendencia: Estavel — desempenho consistente."
       end
       pdf.text tendencia
     end
@@ -169,17 +169,17 @@ class ReportPdfService
     titulo(pdf, "Habitos de Uso e Frequencia")
 
     dados = [
-      ["Total de sessoes",         @habitos[:total_sessoes].to_s],
-      ["Dias com atividade",       @habitos[:dias_ativos_total].to_s],
-      ["Horario mais ativo",       @habitos[:hora_mais_ativa]],
-      ["Dia da semana mais ativo", @habitos[:dia_semana_mais_ativo]],
-      ["Primeiro acesso",          @habitos[:primeiro_acesso] || "—"],
-      ["Ultimo acesso",            @habitos[:ultimo_acesso] || "—"],
-      ["Dias inativo ate hoje",    @habitos[:dias_inativo_ate_hoje]&.to_s || "—"]
+      [ "Total de sessoes",         @habitos[:total_sessoes].to_s ],
+      [ "Dias com atividade",       @habitos[:dias_ativos_total].to_s ],
+      [ "Horario mais ativo",       @habitos[:hora_mais_ativa] ],
+      [ "Dia da semana mais ativo", @habitos[:dia_semana_mais_ativo] ],
+      [ "Primeiro acesso",          @habitos[:primeiro_acesso] || "—" ],
+      [ "Ultimo acesso",            @habitos[:ultimo_acesso] || "—" ],
+      [ "Dias inativo ate hoje",    @habitos[:dias_inativo_ate_hoje]&.to_s || "—" ]
     ]
 
     pdf.table(dados, width: pdf.bounds.width,
-      cell_style: { size: 10, padding: [6, 8], border_color: "D9D0C4" }) do |t|
+      cell_style: { size: 10, padding: [ 6, 8 ], border_color: "D9D0C4" }) do |t|
       t.column(0).background_color = BEGE_CARD
       t.column(0).text_color = AZUL
       t.column(0).font_style = :bold
@@ -214,7 +214,7 @@ class ReportPdfService
 
   def rodape(pdf)
     pdf.repeat(:all) do
-      pdf.bounding_box([0, pdf.bounds.bottom + 20], width: pdf.bounds.width, height: 20) do
+      pdf.bounding_box([ 0, pdf.bounds.bottom + 20 ], width: pdf.bounds.width, height: 20) do
         pdf.stroke_color "D9D0C4"
         pdf.stroke_horizontal_rule
         pdf.move_down 4
@@ -226,7 +226,7 @@ class ReportPdfService
       end
     end
     pdf.number_pages "<page> de <total>",
-      at: [pdf.bounds.right - 60, pdf.bounds.bottom + 22],
+      at: [ pdf.bounds.right - 60, pdf.bounds.bottom + 22 ],
       size: 7, color: MARROM
   end
 

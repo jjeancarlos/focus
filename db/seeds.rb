@@ -49,13 +49,13 @@ Atividade.find_or_initialize_by(titulo: "Leitura no parque").tap do |atividade|
     {
       "id" => "leitura_1",
       "enunciado" => "Com quem Lia foi ao parque?",
-      "opcoes" => ["Com a professora", "Com a avó", "Com a irmã"],
+      "opcoes" => [ "Com a professora", "Com a avó", "Com a irmã" ],
       "correta_index" => 1
     },
     {
       "id" => "leitura_2",
       "enunciado" => "O que Lia fez depois da leitura?",
-      "opcoes" => ["Foi embora imediatamente", "Comeu sozinha", "Brincou de bola por alguns minutos"],
+      "opcoes" => [ "Foi embora imediatamente", "Comeu sozinha", "Brincou de bola por alguns minutos" ],
       "correta_index" => 2
     }
   ]
@@ -73,25 +73,25 @@ puts "Atividade de leitura criada"
   {
     titulo: "Foco na sala de aula",
     imagem_url: "sala_aula.jpeg",
-    opcoes: ["Planta", "Relógio", "Computador", "Livro"],
+    opcoes: [ "Planta", "Relógio", "Computador", "Livro" ],
     correta_index: 2
   },
   {
     titulo: "Foco na cozinha",
     imagem_url: "cozinha.jpeg",
-    opcoes: ["Televisão", "Geladeira", "Panela", "Xícara"],
+    opcoes: [ "Televisão", "Geladeira", "Panela", "Xícara" ],
     correta_index: 0
   },
   {
     titulo: "Foco no quarto",
     imagem_url: "quarto.jpeg",
-    opcoes: ["Cama", "Fogão", "Abajur", "Guarda-roupa"],
+    opcoes: [ "Cama", "Fogão", "Abajur", "Guarda-roupa" ],
     correta_index: 1
   },
   {
     titulo: "Foco no parque",
     imagem_url: "parque.jpeg",
-    opcoes: ["Banco", "Árvore", "Poste de luz", "Carro"],
+    opcoes: [ "Banco", "Árvore", "Poste de luz", "Carro" ],
     correta_index: 3
   }
 ].each_with_index do |dados, index|
@@ -128,8 +128,8 @@ Atividade.find_or_initialize_by(titulo: "Monte a frase").tap do |atividade|
       "id" => "desafio_1",
       "tempo_ideal" => 30,
       "enunciado" => "Monte a frase corretamente",
-      "palavras" => ["Eu", "gosto", "de", "ler"],
-      "ordem_correta" => ["Eu", "gosto", "de", "ler"]
+      "palavras" => [ "Eu", "gosto", "de", "ler" ],
+      "ordem_correta" => [ "Eu", "gosto", "de", "ler" ]
     }
   ]
   atividade.xp_base = 50

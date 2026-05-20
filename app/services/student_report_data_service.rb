@@ -187,6 +187,6 @@ class StudentReportDataService
       end
     end
 
-    sinais.empty? ? ["Nenhum sinal de dificuldade crítico identificado no período analisado"] : sinais
+    sinais.empty? ? [ "Nenhum sinal de dificuldade crítico identificado no período analisado" ] : sinais
   end
 end

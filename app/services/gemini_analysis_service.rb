@@ -29,7 +29,7 @@ end
     request = Net::HTTP::Post.new(uri)
     request["Content-Type"] = "application/json"
     request.body = JSON.generate({
-      contents: [{ parts: [{ text: prompt }] }],
+      contents: [ { parts: [ { text: prompt } ] } ],
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 2048
@@ -82,7 +82,7 @@ end
     prompt += "Ultima atividade registrada: #{geral[:ultima_atividade] || 'nenhuma'}\n\n"
 
     prompt += "=== DESEMPENHO POR TIPO DE MISSAO ===\n"
-    ["leitura", "foco", "desafio"].each do |tipo|
+    [ "leitura", "foco", "desafio" ].each do |tipo|
       d_tipo = tipos[tipo.to_sym] || tipos[tipo]
       next unless d_tipo
       prompt += "#{tipo.upcase}:\n"

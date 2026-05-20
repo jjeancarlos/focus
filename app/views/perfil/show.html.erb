@@ -100,8 +100,17 @@
     </div>
   <% end %>
 
-  <%= button_to "Sair da conta",
-        session_path,
-        method: :delete,
-        class: "btn-secondary min-h-12 mt-4 w-full rounded-full px-6 py-4 text-base font-semibold cursor-pointer" %>
+  <button type="button"
+          class="btn-secondary min-h-12 mt-4 w-full rounded-full px-6 py-4 text-base font-semibold cursor-pointer"
+          data-confirm-modal-open
+          data-confirm-title="Sair da conta?"
+          data-confirm-message="Você precisará fazer login novamente para acessar sua conta."
+          data-confirm-action="<%= session_path %>"
+          data-confirm-method="delete"
+          data-confirm-button="Sair"
+          data-confirm-icon="logout">
+    Sair da conta
+  </button>
+
+  <%= render "layouts/confirm_modal" %>
 </div>

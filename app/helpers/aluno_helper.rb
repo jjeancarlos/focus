@@ -13,6 +13,6 @@ module AlunoHelper
 
   def xp_percentual(user)
     teto = proximo_nivel_xp(user.nivel).to_f
-    [(user.xp_total / teto * 100).round, 100].min
+    [ (user.xp_total / teto * 100).round, 100 ].min
   end
 end

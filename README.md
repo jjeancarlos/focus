@@ -101,6 +101,8 @@ DB_PASSWORD=sua_senha_postgres
 DB_NAME_DEV=focus_development
 DB_NAME_TEST=focus_test
 GEMINI_API_KEY=sua_chave_do_gemini
+GOOGLE_CLIENT_ID=seu_client_id_do_google
+GOOGLE_CLIENT_SECRET=seu_client_secret_do_google
 ```
 
 Se sua aplicação depender de credentials criptografadas fora do ambiente local, você também pode definir:
@@ -109,7 +111,7 @@ Se sua aplicação depender de credentials criptografadas fora do ambiente local
 RAILS_MASTER_KEY=sua_master_key
 ```
 
-Em ambiente local, isso normalmente não é necessário se o arquivo `config/master.key` já existir na máquina.
+Em ambiente local, isso normalmente não é necessário se o arquivo `config/master.key` já existir na máquina. Em plataformas de deploy, definir `RAILS_MASTER_KEY` costuma ser a abordagem mais segura e prática.
 
 4. Prepare o banco:
 
@@ -155,7 +157,9 @@ Código da turma
 FOCUS2026
 ```
 
-## Relatório com IA
+## Variáveis de ambiente para integrações
+
+### Relatório com IA
 
 A geração de relatório em PDF para professores depende da variável abaixo no ambiente:
 
@@ -164,6 +168,17 @@ GEMINI_API_KEY=sua_chave_do_gemini
 ```
 
 Sem essa chave, a funcionalidade de análise com IA não conseguirá consultar a API do Gemini.
+
+### Login com Google
+
+A autenticação com Google depende destas variáveis no ambiente:
+
+```env
+GOOGLE_CLIENT_ID=seu_client_id_do_google
+GOOGLE_CLIENT_SECRET=seu_client_secret_do_google
+```
+
+Sem elas, o login com Google não conseguirá iniciar o fluxo OAuth.
 
 ## Execução com Docker Compose
 
@@ -178,11 +193,21 @@ cp .env.example .env
 2. Preencha ao menos estas variáveis:
 
 ```env
+DB_HOST=localhost
+DB_PORT=5432
 DB_USERNAME=seu_usuario
 DB_PASSWORD=sua_senha
 DB_NAME_DEV=focus_development
 DB_NAME_TEST=focus_test
 RAILS_MASTER_KEY=sua_master_key
+```
+
+Se quiser usar as integrações opcionais também nesse ambiente, adicione:
+
+```env
+GEMINI_API_KEY=sua_chave_do_gemini
+GOOGLE_CLIENT_ID=seu_client_id_do_google
+GOOGLE_CLIENT_SECRET=seu_client_secret_do_google
 ```
 
 3. Suba os containers:

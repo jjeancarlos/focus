@@ -12,7 +12,7 @@ class MissoesControllerTest < ActionDispatch::IntegrationTest
   test "requires authentication" do
     get missoes_path
 
-    assert_redirected_to new_session_path
+    assert_redirected_to new_session_path(return_to: missoes_path)
   end
 
   test "allows aluno to access missions index" do
