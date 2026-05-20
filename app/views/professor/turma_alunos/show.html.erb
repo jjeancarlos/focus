@@ -44,19 +44,39 @@
       <i class="fa-solid fa-chart-line" aria-hidden="true"></i> XP por dia — últimos 7 dias
     </p>
     <% if @xp_por_dia.any? %>
-      <%= bar_chart @xp_por_dia,
-            colors: ["#4A6FA5"],
-            height: "140px",
-            library: {
-              plugins: { legend: { display: false } },
-              scales: {
-                x: { grid: { display: false },
-                     ticks: { color: "#7A726C", font: { size: 10 } } },
-                y: { grid: { color: "#D4E0F0" },
-                     ticks: { color: "#7A726C", font: { size: 10 } },
-                     beginAtZero: true }
-              }
-            } %>
+      <% xp_por_dia = @xp_por_dia.map do |label, valor|
+           data_label = label.respond_to?(:strftime) ? label.strftime('%d/%m') : label.to_s
+           [data_label, valor.to_i]
+         end %>
+      <% max_xp = xp_por_dia.map { |_, valor| valor }.max.to_i %>
+      <% max_xp = 1 if max_xp.zero? %>
+      <% svg_w_xp = 320 %>
+      <% row_height_xp = 42 %>
+      <% top_padding_xp = 22 %>
+      <% bottom_padding_xp = 16 %>
+      <% chart_left_xp = 76 %>
+      <% chart_right_xp = 286 %>
+      <% bar_max_w_xp = chart_right_xp - chart_left_xp %>
+      <% svg_h_xp = top_padding_xp + (xp_por_dia.size * row_height_xp) + bottom_padding_xp %>
+      <div class="bg-app border-subtle rounded-2xl border px-3 py-4">
+        <svg width="100%" viewBox="0 0 <%= svg_w_xp %> <%= svg_h_xp %>" role="img" aria-label="Gráfico de XP por dia nos últimos 7 dias" style="display: block; margin: 0 auto; max-width: 100%;">
+          <defs>
+            <linearGradient id="xpProfessorGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="var(--action-primary)"/>
+              <stop offset="100%" stop-color="var(--action-primary-strong)"/>
+            </linearGradient>
+          </defs>
+          <% xp_por_dia.each_with_index do |(label, valor), i| %>
+            <% y = top_padding_xp + (i * row_height_xp) %>
+            <% bar_w = [(valor / max_xp.to_f * bar_max_w_xp).round, 8].max %>
+            <% opacity = 0.35 + (valor / max_xp.to_f * 0.65) %>
+            <text x="16" y="<%= y + 17 %>" font-size="13" fill="var(--text-muted)"><%= label %></text>
+            <rect x="<%= chart_left_xp %>" y="<%= y %>" width="<%= bar_max_w_xp %>" height="22" rx="8" fill="var(--surface-muted)"/>
+            <rect x="<%= chart_left_xp %>" y="<%= y %>" width="<%= bar_w %>" height="22" rx="8" fill="url(#xpProfessorGrad)" opacity="<%= opacity.round(2) %>"/>
+            <text x="<%= [chart_left_xp + bar_w + 8, chart_right_xp + 10].min %>" y="<%= y + 16 %>" font-size="13" font-weight="600" fill="var(--text-secondary)"><%= valor %></text>
+          <% end %>
+        </svg>
+      </div>
     <% else %>
       <p class="text-muted py-4 text-center text-sm">
         <i class="fa-solid fa-seedling" aria-hidden="true"></i> Nenhuma missão esta semana
@@ -69,17 +89,40 @@
       <i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i> Missões por tipo — esta semana
     </p>
     <% if @missoes_por_tipo.any? %>
-      <%= pie_chart @missoes_por_tipo,
-            colors: ["#4A6FA5", "#4A8C5C", "#9C7A2E"],
-            height: "160px",
-            library: {
-              plugins: {
-                legend: {
-                  position: "bottom",
-                  labels: { color: "#4A4540", font: { size: 11 }, padding: 12 }
-                }
-              }
-            } %>
+      <% missoes_por_tipo = [
+           ["Leitura", @missoes_por_tipo["leitura"].to_i],
+           ["Foco", @missoes_por_tipo["foco"].to_i],
+           ["Desafio", @missoes_por_tipo["desafio"].to_i]
+         ].select { |_, valor| valor.positive? } %>
+      <% max_missoes_tipo = missoes_por_tipo.map { |_, valor| valor }.max.to_i %>
+      <% max_missoes_tipo = 1 if max_missoes_tipo.zero? %>
+      <% n_tipos = missoes_por_tipo.size %>
+      <% bar_w_tipos = 44 %>
+      <% spacing_tipos = 68 %>
+      <% svg_w_tipos = 336 %>
+      <% svg_h_tipos = 192 %>
+      <% max_bar_h_tipos = 116 %>
+      <% baseline_tipos = 140 %>
+      <% chart_start_tipos = (svg_w_tipos / 2.0) - (((n_tipos - 1) * spacing_tipos) / 2.0) %>
+      <div class="bg-app border-subtle rounded-2xl border px-3 py-4">
+        <svg width="100%" viewBox="0 0 <%= svg_w_tipos %> <%= svg_h_tipos %>" role="img" aria-label="Gráfico de missões por tipo nesta semana" style="display: block; margin: 0 auto; max-width: 100%;">
+          <defs>
+            <linearGradient id="tiposGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--action-primary)"/>
+              <stop offset="100%" stop-color="var(--action-primary-strong)"/>
+            </linearGradient>
+          </defs>
+          <% missoes_por_tipo.each_with_index do |(label, valor), i| %>
+            <% cx = chart_start_tipos + (spacing_tipos * i) %>
+            <% h = [(valor / max_missoes_tipo.to_f * max_bar_h_tipos).round, 4].max %>
+            <% y = baseline_tipos - h %>
+            <% opacity = 0.35 + (valor / max_missoes_tipo.to_f * 0.65) %>
+            <rect x="<%= cx - bar_w_tipos / 2 %>" y="<%= y %>" width="<%= bar_w_tipos %>" height="<%= h %>" rx="8" fill="url(#tiposGrad)" opacity="<%= opacity.round(2) %>"/>
+            <text x="<%= cx %>" y="<%= y - 9 %>" text-anchor="middle" font-size="14" font-weight="600" fill="var(--text-secondary)"><%= valor %></text>
+            <text x="<%= cx %>" y="168" text-anchor="middle" font-size="13" fill="var(--text-muted)"><%= label %></text>
+          <% end %>
+        </svg>
+      </div>
     <% else %>
       <p class="text-muted py-4 text-center text-sm">
         <i class="fa-solid fa-seedling" aria-hidden="true"></i> Nenhuma missão esta semana

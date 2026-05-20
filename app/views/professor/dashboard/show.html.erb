@@ -38,7 +38,7 @@
     <div class="border-subtle bg-app mb-4 rounded-2xl border p-4">
       <%= form_with url: professor_dashboard_path, method: :get, local: true, class: "space-y-3" do |form| %>
         <div class="flex items-center gap-3">
-          <div class="bg-surface flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full">
+          <div class="bg-surface flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
             <i class="fa-solid fa-magnifying-glass text-primary" aria-hidden="true"></i>
           </div>
           <div>
@@ -57,7 +57,7 @@
                 placeholder: "Nome da turma ou aluno",
                 class: "form-input-theme min-h-12 w-full rounded-full px-4 py-3 text-base outline-none",
                 autocomplete: "off" %>
-          <div class="flex gap-3 sm:flex-shrink-0">
+          <div class="flex gap-3 sm:shrink-0">
             <%= form.button type: "submit", class: "btn-primary min-h-12 flex-1 rounded-full px-5 py-3 text-base font-semibold sm:flex-none" do %>
               <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
               <span class="ml-2">Buscar</span>
@@ -81,7 +81,7 @@
           <div class="bg-surface shadow-soft rounded-2xl p-5">
             <div class="min-w-0">
               <%= link_to professor_turma_path(turma), class: "block" do %>
-                <p class="text-primary text-base font-semibold break-words">
+                <p class="text-primary text-base font-semibold wrap-break-word">
                   <%= turma.nome %>
                 </p>
                 <p class="text-muted mt-1 text-sm">
@@ -91,7 +91,7 @@
               <% if alunos_encontrados.any? %>
                 <div class="bg-app mt-3 rounded-2xl p-3">
                   <p class="text-muted text-sm font-semibold">Alunos encontrados</p>
-                  <p class="text-primary mt-2 text-base leading-relaxed break-words">
+                  <p class="text-primary mt-2 text-base leading-relaxed wrap-break-word">
                     <%= alunos_encontrados.map(&:name).join(", ") %>
                   </p>
                 </div>
@@ -101,23 +101,19 @@
               </div>
             </div>
 
-            <div class="border-subtle mt-4 flex flex-col gap-3 border-t pt-4 sm:flex-row sm:justify-end">
-              <%= link_to professor_turma_path(turma),
-                    class: "btn-secondary inline-flex min-h-12 items-center justify-center rounded-full px-4 py-3 text-sm font-semibold" do %>
-                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-                <span class="ml-2">Abrir turma</span>
-              <% end %>
+            <div class="border-subtle mt-4 flex justify-end border-t pt-4">
               <button type="button"
-                      class="btn-warning inline-flex min-h-12 items-center justify-center rounded-full px-4 py-3 text-sm font-semibold"
+                      class="text-muted hover:text-warning inline-flex min-h-12 items-center justify-center rounded-full px-3 py-2 text-sm font-semibold transition-colors"
                       aria-label="Excluir turma <%= turma.nome %>"
+                      title="Excluir turma"
                       data-confirm-modal-open
                       data-confirm-title="Excluir turma?"
                       data-confirm-message="Os alunos serão apenas desvinculados desta turma."
                       data-confirm-action="<%= professor_turma_path(turma) %>"
                       data-confirm-method="delete"
-                      data-confirm-button="Excluir turma">
-                <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                <span class="ml-2">Excluir turma</span>
+                      data-confirm-button="Excluir turma"
+                      onclick="event.stopPropagation()">
+                <i class="fa-solid fa-trash-alt" aria-hidden="true"></i>
               </button>
             </div>
           </div>

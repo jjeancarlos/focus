@@ -45,18 +45,19 @@
             <% end %>
           </div>
 
-          <div class="border-subtle mt-4 flex justify-center border-t pt-4">
+          <div class="border-subtle mt-4 flex justify-end border-t pt-4">
             <button type="button"
-                    class="btn-warning inline-flex min-h-12 items-center justify-center rounded-full px-3 py-2 text-sm font-semibold"
+                    class="text-muted hover:text-warning inline-flex min-h-12 items-center justify-center rounded-full px-3 py-2 text-sm font-semibold transition-colors"
                     aria-label="Remover <%= aluno.name %> da turma"
+                    title="Remover da turma"
                     data-confirm-modal-open
                     data-confirm-title="Remover aluno da turma?"
                     data-confirm-message="A conta e o histórico do aluno serão mantidos."
                     data-confirm-action="<%= professor_turma_aluno_path(@turma, aluno) %>"
                     data-confirm-method="delete"
-                    data-confirm-button="Remover da turma">
-              <i class="fa-solid fa-user-minus" aria-hidden="true"></i>
-              <span class="ml-2">Remover da turma</span>
+                    data-confirm-button="Remover da turma"
+                    onclick="event.stopPropagation()">
+              <i class="fa-solid fa-trash-alt" aria-hidden="true"></i>
             </button>
           </div>
         </div>
