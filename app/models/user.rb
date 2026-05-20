@@ -12,11 +12,12 @@ class User < ApplicationRecord
 
   attr_accessor :require_profile_completion
 
-  has_secure_password
+  has_secure_password validations: false
+
   has_many :turmas_como_professor,
-         class_name: "Turma",
-         foreign_key: :professor_id,
-         dependent: :destroy
+           class_name: "Turma",
+           foreign_key: :professor_id,
+           dependent: :destroy
   has_many :sessions, dependent: :destroy
   has_many :tentativas, foreign_key: :aluno_id, dependent: :destroy
   has_many :recados_individuais, class_name: "Recado", foreign_key: :aluno_id, dependent: :nullify
@@ -28,11 +29,14 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :email_address, presence: true, uniqueness: { message: "Esse email já está cadastrado. Tente fazer login." }
-  validates :password, length: { minimum: MIN_PASSWORD_LENGTH, message: "deve ter pelo menos #{MIN_PASSWORD_LENGTH} caracteres" }, allow_nil: true
+  validates :password, length: { minimum: MIN_PASSWORD_LENGTH, message: "deve ter pelo menos #{MIN_PASSWORD_LENGTH} caracteres" }, allow_nil: true, unless: :google_user?
   validates :role, presence: true, inclusion: { in: ROLES }
   validates :perfil_acessibilidade, inclusion: { in: PROFILES }, allow_nil: true
   validates :perfil_acessibilidade, presence: true, if: :require_profile_completion?
-  validate :foto_deve_ser_imagem
+  validates :provider, presence: true, if: -> { uid.present? }
+  validates :uid,      presence: true, if: -> { provider.present? }
+  validates :uid,      uniqueness: { scope: :provider }, allow_nil: true
+  validate  :foto_deve_ser_imagem
 
   def self.nivel_para_xp(xp_total)
     NIVEIS.each do |nivel, dados|
@@ -47,6 +51,10 @@ class User < ApplicationRecord
 
   def aluno?
     role == "aluno"
+  end
+
+  def google_user?
+    provider == "google_oauth2"
   end
 
   def onboarding_pending?
@@ -93,11 +101,9 @@ class User < ApplicationRecord
 
   def foto_deve_ser_imagem
     return unless foto.attached?
-
     unless foto.content_type.in?(%w[image/png image/jpeg image/jpg image/webp])
       errors.add(:foto, "deve ser uma imagem PNG, JPG ou WEBP")
     end
-
     if foto.byte_size > 5.megabytes
       errors.add(:foto, "deve ter menos de 5MB")
     end
