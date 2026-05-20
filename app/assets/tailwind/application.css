@@ -136,6 +136,16 @@
     box-shadow: var(--shadow-soft);
   }
 
+  .btn-primary,
+  .btn-secondary,
+  .btn-warning,
+  .theme-toggle,
+  .interactive-card,
+  .icon-action-button {
+    transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease,
+      box-shadow 220ms ease, transform 220ms ease, opacity 220ms ease;
+  }
+
   .btn-primary {
     background-color: var(--action-primary);
     color: var(--text-on-accent);
@@ -143,12 +153,31 @@
 
   .btn-primary:hover {
     background-color: var(--action-primary-strong);
+    box-shadow: 0 12px 24px color-mix(in srgb, var(--action-primary) 22%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:focus-visible,
+  .btn-secondary:focus-visible,
+  .btn-warning:focus-visible,
+  .theme-toggle:focus-visible,
+  .icon-action-button:focus-visible,
+  .interactive-card:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--action-primary) 18%, transparent);
   }
 
   .btn-secondary {
     background-color: var(--surface-bg);
     color: var(--action-primary);
     border: 1px solid var(--border-subtle);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--surface-muted);
+    border-color: color-mix(in srgb, var(--action-primary) 22%, var(--border-subtle));
+    color: var(--action-primary-strong);
+    transform: translateY(-1px);
   }
 
   .form-input-theme {
@@ -205,6 +234,8 @@
 
   .theme-toggle:hover {
     background-color: var(--surface-muted);
+    border-color: color-mix(in srgb, var(--action-primary) 20%, var(--border-subtle));
+    transform: translateY(-1px);
   }
 
   .theme-toggle--floating {
@@ -222,6 +253,24 @@
 
   .btn-warning:hover {
     background-color: color-mix(in srgb, var(--surface-warning) 72%, var(--warning) 28%);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(202, 138, 4, 0.14);
+  }
+
+  .icon-action-button {
+    color: var(--text-muted);
+  }
+
+  .icon-action-button:hover {
+    color: var(--warning-text);
+    background-color: color-mix(in srgb, var(--surface-warning) 70%, transparent);
+  }
+
+  .interactive-card:hover {
+    background-color: color-mix(in srgb, var(--surface-bg) 88%, var(--surface-muted));
+    border-color: color-mix(in srgb, var(--action-primary) 18%, var(--border-subtle));
+    box-shadow: 0 14px 28px rgba(28, 25, 23, 0.10);
+    transform: translateY(-1px);
   }
 
   .modal-overlay-theme {
@@ -234,15 +283,37 @@
     padding: 1.5rem;
     background-color: color-mix(in srgb, #000 36%, transparent);
     backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 260ms ease, backdrop-filter 260ms ease;
+  }
+
+  .modal-overlay-theme[data-modal-state="opening"],
+  .modal-overlay-theme[data-modal-state="open"] {
+    opacity: 1;
   }
 
   .modal-card-theme {
     width: 100%;
     max-width: 24rem;
-    border-radius: 1rem;
+    border-radius: 1.5rem;
     background-color: var(--surface-bg);
     padding: 1.5rem;
     box-shadow: 0 20px 40px rgba(28, 25, 23, 0.18);
+    border: 1px solid color-mix(in srgb, var(--border-subtle) 78%, transparent);
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+    transition: opacity 260ms ease, transform 260ms ease;
+  }
+
+  .modal-overlay-theme[data-modal-state="opening"] .modal-card-theme,
+  .modal-overlay-theme[data-modal-state="open"] .modal-card-theme {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .modal-card-theme--confirm {
+    max-width: 22rem;
+    padding-top: 1.25rem;
   }
 
   .modal-icon-warning {
@@ -255,5 +326,74 @@
     background-color: var(--surface-warning);
     color: var(--warning-text);
     margin-inline: auto;
+  }
+
+  .modal-icon-warning--soft {
+    height: 4.5rem;
+    width: 4.5rem;
+    background-color: color-mix(in srgb, var(--surface-warning) 80%, white);
+    border: 1px solid color-mix(in srgb, var(--warning) 28%, var(--border-subtle));
+    box-shadow: 0 12px 24px rgba(202, 138, 4, 0.12);
+  }
+
+  .loading-modal-accent {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 0.25rem;
+    background: linear-gradient(90deg, var(--action-primary), var(--warning));
+  }
+
+  .loading-modal-spinner-track {
+    border-color: color-mix(in srgb, var(--border-subtle) 70%, transparent);
+  }
+
+  .loading-modal-spinner-ring {
+    border-color: var(--action-primary);
+  }
+
+  .loading-modal-spinner-icon {
+    color: var(--action-primary);
+  }
+
+  .loading-modal-progress-track {
+    background-color: color-mix(in srgb, var(--border-subtle) 55%, transparent);
+  }
+
+  .loading-modal-progress-bar {
+    width: 33%;
+    background: linear-gradient(90deg, var(--action-primary), color-mix(in srgb, var(--action-primary) 72%, var(--text-on-accent)));
+    animation: loading-modal-progress 2s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary,
+  .btn-secondary,
+  .btn-warning,
+  .theme-toggle,
+  .interactive-card,
+  .icon-action-button,
+  .modal-overlay-theme,
+  .modal-card-theme,
+  .loading-modal-progress-bar {
+    transition: none;
+    animation: none;
+    transform: none;
+  }
+}
+
+@keyframes loading-modal-progress {
+  0% {
+    transform: translateX(-100%);
+    width: 20%;
+  }
+
+  50% {
+    width: 40%;
+  }
+
+  100% {
+    transform: translateX(200%);
+    width: 20%;
   }
 }

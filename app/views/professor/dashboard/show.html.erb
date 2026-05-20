@@ -78,7 +78,7 @@
       <div class="space-y-3">
         <% @turmas.each do |turma| %>
           <% alunos_encontrados = @alunos_encontrados_por_turma[turma] || [] %>
-          <div class="bg-surface shadow-soft rounded-2xl p-5">
+          <div class="bg-surface shadow-soft rounded-2xl p-5 interactive-card">
             <div class="min-w-0">
               <%= link_to professor_turma_path(turma), class: "block" do %>
                 <p class="text-primary text-base font-semibold wrap-break-word">
@@ -103,7 +103,7 @@
 
             <div class="border-subtle mt-4 flex justify-end border-t pt-4">
               <button type="button"
-                      class="text-muted hover:text-warning inline-flex min-h-12 items-center justify-center rounded-full px-3 py-2 text-sm font-semibold transition-colors"
+                      class="icon-action-button inline-flex min-h-12 items-center justify-center rounded-full px-3 py-2 text-sm font-semibold"
                       aria-label="Excluir turma <%= turma.nome %>"
                       title="Excluir turma"
                       data-confirm-modal-open
@@ -112,6 +112,7 @@
                       data-confirm-action="<%= professor_turma_path(turma) %>"
                       data-confirm-method="delete"
                       data-confirm-button="Excluir turma"
+                      data-confirm-icon="trash"
                       onclick="event.stopPropagation()">
                 <i class="fa-solid fa-trash-alt" aria-hidden="true"></i>
               </button>
@@ -127,35 +128,7 @@
       </div>
     <% end %>
 
-    <div id="confirm-modal" class="modal-overlay-theme hidden" aria-hidden="true">
-      <div class="modal-card-theme">
-        <div class="mb-6 text-center">
-          <div class="modal-icon-warning mb-4">
-            <i class="fa-solid fa-triangle-exclamation text-3xl" aria-hidden="true"></i>
-          </div>
-          <h3 class="text-primary mb-2 text-xl font-bold" data-confirm-modal-title>Confirmar ação?</h3>
-          <p class="text-muted text-sm" data-confirm-modal-message>Revise a ação antes de continuar.</p>
-        </div>
-
-        <form id="confirm-modal-form" method="post">
-          <input type="hidden" name="_method" value="delete" data-confirm-modal-method>
-          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-
-          <div class="flex gap-3">
-            <button type="button"
-                    class="btn-secondary text-primary flex-1 rounded-xl px-4 py-3 text-base font-semibold"
-                    data-confirm-modal-cancel>
-              Cancelar
-            </button>
-            <button type="submit"
-                    class="btn-warning flex-1 rounded-xl px-4 py-3 text-base font-semibold"
-                    data-confirm-modal-submit>
-              Confirmar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <%= render "layouts/confirm_modal" %>
   </div>
 </div>
 
