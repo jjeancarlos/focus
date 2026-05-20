@@ -2,9 +2,13 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
+  post "/auth/google_oauth2/callback", to: "sessions#google_callback"
+  get  "/auth/google_oauth2/callback", to: "sessions#google_callback"
+  get  "/auth/failure",                to: "sessions#google_failure"
+
   get   "cadastro"         => "registrations#new",          as: :cadastro
   post  "cadastro"         => "registrations#create"
-  get   "cadastro/perfil"  => "registrations#perfil",       as: :cadastro_perfil
+  get   "cadastro/perfil"  => "registrations#perfil",       as: :perfil_registration
   patch "cadastro/perfil"  => "registrations#update_perfil"
   get   "cadastro/turma"   => "registrations#codigo_turma", as: :cadastro_turma
   post  "cadastro/turma"   => "registrations#entrar_turma"
@@ -22,7 +26,7 @@ Rails.application.routes.draw do
   patch "perfil",           to: "perfil#update"
   patch "perfil/turma",     to: "perfil#update_turma",      as: :perfil_turma
 
-  get  "notificacoes", to: "notificacoes#index",    as: :notificacoes
+  get  "notificacoes",          to: "notificacoes#index",    as: :notificacoes
   get  "notificacoes/contagem", to: "notificacoes#contagem", as: :notificacoes_contagem
 
   namespace :professor do
