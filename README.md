@@ -8,25 +8,43 @@
   <img src="./.docs/Samsung-Galaxy-S20-focus-cd64.onrender.com2.png" alt="Tela de missão do Focus" width="320" />
 </p>
 
-## Descrição do projeto
+## Descrição
 
 Focus é uma PWA inclusiva voltada para estudantes com dislexia e TDAH, desenvolvida para o 2º Hackathon SIF/UniRios 2026.
 
-O projeto busca tornar o processo de aprendizagem mais acessível, interativo e motivador por meio de missões educacionais adaptadas ao perfil de acessibilidade do aluno.
+O sistema combina acessibilidade, gamificação e acompanhamento pedagógico para apoiar a aprendizagem de alunos e dar mais visibilidade aos professores sobre o progresso da turma.
 
-Problemas que o software se propõe a resolver:
+## Funcionalidades atuais
 
-- dificuldade de manter foco e constância nos estudos
-- baixa adaptação de atividades para estudantes com dislexia e TDAH
-- falta de acompanhamento visual de progresso, nível, XP e sequência de prática
-- necessidade de uma experiência de aprendizado mais inclusiva, positiva e responsiva
+### Aluno
 
-## Tecnologias utilizadas e versões
+- cadastro em múltiplas etapas
+- login com autenticação por sessão
+- seleção de perfil de acessibilidade (`dislexia`, `tdh`, `ambos`)
+- missões de `leitura`, `foco` e `desafio`
+- ganho de XP, níveis e sequência diária
+- página de conquistas
+- perfil com foto e vínculo com turma
+- notificações e recados
+
+### Professor
+
+- dashboard com turmas
+- criação e visualização de turmas
+- busca por nome da turma e aluno no dashboard
+- visualização individual do aluno
+- gráficos semanais de desempenho
+- envio de recados para turma e aluno
+- remoção de aluno da turma sem excluir a conta
+- exclusão de turma com desvinculação segura dos alunos
+- geração de relatório em PDF com IA
+
+## Stack
 
 ### Backend
 
 - Ruby 3.4.8
-- Rails 8.1.3
+- Rails 8.1.1
 - PostgreSQL
 - Puma
 - Active Storage
@@ -36,47 +54,30 @@ Problemas que o software se propõe a resolver:
 
 ### Frontend
 
-- Tailwind CSS v4 via `tailwindcss-rails`
+- Tailwind CSS via `tailwindcss-rails`
+- Turbo
+- Propshaft
 - Chartkick
 - Chart.js
-- Propshaft
-- Turbo
 
-### Bibliotecas e ferramentas principais
+### Bibliotecas principais
 
-- bcrypt 3.1.22
-- pg 1.6.3
-- chartkick 5.2.1
-- groupdate 6.8.0
-- kamal 2.11.0
-- Bundler 4.0.3
+- bcrypt
+- pg
+- groupdate
+- dotenv-rails
+- prawn
+- prawn-table
+- kamal
 
-### Ambiente e execução
-
-- Foreman
-- Docker
-- dotenv
-
-## Abordagens e metodologias utilizadas
-
-- desenvolvimento web com Ruby on Rails seguindo padrão MVC
-- separação de regras de negócio em service objects
-- uso de acessibilidade como requisito central de produto
-- gamificação com XP, níveis e sequência diária para incentivo ao aprendizado
-- interface pensada para inclusão de estudantes com dislexia e TDAH
-- arquitetura com controllers enxutos e lógica de negócio desacoplada
-- uso de PWA para facilitar acesso multiplataforma
-
-## Como executar o projeto
-
-### Pré-requisitos locais
+## Pré-requisitos
 
 - Ruby 3.4.8
 - Bundler
 - PostgreSQL
-- Node.js
+- Redis opcional
 
-### Configuração local
+## Configuração local
 
 1. Instale as dependências:
 
@@ -90,61 +91,56 @@ bundle install
 cp .env.example .env
 ```
 
-3. Preencha o `.env` com os dados do seu PostgreSQL local:
+3. Preencha o `.env` com as variáveis necessárias:
 
 ```env
 DB_HOST=localhost
 DB_PORT=5432
-DB_USERNAME=seu_usuario
-DB_PASSWORD=sua_senha
+DB_USERNAME=seu_usuario_postgres
+DB_PASSWORD=sua_senha_postgres
 DB_NAME_DEV=focus_development
 DB_NAME_TEST=focus_test
+GEMINI_API_KEY=sua_chave_do_gemini
 ```
 
-4. Prepare o banco de dados:
+Se sua aplicação depender de credentials criptografadas fora do ambiente local, você também pode definir:
+
+```env
+RAILS_MASTER_KEY=sua_master_key
+```
+
+Em ambiente local, isso normalmente não é necessário se o arquivo `config/master.key` já existir na máquina.
+
+4. Prepare o banco:
 
 ```bash
 bin/rails db:prepare
 ```
 
-5. Inicie a aplicação em desenvolvimento:
-
-```bash
-bin/dev
-```
-
-O projeto ficará disponível em:
-
-```txt
-http://localhost:3000
-```
-
-### Setup automático
-
-Na primeira execução, você também pode usar:
-
-```bash
-bin/setup
-```
-
-Esse comando instala as dependências, prepara o banco e inicia o servidor de desenvolvimento.
-
-### Seeds de demonstração
-
-Para carregar os dados iniciais de demonstração:
+5. Carregue os dados de demonstração:
 
 ```bash
 bin/rails db:seed
 ```
 
+6. Inicie a aplicação:
+
+```bash
+bin/dev
+```
+
+A aplicação ficará disponível em `http://localhost:3000`.
+
+## Seeds de demonstração
+
 As seeds criam:
 
 - professor demo
-- turma padrão com código de convite
-- aluno demo vinculado à turma
+- turma padrão
+- aluno demo
 - atividades de leitura, foco e desafio
 
-Credenciais geradas pelas seeds:
+Credenciais padrão:
 
 ```txt
 Professor
@@ -159,9 +155,19 @@ Código da turma
 FOCUS2026
 ```
 
-### Executar com Docker Compose
+## Relatório com IA
 
-O projeto possui um ambiente de desenvolvimento com `compose.yml` e `Dockerfile.dev`.
+A geração de relatório em PDF para professores depende da variável abaixo no ambiente:
+
+```env
+GEMINI_API_KEY=sua_chave_do_gemini
+```
+
+Sem essa chave, a funcionalidade de análise com IA não conseguirá consultar a API do Gemini.
+
+## Execução com Docker Compose
+
+O projeto possui ambiente de desenvolvimento com `compose.yml` e `Dockerfile.dev`.
 
 1. Crie o arquivo de ambiente:
 
@@ -169,13 +175,14 @@ O projeto possui um ambiente de desenvolvimento com `compose.yml` e `Dockerfile.
 cp .env.example .env
 ```
 
-2. Preencha ao menos as variáveis de banco no `.env`:
+2. Preencha ao menos estas variáveis:
 
 ```env
 DB_USERNAME=seu_usuario
 DB_PASSWORD=sua_senha
 DB_NAME_DEV=focus_development
 DB_NAME_TEST=focus_test
+RAILS_MASTER_KEY=sua_master_key
 ```
 
 3. Suba os containers:
@@ -186,20 +193,12 @@ docker compose up --build
 
 A aplicação ficará disponível em `http://localhost:3000`.
 
-## Estrutura funcional do projeto
+## Estrutura funcional
 
-Atualmente o sistema possui funcionalidades como:
-
-- cadastro e autenticação de usuários
-- definição de perfil de acessibilidade
-- missões por tipo: leitura, foco e desafio
-- cálculo de XP por desempenho
-- acompanhamento de nível e sequência
-- tela de conquistas
-- histórico do aluno com gráficos semanais
-- edição de perfil com foto
-- gestão de turmas para professores
-- envio de recados para alunos
+- autenticação com `Current.session` e `Current.user`
+- controllers enxutos com regras de negócio em `app/services`
+- portal do aluno com missões e progresso
+- portal do professor com gestão de turmas e acompanhamento individual
 - PWA com manifesto e service worker
 
 ## Tipos de usuário
