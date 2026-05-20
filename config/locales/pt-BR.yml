@@ -17,6 +17,11 @@ pt-BR:
       reset_success: "Sua senha foi atualizada com sucesso."
       mismatch: "As senhas não coincidem. Tente novamente."
       invalid_token: "O link para redefinir a senha é inválido ou expirou."
+    google:
+      no_email: "Não foi possível obter o email da conta Google."
+      professor_blocked: "Login com Google disponível apenas para alunos. Use email e senha."
+      create_failed: "Não foi possível criar sua conta. Tente novamente."
+      failure: "Autenticação com Google falhou. Tente novamente."
   passwords:
     new:
       title: "Esqueceu sua senha?"
